@@ -6,6 +6,7 @@ import (
 
 	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_create/domain"
 	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
+	"github.com/PrikolTech/alpha/backend/core/pkg/test"
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -15,6 +16,8 @@ func Test_usecase_Handle(t *testing.T) {
 	ctx := context.Background()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
+
+	trm := test.NewTrManager()
 
 	t.Run("Success", func(t *testing.T) {
 		in := domain.UserCreateIn{
@@ -28,7 +31,7 @@ func Test_usecase_Handle(t *testing.T) {
 		userRepo.EXPECT().ExistsByEmail(ctx, in.Email).Return(false, nil)
 		userRepo.EXPECT().Create(ctx, in).Return(nil)
 
-		usecase := New(userRepo)
+		usecase := New(userRepo, trm)
 		err := usecase.Handle(ctx, in)
 		require.NoError(t, err)
 	})
@@ -38,7 +41,7 @@ func Test_usecase_Handle(t *testing.T) {
 
 		userRepo := NewMockuserRepo(ctrl)
 
-		usecase := New(userRepo)
+		usecase := New(userRepo, trm)
 		err := usecase.Handle(ctx, in)
 		require.Error(t, err)
 	})
@@ -54,43 +57,43 @@ func Test_usecase_Handle(t *testing.T) {
 		userRepo := NewMockuserRepo(ctrl)
 		userRepo.EXPECT().ExistsByEmail(ctx, in.Email).Return(true, nil)
 
-		usecase := New(userRepo)
+		usecase := New(userRepo, trm)
 		err := usecase.Handle(ctx, in)
 		require.Error(t, err)
 	})
 
-	t.Run("RepoExistsByEmailError", func(t *testing.T) {
+	t.Run("userRepo_ExistsByEmailError", func(t *testing.T) {
 		in := domain.UserCreateIn{
 			Email:      gofakeit.Email(),
 			FirstName:  gofakeit.FirstName(),
 			MiddleName: ptr.To(gofakeit.MiddleName()),
 			LastName:   gofakeit.LastName(),
 		}
-		expectedError := gofakeit.Error()
+		expectedErr := gofakeit.Error()
 
 		userRepo := NewMockuserRepo(ctrl)
-		userRepo.EXPECT().ExistsByEmail(ctx, gomock.Any()).Return(false, expectedError)
+		userRepo.EXPECT().ExistsByEmail(ctx, gomock.Any()).Return(false, expectedErr)
 
-		usecase := New(userRepo)
+		usecase := New(userRepo, trm)
 		err := usecase.Handle(ctx, in)
-		require.ErrorIs(t, err, expectedError)
+		require.ErrorIs(t, err, expectedErr)
 	})
 
-	t.Run("RepoCreateError", func(t *testing.T) {
+	t.Run("userRepo_CreateError", func(t *testing.T) {
 		in := domain.UserCreateIn{
 			Email:      gofakeit.Email(),
 			FirstName:  gofakeit.FirstName(),
 			MiddleName: ptr.To(gofakeit.MiddleName()),
 			LastName:   gofakeit.LastName(),
 		}
-		expectedError := gofakeit.Error()
+		expectedErr := gofakeit.Error()
 
 		userRepo := NewMockuserRepo(ctrl)
 		userRepo.EXPECT().ExistsByEmail(ctx, in.Email).Return(false, nil)
-		userRepo.EXPECT().Create(ctx, in).Return(expectedError)
+		userRepo.EXPECT().Create(ctx, in).Return(expectedErr)
 
-		usecase := New(userRepo)
+		usecase := New(userRepo, trm)
 		err := usecase.Handle(ctx, in)
-		require.ErrorIs(t, err, expectedError)
+		require.ErrorIs(t, err, expectedErr)
 	})
 }
