@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 
+	test_trm "github.com/PrikolTech/alpha/backend/core/internal/pkg/test/trm"
 	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_create/domain"
 	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
-	"github.com/PrikolTech/alpha/backend/core/pkg/test"
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -17,7 +17,7 @@ func Test_usecase_Handle(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	trm := test.NewTrManager()
+	trm := test_trm.New()
 
 	t.Run("Success", func(t *testing.T) {
 		in := domain.UserCreateIn{

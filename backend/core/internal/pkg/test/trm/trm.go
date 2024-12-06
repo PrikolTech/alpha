@@ -1,4 +1,4 @@
-package test
+package test_trm
 
 import (
 	"context"
@@ -16,6 +16,6 @@ func (m *TrManager) DoWithSettings(ctx context.Context, _ trm.Settings, fn func(
 	return fn(ctx)
 }
 
-func NewTrManager() *TrManager {
+func New() *TrManager {
 	return &TrManager{}
 }

@@ -8,16 +8,16 @@ import (
 	"github.com/avito-tech/go-transaction-manager/trm/v2"
 )
 
-type usecase struct {
+type Usecase struct {
 	userRepo userRepo
 	trm      trm.Manager
 }
 
-func New(userRepo userRepo, trm trm.Manager) *usecase {
-	return &usecase{userRepo: userRepo, trm: trm}
+func New(userRepo userRepo, trm trm.Manager) *Usecase {
+	return &Usecase{userRepo: userRepo, trm: trm}
 }
 
-func (u *usecase) Handle(ctx context.Context, in domain.UserCreateIn) error {
+func (u *Usecase) Handle(ctx context.Context, in domain.UserCreateIn) error {
 	if err := in.Validate(); err != nil {
 		return fmt.Errorf("validation error: %w", err)
 	}
