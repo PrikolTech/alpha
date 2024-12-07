@@ -1,10 +1,15 @@
 package test_db
 
-import "reflect"
+import (
+	"reflect"
+)
 
-type Fields map[string]any
+type Field struct {
+	Key   string
+	Value any
+}
 
-func toFields[T any](item T) Fields {
+func toFields[T any](item T) []Field {
 	v := reflect.ValueOf(item)
 	t := v.Type()
 
@@ -12,10 +17,10 @@ func toFields[T any](item T) Fields {
 		return nil
 	}
 
-	fields := make(Fields, v.NumField())
-	for i := range v.NumField() {
-		key := t.Field(i).Tag.Get("db")
-		fields[key] = v.Field(i).Interface()
+	fields := make([]Field, v.NumField())
+	for i := range fields {
+		fields[i].Key = t.Field(i).Tag.Get("db")
+		fields[i].Value = v.Field(i).Interface()
 	}
 
 	return fields

@@ -2,6 +2,7 @@ package test_db
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/samber/lo"
 )
@@ -11,20 +12,25 @@ func insertEntities[T, U any](c *Container, table string, entities []T, idCol st
 		return make([]U, 0), nil
 	}
 
-	fieldsSlice := lo.Map(entities, func(item T, _ int) Fields {
+	fieldsSlice := lo.Map(entities, func(item T, _ int) []Field {
 		fields := toFields(item)
 		if idSkip {
-			delete(fields, idCol)
+			fields = slices.DeleteFunc(fields, func(field Field) bool {
+				return field.Key == idCol
+			})
 		}
 		return fields
 	})
 
+	keys := lo.Map(fieldsSlice[0], func(item Field, _ int) string { return item.Key })
+
 	builder := c.builder.
 		Insert(table).
-		Columns(lo.Keys(fieldsSlice[0])...)
+		Columns(keys...)
 
 	for _, fields := range fieldsSlice {
-		builder = builder.Values(lo.Values(fields)...)
+		values := lo.Map(fields, func(item Field, _ int) any { return item.Value })
+		builder = builder.Values(values...)
 	}
 
 	builder = builder.Suffix("RETURNING " + idCol)

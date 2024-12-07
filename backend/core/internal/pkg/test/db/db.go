@@ -3,7 +3,6 @@ package test_db
 import (
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
-	"github.com/joho/godotenv"
 
 	"github.com/PrikolTech/alpha/backend/core/internal/pkg/psql"
 )
@@ -17,15 +16,11 @@ func New(db *sqlx.DB, builder *sq.StatementBuilderType) *Container {
 	return &Container{db, builder}
 }
 
-func (c *Container) Close() error {
-	return c.db.Close()
-}
+func (c *Container) DB() *sqlx.DB { return c.db }
+
+func (c *Container) Close() error { return c.db.Close() }
 
 func NewPsql() (*Container, error) {
-	if err := godotenv.Overload(); err != nil {
-		return nil, err
-	}
-
 	db, err := psql.Connect()
 	if err != nil {
 		return nil, err

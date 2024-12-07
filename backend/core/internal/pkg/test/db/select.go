@@ -10,9 +10,10 @@ import (
 func SelectEntitiesByIdCol[T, U any](c *Container, table string, idCol string, ids []U) ([]T, error) {
 	var entity T
 	fields := toFields(entity)
+	keys := lo.Map(fields, func(item Field, _ int) string { return item.Key })
 
 	builder := c.builder.
-		Select(lo.Keys(fields)...).
+		Select(keys...).
 		From(table).
 		Where(sq.Eq{idCol: ids})
 
