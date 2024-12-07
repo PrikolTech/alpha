@@ -1,4 +1,4 @@
-UserData:
+UserRelationship:
   type: object
   properties:
     id:
@@ -8,6 +8,3 @@ UserData:
       type: string
       enum:
         - user
-    attributes:
-      type: object
-      $ref: '../base/user.yaml#/User'

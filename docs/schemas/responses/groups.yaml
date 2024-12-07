@@ -1,11 +1,11 @@
-UsersResponse:
+GroupsResponse:
   type: object
   properties:
     data:
       type: array
       items:
         # type: object
-        $ref: '../datas/user.yaml#/UserData'
+        $ref: '../datas/group.yaml#/GroupData'
     meta:
       type: object
       $ref: '../base/meta.yaml#/Meta'

@@ -1,0 +1,21 @@
+GroupRelationsData:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    type:
+      type: string
+      enum:
+        - group
+    attributes:
+      type: object
+      $ref: '../base/group.yaml#/Group'
+    relationships:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            # type: object
+            $ref: '../relationships/user.yaml#/UserRelationship'

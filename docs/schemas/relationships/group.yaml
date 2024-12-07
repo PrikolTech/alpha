@@ -1,4 +1,4 @@
-UserData:
+GroupRelationship:
   type: object
   properties:
     id:
@@ -7,7 +7,4 @@ UserData:
     type:
       type: string
       enum:
-        - user
-    attributes:
-      type: object
-      $ref: '../base/user.yaml#/User'
+        - group

@@ -3,4 +3,4 @@ UserResponse:
   properties:
     data:
       type: object
-      $ref: '../datas/user.yaml#/UserData'
+      $ref: '../datas/user_relations.yaml#/UserRelationsData'

@@ -27,7 +27,7 @@ paths:
       description: Создать нового пользователя
       responses:
         '201':
-          description: Created
+          description: Создан
           content:
             application/json:
               schema:
@@ -53,3 +53,104 @@ paths:
             application/json:
               schema:
                 $ref: 'schemas/responses/user.yaml#/UserResponse'
+    patch:
+      tags:
+        - user
+      summary: Обновить пользователя по ID
+      description: Обновить пользователя по ID
+      responses:
+        '200':
+          description: Обновлен
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas/responses/user.yaml#/UserResponse'
+      requestBody:
+        description: Обновить пользователя
+        content:
+          application/json:
+            schema:
+              $ref: 'schemas/base/user.yaml#/User'
+
+    delete:
+      tags:
+        - user
+      summary: Удалить пользователя по ID
+      description: Удалить пользователя по ID
+      responses:
+        '204':
+          description: Удален
+  
+  /groups:
+    get:
+      tags:
+        - group
+      summary: Получить все группы
+      description: Получить все группы
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas/responses/groups.yaml#/GroupsResponse'
+    post:
+      tags:
+        - group
+      summary: Создать новую группу
+      description: Создать новую группу
+      responses:
+        '201':
+          description: Создана
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas/responses/group.yaml#/GroupResponse'
+      requestBody:
+        description: Создать новую группу
+        content:
+          application/json:
+            schema:
+              $ref: 'schemas/base/group.yaml#/Group'
+
+      
+  /groups/{id}:
+    get:
+      tags:
+        - group
+      summary: Получить группу по ID
+      description: Получить группу по ID
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas/responses/group.yaml#/GroupResponse'
+    patch:
+      tags:
+        - group
+      summary: Обновить группу по ID
+      description: Обновить группу по ID
+      responses:
+        '200':
+          description: Обновлена
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas/responses/group.yaml#/GroupResponse'
+      requestBody:
+        description: Обновить группу
+        content:
+          application/json:
+            schema:
+              $ref: 'schemas/base/group.yaml#/Group'
+
+    delete:
+      tags:
+        - group
+      summary: Удалить группу по ID
+      description: Удалить группу по ID
+      responses:
+        '204':
+          description: Удалена
