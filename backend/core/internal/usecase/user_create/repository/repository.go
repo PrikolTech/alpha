@@ -20,7 +20,8 @@ func New(db *sqlx.DB) *Repository {
 }
 
 func (r *Repository) Create(ctx context.Context, in domain.UserCreateIn) error {
-	builder := sq.Insert("user").
+	builder := sq.StatementBuilder.PlaceholderFormat(sq.Dollar).
+		Insert("user").
 		Columns("email", "first_name", "middle_name", "last_name").
 		Values(in.Email, in.FirstName, in.MiddleName, in.LastName)
 
@@ -38,7 +39,10 @@ func (r *Repository) Create(ctx context.Context, in domain.UserCreateIn) error {
 }
 
 func (r *Repository) ExistsByEmail(ctx context.Context, email string) (bool, error) {
-	builder := sq.Select("id").From("user").Where(sq.Eq{"email": email})
+	builder := sq.StatementBuilder.PlaceholderFormat(sq.Dollar).
+		Select("id").
+		From("user").
+		Where(sq.Eq{"email": email})
 
 	query, args, err := builder.ToSql()
 	if err != nil {
