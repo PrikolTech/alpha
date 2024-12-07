@@ -9,6 +9,7 @@ require (
 	github.com/brianvoe/gofakeit/v7 v7.1.2
 	github.com/jackc/pgx/v5 v5.7.1
 	github.com/jmoiron/sqlx v1.4.0
+	github.com/samber/lo v1.47.0
 	github.com/stretchr/testify v1.10.0
 	go.uber.org/mock v0.5.0
 )
