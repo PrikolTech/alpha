@@ -3,6 +3,7 @@ package test_db
 import (
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
+	"github.com/joho/godotenv"
 
 	"github.com/PrikolTech/alpha/backend/core/internal/pkg/psql"
 )
@@ -21,6 +22,10 @@ func (c *Container) Close() error {
 }
 
 func NewPsql() (*Container, error) {
+	if err := godotenv.Overload(); err != nil {
+		return nil, err
+	}
+
 	db, err := psql.Connect()
 	if err != nil {
 		return nil, err
