@@ -1,0 +1,55 @@
+openapi: '3.0.3'
+info:
+  title: Project Alpha core API
+  version: '1.0'
+servers:
+  - url: api/v1
+
+
+paths:
+  /users:
+    get:
+      tags:
+        - user
+      summary: Получить всех пользователей
+      description: Получить всех пользователей
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas/responses/users.yaml#/UsersResponse'
+    post:
+      tags:
+        - user
+      summary: Создать нового пользователя
+      description: Создать нового пользователя
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas/responses/user.yaml#/UserResponse'
+      requestBody:
+        description: Создать нового пользователя
+        content:
+          application/json:
+            schema:
+              $ref: 'schemas/base/user.yaml#/User'
+
+      
+  /users/{id}:
+    get:
+      tags:
+        - user
+      summary: Получить пользователя по ID
+      description: Получить пользователя по ID
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas/responses/user.yaml#/UserResponse'

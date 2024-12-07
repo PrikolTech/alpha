@@ -1,0 +1,18 @@
+User:
+  type: object
+  properties:
+    email:
+      type: string
+      format: email
+    firstName:
+      type: string
+    middleName:
+      type: string
+    lastName:
+      type: string
+    createdAt:
+      type: string
+      format: date-time
+    updatedAt:
+      type: string
+      format: date-time

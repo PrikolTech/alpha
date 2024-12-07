@@ -1,0 +1,10 @@
+UsersResponse:
+  type: object
+  properties:
+    data:
+      type: array
+      items:
+        $ref: '../datas/user.yaml#/UserData'
+    meta:
+      type: object
+      $ref: '../base/meta.yaml#/Meta'

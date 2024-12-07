@@ -1,0 +1,6 @@
+UserResponse:
+  type: object
+  properties:
+    data:
+      type: object
+      $ref: '../datas/user.yaml#/UserData'
