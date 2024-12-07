@@ -15,13 +15,13 @@ type Repository struct {
 	getter *trmsqlx.CtxGetter
 }
 
-func New(db *sqlx.DB) *Repository {
-	return &Repository{db: db}
+func New(db *sqlx.DB, getter *trmsqlx.CtxGetter) *Repository {
+	return &Repository{db: db, getter: getter}
 }
 
 func (r *Repository) Create(ctx context.Context, in domain.UserCreateIn) error {
 	builder := sq.StatementBuilder.PlaceholderFormat(sq.Dollar).
-		Insert("user").
+		Insert("_user").
 		Columns("email", "first_name", "middle_name", "last_name").
 		Values(in.Email, in.FirstName, in.MiddleName, in.LastName)
 
@@ -41,7 +41,7 @@ func (r *Repository) Create(ctx context.Context, in domain.UserCreateIn) error {
 func (r *Repository) ExistsByEmail(ctx context.Context, email string) (bool, error) {
 	builder := sq.StatementBuilder.PlaceholderFormat(sq.Dollar).
 		Select("id").
-		From("user").
+		From("_user").
 		Where(sq.Eq{"email": email})
 
 	query, args, err := builder.ToSql()
@@ -54,7 +54,7 @@ func (r *Repository) ExistsByEmail(ctx context.Context, email string) (bool, err
 		return false, fmt.Errorf("failed to exec query: %w", err)
 	}
 
-	if !rows.Next() {
+	if rows.Next() {
 		rows.Close()
 		return true, nil
 	}

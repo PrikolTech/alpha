@@ -7,6 +7,7 @@ require (
 	github.com/avito-tech/go-transaction-manager/drivers/sqlx/v2 v2.0.0
 	github.com/avito-tech/go-transaction-manager/trm/v2 v2.0.0
 	github.com/brianvoe/gofakeit/v7 v7.1.2
+	github.com/google/uuid v1.6.0
 	github.com/jackc/pgx/v5 v5.7.1
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/joho/godotenv v1.5.1

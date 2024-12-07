@@ -9,7 +9,7 @@ import (
 )
 
 func New(db *sqlx.DB) *usecase.Usecase {
-	userRepo := repository.New(db)
+	userRepo := repository.New(db, trmsqlx.DefaultCtxGetter)
 	trm := manager.Must(trmsqlx.NewDefaultFactory(db))
 	return usecase.New(userRepo, trm)
 }
