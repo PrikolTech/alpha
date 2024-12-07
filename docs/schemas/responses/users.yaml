@@ -4,6 +4,7 @@ UsersResponse:
     data:
       type: array
       items:
+        type: object
         $ref: '../datas/user.yaml#/UserData'
     meta:
       type: object
