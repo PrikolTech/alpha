@@ -1,7 +1,7 @@
 openapi: '3.0.3'
 info:
   title: Project Alpha core API
-  version: '1.0'
+  version: '0.1'
 servers:
   - url: api/v1
 
@@ -33,7 +33,6 @@ paths:
               schema:
                 $ref: 'schemas/responses/user.yaml#/UserResponse'
       requestBody:
-        description: Создать нового пользователя
         content:
           application/json:
             schema:
@@ -46,6 +45,17 @@ paths:
         - user
       summary: Получить пользователя по ID
       description: Получить пользователя по ID
+      parameters:
+        - name: include
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - groups
+                - roles
+                - projects
       responses:
         '200':
           description: Ok
@@ -53,7 +63,7 @@ paths:
             application/json:
               schema:
                 $ref: 'schemas/responses/user.yaml#/UserResponse'
-    patch:
+    put:
       tags:
         - user
       summary: Обновить пользователя по ID
@@ -66,7 +76,6 @@ paths:
               schema:
                 $ref: 'schemas/responses/user.yaml#/UserResponse'
       requestBody:
-        description: Обновить пользователя
         content:
           application/json:
             schema:
@@ -80,13 +89,49 @@ paths:
       responses:
         '204':
           description: Удален
-  
+
+  /users/{id}/roles:
+    put:
+      tags:
+        - user
+      summary: Установить роли пользователя
+      description: Установить роли пользователя
+      responses:
+        '200':
+          description: Роли обновлены
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas/responses/roles.yaml#/RolesResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'schemas/responses/roles.yaml#/RolesResponse'
+
+
   /groups:
     get:
       tags:
         - group
       summary: Получить все группы
       description: Получить все группы
+      parameters:
+        - name: sort
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - name
+                - code
+                - createdAt
+        - in: query
+          name: filter[query]
+          description: Фильтрация по имени группы
+          schema:
+            type: string
       responses:
         '200':
           description: OK
@@ -107,7 +152,6 @@ paths:
               schema:
                 $ref: 'schemas/responses/group.yaml#/GroupResponse'
       requestBody:
-        description: Создать новую группу
         content:
           application/json:
             schema:
@@ -120,6 +164,16 @@ paths:
         - group
       summary: Получить группу по ID
       description: Получить группу по ID
+      parameters:
+        - name: include
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - users
+                - projects
       responses:
         '200':
           description: Ok
@@ -127,7 +181,7 @@ paths:
             application/json:
               schema:
                 $ref: 'schemas/responses/group.yaml#/GroupResponse'
-    patch:
+    put:
       tags:
         - group
       summary: Обновить группу по ID
@@ -140,7 +194,6 @@ paths:
               schema:
                 $ref: 'schemas/responses/group.yaml#/GroupResponse'
       requestBody:
-        description: Обновить группу
         content:
           application/json:
             schema:
@@ -154,3 +207,53 @@ paths:
       responses:
         '204':
           description: Удалена
+
+  /roles:
+    get:
+      tags:
+        - roles
+      summary: Получить все роли
+      description: Получить все роли
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas/responses/roles.yaml#/RolesResponse'
+
+  /groups/{id}/add:
+    post:
+      tags:
+        - group
+      summary: Добавить пользователя в группу
+      description: Добавить пользователя в группу
+      responses:
+        '204':
+          description: Добавлен
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                user_id:
+                  type: string
+                  format: uuid
+
+  /groups/{id}/remove:
+    post:
+      tags:
+        - group
+      summary: Удалить пользователя из группы
+      description: Удалить пользователя из группы
+      responses:
+        '204':
+          description: Удален
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                user_id:
+                  type: string
+                  format: uuid
