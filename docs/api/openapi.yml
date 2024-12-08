@@ -1,0 +1,9 @@
+openapi: 3.0.3
+info:
+  title: project-alpha
+  version: 0.0.1
+paths:
+  /v1/users:
+    $ref: "./paths/user/user_create.yml#/paths/user_create"
+  /v1/users/{id}:
+    $ref: "./paths/user/user_get_by_id.yml#/paths/user_get_by_id"

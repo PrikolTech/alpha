@@ -1,0 +1,40 @@
+paths:
+  user_create:
+    post:
+      operationId: userCreate
+      summary: Создать нового пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCreateRequest"
+      responses:
+        201:
+          description: Created
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "../../common.yml#/components/schemas/Error"
+
+components:
+  schemas:
+    UserCreateRequest:
+      type: object
+      required:
+        - email
+        - firstName
+        - lastName
+      properties:
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+        middleName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
