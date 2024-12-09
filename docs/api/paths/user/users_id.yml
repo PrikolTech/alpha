@@ -1,5 +1,5 @@
 paths:
-  user_get_by_id:
+  users_id:
     get:
       operationId: userGetById
       summary: Получить пользователя по id
@@ -12,12 +12,6 @@ paths:
             application/json:
               schema:
                 $ref: "./common.yml#/components/schemas/User"
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: "../../common.yml#/components/schemas/Error"
 
 components:
   parameters:

@@ -1,5 +1,5 @@
 paths:
-  user_create:
+  users:
     post:
       operationId: userCreate
       summary: Создать нового пользователя
@@ -12,8 +12,8 @@ paths:
       responses:
         201:
           description: Created
-        default:
-          description: Error
+        400:
+          description: Bad request
           content:
             application/json:
               schema:

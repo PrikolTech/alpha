@@ -1,0 +1,53 @@
+package user_create_handler
+
+import (
+	"context"
+	"errors"
+	"net/http"
+
+	"github.com/PrikolTech/alpha/backend/core/internal/generated/api"
+	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_create/domain"
+	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
+)
+
+type Handler struct {
+	userUsecase userUsecase
+}
+
+func New(userUsecase userUsecase) *Handler {
+	return &Handler{userUsecase: userUsecase}
+}
+
+func (h *Handler) Handle(ctx context.Context, req *api.UserCreateRequest) (api.UserCreateRes, error) {
+	err := h.userUsecase.Handle(ctx, h.convertDtoToDomain(req))
+	if err != nil {
+		var (
+			validationErr *domain.ValidationError
+			domainErr     *domain.DomainError
+		)
+		if errors.As(err, &validationErr) || errors.As(err, &domainErr) {
+			res := &api.Error{
+				Code:    http.StatusBadRequest,
+				Message: err.Error(),
+			}
+			return res, nil
+		}
+		return nil, err
+	}
+
+	return &api.UserCreateCreated{}, nil
+}
+
+func (h *Handler) convertDtoToDomain(req *api.UserCreateRequest) domain.UserCreateIn {
+	in := domain.UserCreateIn{
+		Email:     req.Email,
+		FirstName: req.FirstName,
+		LastName:  req.LastName,
+	}
+
+	if req.MiddleName.IsSet() && !req.MiddleName.IsNull() {
+		in.MiddleName = ptr.To(req.MiddleName.Value)
+	}
+
+	return in
+}

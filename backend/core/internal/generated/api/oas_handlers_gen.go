@@ -58,7 +58,7 @@ func (s *Server) handleUserCreateRequest(args [0]string, argsEscaped bool, w htt
 		}
 	}()
 
-	var response *UserCreateCreated
+	var response UserCreateRes
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -73,7 +73,7 @@ func (s *Server) handleUserCreateRequest(args [0]string, argsEscaped bool, w htt
 		type (
 			Request  = *UserCreateRequest
 			Params   = struct{}
-			Response = *UserCreateCreated
+			Response = UserCreateRes
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -84,27 +84,16 @@ func (s *Server) handleUserCreateRequest(args [0]string, argsEscaped bool, w htt
 			mreq,
 			nil,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				err = s.h.UserCreate(ctx, request)
+				response, err = s.h.UserCreate(ctx, request)
 				return response, err
 			},
 		)
 	} else {
-		err = s.h.UserCreate(ctx, request)
+		response, err = s.h.UserCreate(ctx, request)
 	}
 	if err != nil {
-		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			if err := encodeErrorResponse(errRes, w); err != nil {
-				defer recordError("Internal", err)
-			}
-			return
-		}
-		if errors.Is(err, ht.ErrNotImplemented) {
-			s.cfg.ErrorHandler(ctx, w, r, err)
-			return
-		}
-		if err := encodeErrorResponse(s.h.NewError(ctx, err), w); err != nil {
-			defer recordError("Internal", err)
-		}
+		defer recordError("Internal", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 
@@ -184,19 +173,8 @@ func (s *Server) handleUserGetByIdRequest(args [1]string, argsEscaped bool, w ht
 		response, err = s.h.UserGetById(ctx, params)
 	}
 	if err != nil {
-		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			if err := encodeErrorResponse(errRes, w); err != nil {
-				defer recordError("Internal", err)
-			}
-			return
-		}
-		if errors.Is(err, ht.ErrNotImplemented) {
-			s.cfg.ErrorHandler(ctx, w, r, err)
-			return
-		}
-		if err := encodeErrorResponse(s.h.NewError(ctx, err), w); err != nil {
-			defer recordError("Internal", err)
-		}
+		defer recordError("Internal", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 

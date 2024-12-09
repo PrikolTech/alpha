@@ -18,8 +18,8 @@ var _ Handler = UnimplementedHandler{}
 // Создать нового пользователя.
 //
 // POST /v1/users
-func (UnimplementedHandler) UserCreate(ctx context.Context, req *UserCreateRequest) error {
-	return ht.ErrNotImplemented
+func (UnimplementedHandler) UserCreate(ctx context.Context, req *UserCreateRequest) (r UserCreateRes, _ error) {
+	return r, ht.ErrNotImplemented
 }
 
 // UserGetById implements userGetById operation.
@@ -29,12 +29,4 @@ func (UnimplementedHandler) UserCreate(ctx context.Context, req *UserCreateReque
 // GET /v1/users/{id}
 func (UnimplementedHandler) UserGetById(ctx context.Context, params UserGetByIdParams) (r *User, _ error) {
 	return r, ht.ErrNotImplemented
-}
-
-// NewError creates *ErrorStatusCode from error returned by handler.
-//
-// Used for common default response.
-func (UnimplementedHandler) NewError(ctx context.Context, err error) (r *ErrorStatusCode) {
-	r = new(ErrorStatusCode)
-	return r
 }

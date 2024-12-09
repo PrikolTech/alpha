@@ -7,14 +7,30 @@ import (
 
 	"github.com/go-faster/errors"
 	"github.com/go-faster/jx"
-
-	ht "github.com/ogen-go/ogen/http"
 )
 
-func encodeUserCreateResponse(response *UserCreateCreated, w http.ResponseWriter) error {
-	w.WriteHeader(201)
+func encodeUserCreateResponse(response UserCreateRes, w http.ResponseWriter) error {
+	switch response := response.(type) {
+	case *UserCreateCreated:
+		w.WriteHeader(201)
 
-	return nil
+		return nil
+
+	case *Error:
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(400)
+
+		e := new(jx.Encoder)
+		response.Encode(e)
+		if _, err := e.WriteTo(w); err != nil {
+			return errors.Wrap(err, "write")
+		}
+
+		return nil
+
+	default:
+		return errors.Errorf("unexpected response type: %T", response)
+	}
 }
 
 func encodeUserGetByIdResponse(response *User, w http.ResponseWriter) error {
@@ -36,26 +52,4 @@ func encodeUserGetByIdResponse(response *User, w http.ResponseWriter) error {
 	}
 
 	return nil
-}
-
-func encodeErrorResponse(response *ErrorStatusCode, w http.ResponseWriter) error {
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	code := response.StatusCode
-	if code == 0 {
-		// Set default status code.
-		code = http.StatusOK
-	}
-	w.WriteHeader(code)
-
-	e := new(jx.Encoder)
-	response.Response.Encode(e)
-	if _, err := e.WriteTo(w); err != nil {
-		return errors.Wrap(err, "write")
-	}
-
-	if code >= http.StatusInternalServerError {
-		return errors.Wrapf(ht.ErrInternalServerErrorResponse, "code: %d, message: %s", code, http.StatusText(code))
-	}
-	return nil
-
 }

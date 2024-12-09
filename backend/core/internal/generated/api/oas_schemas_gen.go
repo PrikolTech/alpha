@@ -3,13 +3,8 @@
 package api
 
 import (
-	"fmt"
 	"time"
 )
-
-func (s *ErrorStatusCode) Error() string {
-	return fmt.Sprintf("code %d: %+v", s.StatusCode, s.Response)
-}
 
 // Общая ошибка.
 // Ref: #/components/schemas/Error
@@ -38,31 +33,7 @@ func (s *Error) SetMessage(val string) {
 	s.Message = val
 }
 
-// ErrorStatusCode wraps Error with StatusCode.
-type ErrorStatusCode struct {
-	StatusCode int
-	Response   Error
-}
-
-// GetStatusCode returns the value of StatusCode.
-func (s *ErrorStatusCode) GetStatusCode() int {
-	return s.StatusCode
-}
-
-// GetResponse returns the value of Response.
-func (s *ErrorStatusCode) GetResponse() Error {
-	return s.Response
-}
-
-// SetStatusCode sets the value of StatusCode.
-func (s *ErrorStatusCode) SetStatusCode(val int) {
-	s.StatusCode = val
-}
-
-// SetResponse sets the value of Response.
-func (s *ErrorStatusCode) SetResponse(val Error) {
-	s.Response = val
-}
+func (*Error) userCreateRes() {}
 
 // NewOptDateTime returns new OptDateTime with value set to v.
 func NewOptDateTime(v time.Time) OptDateTime {
@@ -246,6 +217,8 @@ func (s *User) SetUpdatedAt(val OptDateTime) {
 
 // UserCreateCreated is response for UserCreate operation.
 type UserCreateCreated struct{}
+
+func (*UserCreateCreated) userCreateRes() {}
 
 // Ref: #/components/schemas/UserCreateRequest
 type UserCreateRequest struct {

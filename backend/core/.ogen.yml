@@ -2,7 +2,7 @@ parser:
   allow_remote: true
 
 generator:
-  convenient_errors: "on"
+  convenient_errors: "off"
   features:
     enable:
       # Enables paths server generation

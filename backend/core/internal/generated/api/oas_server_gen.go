@@ -13,17 +13,13 @@ type Handler interface {
 	// Создать нового пользователя.
 	//
 	// POST /v1/users
-	UserCreate(ctx context.Context, req *UserCreateRequest) error
+	UserCreate(ctx context.Context, req *UserCreateRequest) (UserCreateRes, error)
 	// UserGetById implements userGetById operation.
 	//
 	// Получить пользователя по id.
 	//
 	// GET /v1/users/{id}
 	UserGetById(ctx context.Context, params UserGetByIdParams) (*User, error)
-	// NewError creates *ErrorStatusCode from error returned by handler.
-	//
-	// Used for common default response.
-	NewError(ctx context.Context, err error) *ErrorStatusCode
 }
 
 // Server implements http server based on OpenAPI v3 specification and
