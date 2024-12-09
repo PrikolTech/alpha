@@ -16,6 +16,7 @@ components:
       schema:
         type: integer
         default: 20
+
   schemas:
     Meta:
       type: object
