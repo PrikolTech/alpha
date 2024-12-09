@@ -25,10 +25,13 @@ components:
         - page
         - totalPages
         - per
+        - totalRecords
       properties:
         page:
           type: integer
         totalPages:
           type: integer
         per:
+          type: integer
+        totalRecords:
           type: integer
