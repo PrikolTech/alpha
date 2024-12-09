@@ -1,0 +1,78 @@
+paths:
+  users:
+    post:
+      tags:
+        - user
+      operationId: userCreate
+      summary: Создать нового пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCreateRequest"
+      responses:
+        201:
+          description: Created
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "../../common.yml#/components/schemas/Error"
+
+    get:
+      tags:
+        - user
+      operationId: userGetAll
+      summary: Получить всех пользователей
+      parameters:
+        - $ref: "../../common.yml#/components/parameters/Page"
+        - $ref: "../../common.yml#/components/parameters/PerPage"
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserArray"
+
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "../../common.yml#/components/schemas/Error"
+
+components:
+  schemas:
+    UserCreateRequest:
+      type: object
+      required:
+        - email
+        - firstName
+        - lastName
+      properties:
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+        middleName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+    UserArray:
+      type: object
+      description: Список пользователей
+      required:
+        - users
+        - meta
+      properties:
+        projects:
+          type: array
+          items:
+            $ref: "./common.yml#/components/schemas/User"
+        meta:
+          $ref: "../../common.yml#/components/schemas/Meta"
