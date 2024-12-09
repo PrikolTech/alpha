@@ -14,12 +14,6 @@ paths:
       responses:
         201:
           description: Created
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: "../../common.yml#/components/schemas/Error"
     
     get:
       tags:
@@ -35,13 +29,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ProjectArray"
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: "../../common.yml#/components/schemas/Error"
+                $ref: "#/components/schemas/ProjectGetAllResponse"
 
 components:
   schemas:
@@ -61,13 +49,13 @@ components:
         code:
           type: string
 
-    ProjectArray:
+    ProjectGetAllResponse:
       type: object
-      description: Массив проектов
+      description: Список проектов
       required:
         - projects
       properties:
-        projects:
+        data:
           type: array
           items:
             $ref: "./common.yml/#/components/schemas/Project"
