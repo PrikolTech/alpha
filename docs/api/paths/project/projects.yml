@@ -1,0 +1,75 @@
+paths:
+  projects:
+    post:
+      tags:
+        - project
+      operationId: projectCreate
+      summary: Создать новый проект
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectCreateRequest"
+      responses:
+        201:
+          description: Created
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "../../common.yml#/components/schemas/Error"
+    
+    get:
+      tags:
+        - project
+      operationId: projectGetAll
+      summary: Получить все проекты с пагинацией
+      parameters:
+        - $ref: "../../common.yml#/components/parameters/Page"
+        - $ref: "../../common.yml#/components/parameters/PerPage"
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectArray"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "../../common.yml#/components/schemas/Error"
+
+components:
+  schemas:
+    ProjectCreateRequest:
+      type: object
+      description: Запрос на создание проекта
+      required:
+        - name
+        - description
+        - code
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        code:
+          type: string
+
+    ProjectArray:
+      type: object
+      description: Массив проектов
+      required:
+        - projects
+      properties:
+        projects:
+          type: array
+          items:
+            $ref: "./common.yml/#/components/schemas/Project"
+        meta:
+          $ref: "../../common.yml#/components/schemas/Meta"

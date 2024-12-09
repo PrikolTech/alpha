@@ -11,6 +11,6 @@ paths:
   
   # Pojects
   /v1/projects:
-    $ref: "./paths/project/project_create.yml#/paths/project_create"
+    $ref: "./paths/project/projects.yml#/paths/projects"
   /v1/projects/{id}:
-    $ref: "./paths/project/project_get_by_id.yml#/paths/project_get_by_id"
+    $ref: "./paths/project/projects_id.yml#/paths/project_id"
