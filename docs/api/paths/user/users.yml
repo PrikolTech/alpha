@@ -14,12 +14,6 @@ paths:
       responses:
         201:
           description: Created
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: "../../common.yml#/components/schemas/Error"
 
     get:
       tags:
@@ -36,13 +30,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UserArray"
-
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: "../../common.yml#/components/schemas/Error"
 
 components:
   schemas:
