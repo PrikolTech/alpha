@@ -1,6 +1,8 @@
 paths:
   users_id:
     get:
+      tags:
+        - user
       operationId: userGetById
       summary: Получить пользователя по id
       parameters:
