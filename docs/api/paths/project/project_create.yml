@@ -1,0 +1,39 @@
+paths:
+  project_create:
+    post:
+      tags:
+        - project
+      operationId: projectCreate
+      summary: Создать новый проект
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectCreateRequest"
+      responses:
+        201:
+          description: Created
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "../../common.yml#/components/schemas/Error"
+
+components:
+  schemas:
+    ProjectCreateRequest:
+      type: object
+      required:
+        - name
+        - description
+        - code
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        code:
+          type: string
