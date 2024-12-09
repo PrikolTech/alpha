@@ -3,7 +3,6 @@ package user_create_handler
 import (
 	"context"
 	"errors"
-	"net/http"
 
 	"github.com/PrikolTech/alpha/backend/core/internal/generated/api"
 	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_create/domain"
@@ -25,13 +24,19 @@ func (h *Handler) Handle(ctx context.Context, req *api.UserCreateRequest) (api.U
 			validationErr *domain.ValidationError
 			domainErr     *domain.DomainError
 		)
-		if errors.As(err, &validationErr) || errors.As(err, &domainErr) {
-			res := &api.Error{
-				Code:    http.StatusBadRequest,
+		if errors.As(err, &validationErr) {
+			res := &api.UserCreateValidationError{
+				Field:  validationErr.Field,
+				Reason: validationErr.Reason.Error(),
+			}
+			return res, nil
+		} else if errors.As(err, &domainErr) {
+			res := &api.UserCreateDomainError{
 				Message: err.Error(),
 			}
 			return res, nil
 		}
+
 		return nil, err
 	}
 

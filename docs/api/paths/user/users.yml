@@ -19,7 +19,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "../../common.yml#/components/schemas/Error"
+                $ref: "#/components/schemas/UserCreateValidationError"
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserCreateDomainError"
 
     get:
       tags:
@@ -39,6 +45,23 @@ paths:
 
 components:
   schemas:
+    UserCreateValidationError:
+      type: object
+      required:
+        - field
+        - reason
+      properties:
+        field:
+          type: string
+        reason:
+          type: string
+    UserCreateDomainError:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
     UserCreateRequest:
       type: object
       required:

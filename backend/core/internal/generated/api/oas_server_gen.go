@@ -14,6 +14,12 @@ type Handler interface {
 	//
 	// POST /v1/users
 	UserCreate(ctx context.Context, req *UserCreateRequest) (UserCreateRes, error)
+	// UserGetAll implements userGetAll operation.
+	//
+	// Получить всех пользователей.
+	//
+	// GET /v1/users
+	UserGetAll(ctx context.Context, params UserGetAllParams) (*UserGetAllResponse, error)
 	// UserGetById implements userGetById operation.
 	//
 	// Получить пользователя по id.

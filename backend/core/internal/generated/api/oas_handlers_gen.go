@@ -106,6 +106,91 @@ func (s *Server) handleUserCreateRequest(args [0]string, argsEscaped bool, w htt
 	}
 }
 
+// handleUserGetAllRequest handles userGetAll operation.
+//
+// Получить всех пользователей.
+//
+// GET /v1/users
+func (s *Server) handleUserGetAllRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
+	ctx := r.Context()
+
+	var (
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: UserGetAllOperation,
+			ID:   "userGetAll",
+		}
+	)
+	params, err := decodeUserGetAllParams(args, argsEscaped, r)
+	if err != nil {
+		err = &ogenerrors.DecodeParamsError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeParams", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	var response *UserGetAllResponse
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    UserGetAllOperation,
+			OperationSummary: "Получить всех пользователей",
+			OperationID:      "userGetAll",
+			Body:             nil,
+			Params: middleware.Parameters{
+				{
+					Name: "page",
+					In:   "query",
+				}: params.Page,
+				{
+					Name: "per",
+					In:   "query",
+				}: params.Per,
+			},
+			Raw: r,
+		}
+
+		type (
+			Request  = struct{}
+			Params   = UserGetAllParams
+			Response = *UserGetAllResponse
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			unpackUserGetAllParams,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.UserGetAll(ctx, params)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.UserGetAll(ctx, params)
+	}
+	if err != nil {
+		defer recordError("Internal", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	if err := encodeUserGetAllResponse(response, w); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
 // handleUserGetByIdRequest handles userGetById operation.
 //
 // Получить пользователя по id.

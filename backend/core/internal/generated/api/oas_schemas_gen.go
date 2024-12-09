@@ -6,34 +6,54 @@ import (
 	"time"
 )
 
-// Общая ошибка.
-// Ref: #/components/schemas/Error
-type Error struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
+// Мета данные.
+// Ref: #/components/schemas/Meta
+type Meta struct {
+	Page         int `json:"page"`
+	TotalPages   int `json:"totalPages"`
+	Per          int `json:"per"`
+	TotalRecords int `json:"totalRecords"`
 }
 
-// GetCode returns the value of Code.
-func (s *Error) GetCode() int {
-	return s.Code
+// GetPage returns the value of Page.
+func (s *Meta) GetPage() int {
+	return s.Page
 }
 
-// GetMessage returns the value of Message.
-func (s *Error) GetMessage() string {
-	return s.Message
+// GetTotalPages returns the value of TotalPages.
+func (s *Meta) GetTotalPages() int {
+	return s.TotalPages
 }
 
-// SetCode sets the value of Code.
-func (s *Error) SetCode(val int) {
-	s.Code = val
+// GetPer returns the value of Per.
+func (s *Meta) GetPer() int {
+	return s.Per
 }
 
-// SetMessage sets the value of Message.
-func (s *Error) SetMessage(val string) {
-	s.Message = val
+// GetTotalRecords returns the value of TotalRecords.
+func (s *Meta) GetTotalRecords() int {
+	return s.TotalRecords
 }
 
-func (*Error) userCreateRes() {}
+// SetPage sets the value of Page.
+func (s *Meta) SetPage(val int) {
+	s.Page = val
+}
+
+// SetTotalPages sets the value of TotalPages.
+func (s *Meta) SetTotalPages(val int) {
+	s.TotalPages = val
+}
+
+// SetPer sets the value of Per.
+func (s *Meta) SetPer(val int) {
+	s.Per = val
+}
+
+// SetTotalRecords sets the value of TotalRecords.
+func (s *Meta) SetTotalRecords(val int) {
+	s.TotalRecords = val
+}
 
 // NewOptDateTime returns new OptDateTime with value set to v.
 func NewOptDateTime(v time.Time) OptDateTime {
@@ -75,6 +95,52 @@ func (o OptDateTime) Get() (v time.Time, ok bool) {
 
 // Or returns value if set, or given parameter if does not.
 func (o OptDateTime) Or(d time.Time) time.Time {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptInt returns new OptInt with value set to v.
+func NewOptInt(v int) OptInt {
+	return OptInt{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptInt is optional int.
+type OptInt struct {
+	Value int
+	Set   bool
+}
+
+// IsSet returns true if OptInt was set.
+func (o OptInt) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptInt) Reset() {
+	var v int
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptInt) SetTo(v int) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptInt) Get() (v int, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptInt) Or(d int) int {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -220,6 +286,23 @@ type UserCreateCreated struct{}
 
 func (*UserCreateCreated) userCreateRes() {}
 
+// Ref: #/components/schemas/UserCreateDomainError
+type UserCreateDomainError struct {
+	Message string `json:"message"`
+}
+
+// GetMessage returns the value of Message.
+func (s *UserCreateDomainError) GetMessage() string {
+	return s.Message
+}
+
+// SetMessage sets the value of Message.
+func (s *UserCreateDomainError) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*UserCreateDomainError) userCreateRes() {}
+
 // Ref: #/components/schemas/UserCreateRequest
 type UserCreateRequest struct {
 	Email      string       `json:"email"`
@@ -266,4 +349,59 @@ func (s *UserCreateRequest) SetMiddleName(val OptNilString) {
 // SetLastName sets the value of LastName.
 func (s *UserCreateRequest) SetLastName(val string) {
 	s.LastName = val
+}
+
+// Ref: #/components/schemas/UserCreateValidationError
+type UserCreateValidationError struct {
+	Field  string `json:"field"`
+	Reason string `json:"reason"`
+}
+
+// GetField returns the value of Field.
+func (s *UserCreateValidationError) GetField() string {
+	return s.Field
+}
+
+// GetReason returns the value of Reason.
+func (s *UserCreateValidationError) GetReason() string {
+	return s.Reason
+}
+
+// SetField sets the value of Field.
+func (s *UserCreateValidationError) SetField(val string) {
+	s.Field = val
+}
+
+// SetReason sets the value of Reason.
+func (s *UserCreateValidationError) SetReason(val string) {
+	s.Reason = val
+}
+
+func (*UserCreateValidationError) userCreateRes() {}
+
+// Список пользователей.
+// Ref: #/components/schemas/UserGetAllResponse
+type UserGetAllResponse struct {
+	Data []User `json:"data"`
+	Meta Meta   `json:"meta"`
+}
+
+// GetData returns the value of Data.
+func (s *UserGetAllResponse) GetData() []User {
+	return s.Data
+}
+
+// GetMeta returns the value of Meta.
+func (s *UserGetAllResponse) GetMeta() Meta {
+	return s.Meta
+}
+
+// SetData sets the value of Data.
+func (s *UserGetAllResponse) SetData(val []User) {
+	s.Data = val
+}
+
+// SetMeta sets the value of Meta.
+func (s *UserGetAllResponse) SetMeta(val Meta) {
+	s.Meta = val
 }

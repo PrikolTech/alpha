@@ -16,6 +16,133 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
+// UserGetAllParams is parameters of userGetAll operation.
+type UserGetAllParams struct {
+	// Номер страницы.
+	Page OptInt
+	// Количество записей на странице.
+	Per OptInt
+}
+
+func unpackUserGetAllParams(packed middleware.Parameters) (params UserGetAllParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "page",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Page = v.(OptInt)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "per",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Per = v.(OptInt)
+		}
+	}
+	return params
+}
+
+func decodeUserGetAllParams(args [0]string, argsEscaped bool, r *http.Request) (params UserGetAllParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
+	// Set default value for query: page.
+	{
+		val := int(1)
+		params.Page.SetTo(val)
+	}
+	// Decode query: page.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "page",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotPageVal int
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToInt(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotPageVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Page.SetTo(paramsDotPageVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "page",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Set default value for query: per.
+	{
+		val := int(20)
+		params.Per.SetTo(val)
+	}
+	// Decode query: per.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "per",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotPerVal int
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToInt(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotPerVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Per.SetTo(paramsDotPerVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "per",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
 // UserGetByIdParams is parameters of userGetById operation.
 type UserGetByIdParams struct {
 	// Id пользователя.

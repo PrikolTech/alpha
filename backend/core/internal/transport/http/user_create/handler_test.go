@@ -31,13 +31,15 @@ func TestHandler_Handle(t *testing.T) {
 
 	t.Run("UserUsecaseValidationError", func(t *testing.T) {
 		userUsecase := NewMockuserUsecase(ctrl)
-		userUsecase.EXPECT().Handle(ctx, gomock.Any()).Return(&domain.ValidationError{})
+		userUsecase.EXPECT().Handle(ctx, gomock.Any()).Return(&domain.ValidationError{
+			Reason: gofakeit.Error(),
+		})
 
 		handler := New(userUsecase)
 
 		res, err := handler.Handle(ctx, &api.UserCreateRequest{})
 		require.NoError(t, err)
-		require.IsType(t, &api.Error{}, res)
+		require.IsType(t, &api.UserCreateValidationError{}, res)
 	})
 
 	t.Run("UserUsecaseDomainError", func(t *testing.T) {
@@ -48,7 +50,7 @@ func TestHandler_Handle(t *testing.T) {
 
 		res, err := handler.Handle(ctx, &api.UserCreateRequest{})
 		require.NoError(t, err)
-		require.IsType(t, &api.Error{}, res)
+		require.IsType(t, &api.UserCreateDomainError{}, res)
 	})
 
 	t.Run("UserUsecaseInternalError", func(t *testing.T) {

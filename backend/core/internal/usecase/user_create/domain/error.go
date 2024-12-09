@@ -10,16 +10,16 @@ var (
 )
 
 type ValidationError struct {
-	Field string
-	Err   error
+	Field  string
+	Reason error
 }
 
 func NewValidationError(field string, err error) *ValidationError {
-	return &ValidationError{Field: field, Err: err}
+	return &ValidationError{Field: field, Reason: err}
 }
 
 func (e *ValidationError) Error() string {
-	return fmt.Sprintf("value of field '%s' is invalid: %s", e.Field, e.Err)
+	return fmt.Sprintf("value of field '%s' is invalid: %s", e.Field, e.Reason)
 }
 
 type DomainError struct {

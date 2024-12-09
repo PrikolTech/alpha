@@ -22,6 +22,15 @@ func (UnimplementedHandler) UserCreate(ctx context.Context, req *UserCreateReque
 	return r, ht.ErrNotImplemented
 }
 
+// UserGetAll implements userGetAll operation.
+//
+// Получить всех пользователей.
+//
+// GET /v1/users
+func (UnimplementedHandler) UserGetAll(ctx context.Context, params UserGetAllParams) (r *UserGetAllResponse, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // UserGetById implements userGetById operation.
 //
 // Получить пользователя по id.

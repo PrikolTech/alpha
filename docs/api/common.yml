@@ -35,14 +35,3 @@ components:
           type: integer
         totalRecords:
           type: integer
-    Error:
-      type: object
-      description: Общая ошибка
-      required:
-        - code
-        - message
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
