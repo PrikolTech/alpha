@@ -1,6 +1,0 @@
-GroupResponse:
-  type: object
-  properties:
-    data:
-      type: object
-      $ref: '../datas/group_relations.yaml#/GroupRelationsData'

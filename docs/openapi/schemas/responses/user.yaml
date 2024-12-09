@@ -1,6 +1,0 @@
-UserResponse:
-  type: object
-  properties:
-    data:
-      type: object
-      $ref: '../datas/user_relations.yaml#/UserRelationsData'
