@@ -1,7 +1,4 @@
-# This workflow will build a golang project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
-
-name: Go
+name: Core
 
 defaults:
   run:
@@ -10,17 +7,18 @@ defaults:
 on:
   push:
     branches: ["*"]
-    # paths: ["backend/core"]
+    paths: ["./backend/core"]
   pull_request:
     branches: ["*"]
-    # paths: ["backend/core"]
+    paths: ["./backend/core"]
 
 jobs:
   build:
     runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out
+        uses: actions/checkout@v4
 
       - name: Set up
         uses: actions/setup-go@v5
