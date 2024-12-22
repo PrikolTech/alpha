@@ -52,8 +52,8 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-        volumes:
-          - ./backend/core/migrations/psql:/docker-entrypoint-initdb.d
+        # volumes:
+        #   - ./backend/core/migrations/psql:/docker-entrypoint-initdb.d
         ports:
           - 15432:5432
 
