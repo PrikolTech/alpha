@@ -60,7 +60,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run migrations
-        run: find . -iname "./migrations/psql/*.sql" | xargs printf -- ' -f %s' | xargs -t psql postgresql://devuser:devpassword@localhost:15432/devdb
+        run: find ./migrations/psql -iname "*.sql" | xargs printf -- ' -f %s' | xargs -t psql postgresql://devuser:devpassword@localhost:15432/devdb
 
       - name: Set up
         uses: actions/setup-go@v5
