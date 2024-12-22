@@ -52,13 +52,16 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-        # volumes:
-        #   - ./backend/core/migrations/psql:/docker-entrypoint-initdb.d
+        volumes:
+          - ./backend/core/migrations/psql:/docker-entrypoint-initdb.d
         ports:
           - 15432:5432
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            !./backend/core/migrations
 
       - name: Set up
         uses: actions/setup-go@v5
