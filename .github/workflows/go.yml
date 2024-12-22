@@ -58,10 +58,12 @@ jobs:
           - 15432:5432
 
     steps:
-      - uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            !./backend/core/migrations
+      - name: Chown user
+        run: |
+          sudo chown -R $USER:$USER $GITHUB_WORKSPACE
+      
+      - name: Check out
+        uses: actions/checkout@v4
 
       - name: Set up
         uses: actions/setup-go@v5
