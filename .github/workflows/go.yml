@@ -17,7 +17,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v4
@@ -25,7 +25,9 @@ jobs:
       - name: Set up
         uses: actions/setup-go@v5
         with:
-          go-version: "1.23.0"
+          go-version: 1.23.0
+          cache-dependency-path: |
+             ./backend/core/go.sum
 
       - name: Lint
         uses: golangci/golangci-lint-action@v6
@@ -38,7 +40,7 @@ jobs:
 
   test:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     services:
       postgres:
@@ -65,7 +67,9 @@ jobs:
       - name: Set up
         uses: actions/setup-go@v5
         with:
-          go-version: "1.23.0"
+          go-version: 1.23.0
+          cache-dependency-path: |
+             ./backend/core/go.sum
 
       - name: Test
         run: go test -v ./...
