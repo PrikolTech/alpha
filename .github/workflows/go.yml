@@ -3,6 +3,10 @@
 
 name: Go
 
+defaults:
+  run:
+    working-directory: "./backend/core"
+
 on:
   push:
     branches: ["*"]
@@ -31,7 +35,6 @@ jobs:
 
       - name: Build
         run: go build -v ./...
-        working-directory: ./backend/core
 
   test:
     needs: build
@@ -64,7 +67,6 @@ jobs:
 
       - name: Test
         run: go test -v ./...
-        working-directory: ./backend/core
         env:
           PGHOST: localhost
           PGPORT: 15432
