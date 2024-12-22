@@ -52,18 +52,15 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-        volumes:
-          - ./backend/core/migrations/psql:/docker-entrypoint-initdb.d
         ports:
           - 15432:5432
 
     steps:
-      - name: Chown user
-        run: |
-          sudo chown -R $USER:$USER $GITHUB_WORKSPACE
-      
       - name: Check out
         uses: actions/checkout@v4
+
+      - name: Run migrations
+        run: find . -iname "./migrations/psql/*.sql" | xargs printf -- ' -f %s' | xargs -t psql postgresql://devuser:devpassword@localhost:15432/devdb
 
       - name: Set up
         uses: actions/setup-go@v5
