@@ -18,7 +18,10 @@ func main() {
 }
 
 func run() int {
-	godotenv.Overload()
+	err := godotenv.Overload()
+	if err != nil {
+		return 1
+	}
 
 	db, err := psql.Connect()
 	if err != nil {
