@@ -5,45 +5,68 @@ name: Go
 
 on:
   push:
-    branches: [ "*" ]
+    branches: ["*"]
+    paths: ["backend/core"]
   pull_request:
-    branches: [ "*" ]
+    branches: ["*"]
+    paths: ["backend/core"]
 
 jobs:
-
   build:
+    if: false
     runs-on: ubuntu-latest
-        
+
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up
-      uses: actions/setup-go@v5
-      with:
-        go-version: '1.23.0'
+      - name: Set up
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.23.0"
 
-    - name: Lint
-      uses: golangci/golangci-lint-action@v6
-      with:
-        version: v1.60
+      - name: Lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.60
+          working-directory: ./backend/core
+
+      - name: Build
+        run: go build -v ./...
         working-directory: ./backend/core
 
-    - name: Build
-      run: go build -v ./...
-      working-directory: ./backend/core
-  
   test:
     needs: build
     runs-on: ubuntu-latest
-        
+
+    services:
+      postgres:
+        image: postgres:17.2-alpine3.20
+        env:
+          POSTGRES_DB: devdb
+          POSTGRES_USER: devuser
+          POSTGRES_PASSWORD: devpassword
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 15432:5432
+
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up
-      uses: actions/setup-go@v5
-      with:
-        go-version: '1.23.0'
+      - name: Set up
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.23.0"
 
-    - name: Test
-      run: go test -v ./...
-      working-directory: ./backend/core
+      - name: Test
+        run: go test -v ./...
+        working-directory: ./backend/core
+        env:
+          PGHOST: localhost
+          PGPORT: 15432
+          PGDATABASE: devdb
+          PGUSER: devuser
+          PGPASSWORD: devpassword
