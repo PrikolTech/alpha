@@ -44,9 +44,9 @@ jobs:
       postgres:
         image: postgres:17.2-alpine3.20
         env:
-          POSTGRES_DB: devdb
-          POSTGRES_USER: devuser
-          POSTGRES_PASSWORD: devpassword
+          POSTGRES_DB: testdb
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpassword
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -60,7 +60,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run migrations
-        run: find ./migrations/psql -iname "*.sql" | xargs printf -- ' -f %s' | xargs -t psql postgresql://devuser:devpassword@localhost:15432/devdb
+        run: find ./migrations/psql -iname "*.sql" | xargs printf -- ' -f %s' | xargs psql postgresql://testuser:testpassword@localhost:15432/testdb -a
 
       - name: Set up
         uses: actions/setup-go@v5
