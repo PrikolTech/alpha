@@ -7,10 +7,10 @@ defaults:
 on:
   push:
     branches: ["*"]
-    paths: ["./backend/core"]
+    paths: ["./backend/core/**"]
   pull_request:
     branches: ["*"]
-    paths: ["./backend/core"]
+    paths: ["./backend/core/**"]
 
 jobs:
   build:
