@@ -4,7 +4,28 @@ package api
 
 import (
 	"time"
+
+	"github.com/google/uuid"
 )
+
+// Доменная ошибка.
+// Ref: #/components/schemas/DomainError
+type DomainError struct {
+	Message string `json:"message"`
+}
+
+// GetMessage returns the value of Message.
+func (s *DomainError) GetMessage() string {
+	return s.Message
+}
+
+// SetMessage sets the value of Message.
+func (s *DomainError) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*DomainError) userCreateRes()  {}
+func (*DomainError) userGetByIdRes() {}
 
 // Мета данные.
 // Ref: #/components/schemas/Meta
@@ -53,6 +74,51 @@ func (s *Meta) SetPer(val int) {
 // SetTotalRecords sets the value of TotalRecords.
 func (s *Meta) SetTotalRecords(val int) {
 	s.TotalRecords = val
+}
+
+// NewNilString returns new NilString with value set to v.
+func NewNilString(v string) NilString {
+	return NilString{
+		Value: v,
+	}
+}
+
+// NilString is nullable string.
+type NilString struct {
+	Value string
+	Null  bool
+}
+
+// SetTo sets value to v.
+func (o *NilString) SetTo(v string) {
+	o.Null = false
+	o.Value = v
+}
+
+// IsSet returns true if value is Null.
+func (o NilString) IsNull() bool { return o.Null }
+
+// SetNull sets value to null.
+func (o *NilString) SetToNull() {
+	o.Null = true
+	var v string
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o NilString) Get() (v string, ok bool) {
+	if o.Null {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o NilString) Or(d string) string {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptDateTime returns new OptDateTime with value set to v.
@@ -147,6 +213,52 @@ func (o OptInt) Or(d int) int {
 	return d
 }
 
+// NewOptMeta returns new OptMeta with value set to v.
+func NewOptMeta(v Meta) OptMeta {
+	return OptMeta{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptMeta is optional Meta.
+type OptMeta struct {
+	Value Meta
+	Set   bool
+}
+
+// IsSet returns true if OptMeta was set.
+func (o OptMeta) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptMeta) Reset() {
+	var v Meta
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptMeta) SetTo(v Meta) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptMeta) Get() (v Meta, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptMeta) Or(d Meta) Meta {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptNilString returns new OptNilString with value set to v.
 func NewOptNilString(v string) OptNilString {
 	return OptNilString{
@@ -210,15 +322,152 @@ func (o OptNilString) Or(d string) string {
 	return d
 }
 
+// Проект.
+// Ref: #/components/schemas/Project
+type Project struct {
+	Name        string      `json:"name"`
+	Description NilString   `json:"description"`
+	Code        string      `json:"code"`
+	CreatedAt   OptDateTime `json:"createdAt"`
+	UpdatedAt   OptDateTime `json:"updatedAt"`
+}
+
+// GetName returns the value of Name.
+func (s *Project) GetName() string {
+	return s.Name
+}
+
+// GetDescription returns the value of Description.
+func (s *Project) GetDescription() NilString {
+	return s.Description
+}
+
+// GetCode returns the value of Code.
+func (s *Project) GetCode() string {
+	return s.Code
+}
+
+// GetCreatedAt returns the value of CreatedAt.
+func (s *Project) GetCreatedAt() OptDateTime {
+	return s.CreatedAt
+}
+
+// GetUpdatedAt returns the value of UpdatedAt.
+func (s *Project) GetUpdatedAt() OptDateTime {
+	return s.UpdatedAt
+}
+
+// SetName sets the value of Name.
+func (s *Project) SetName(val string) {
+	s.Name = val
+}
+
+// SetDescription sets the value of Description.
+func (s *Project) SetDescription(val NilString) {
+	s.Description = val
+}
+
+// SetCode sets the value of Code.
+func (s *Project) SetCode(val string) {
+	s.Code = val
+}
+
+// SetCreatedAt sets the value of CreatedAt.
+func (s *Project) SetCreatedAt(val OptDateTime) {
+	s.CreatedAt = val
+}
+
+// SetUpdatedAt sets the value of UpdatedAt.
+func (s *Project) SetUpdatedAt(val OptDateTime) {
+	s.UpdatedAt = val
+}
+
+// ProjectCreateCreated is response for ProjectCreate operation.
+type ProjectCreateCreated struct{}
+
+// Запрос на создание проекта.
+// Ref: #/components/schemas/ProjectCreateRequest
+type ProjectCreateRequest struct {
+	Name        string    `json:"name"`
+	Description NilString `json:"description"`
+	Code        string    `json:"code"`
+}
+
+// GetName returns the value of Name.
+func (s *ProjectCreateRequest) GetName() string {
+	return s.Name
+}
+
+// GetDescription returns the value of Description.
+func (s *ProjectCreateRequest) GetDescription() NilString {
+	return s.Description
+}
+
+// GetCode returns the value of Code.
+func (s *ProjectCreateRequest) GetCode() string {
+	return s.Code
+}
+
+// SetName sets the value of Name.
+func (s *ProjectCreateRequest) SetName(val string) {
+	s.Name = val
+}
+
+// SetDescription sets the value of Description.
+func (s *ProjectCreateRequest) SetDescription(val NilString) {
+	s.Description = val
+}
+
+// SetCode sets the value of Code.
+func (s *ProjectCreateRequest) SetCode(val string) {
+	s.Code = val
+}
+
+// ProjectDeleteByIdNoContent is response for ProjectDeleteById operation.
+type ProjectDeleteByIdNoContent struct{}
+
+// Список проектов.
+// Ref: #/components/schemas/ProjectGetAllResponse
+type ProjectGetAllResponse struct {
+	Data []Project `json:"data"`
+	Meta OptMeta   `json:"meta"`
+}
+
+// GetData returns the value of Data.
+func (s *ProjectGetAllResponse) GetData() []Project {
+	return s.Data
+}
+
+// GetMeta returns the value of Meta.
+func (s *ProjectGetAllResponse) GetMeta() OptMeta {
+	return s.Meta
+}
+
+// SetData sets the value of Data.
+func (s *ProjectGetAllResponse) SetData(val []Project) {
+	s.Data = val
+}
+
+// SetMeta sets the value of Meta.
+func (s *ProjectGetAllResponse) SetMeta(val OptMeta) {
+	s.Meta = val
+}
+
 // Пользователь.
 // Ref: #/components/schemas/User
 type User struct {
+	ID         uuid.UUID    `json:"id"`
 	Email      string       `json:"email"`
 	FirstName  string       `json:"firstName"`
 	MiddleName OptNilString `json:"middleName"`
 	LastName   string       `json:"lastName"`
-	CreatedAt  OptDateTime  `json:"createdAt"`
-	UpdatedAt  OptDateTime  `json:"updatedAt"`
+	CreatedAt  time.Time    `json:"createdAt"`
+	UpdatedAt  time.Time    `json:"updatedAt"`
+}
+
+// GetID returns the value of ID.
+func (s *User) GetID() uuid.UUID {
+	return s.ID
 }
 
 // GetEmail returns the value of Email.
@@ -242,13 +491,18 @@ func (s *User) GetLastName() string {
 }
 
 // GetCreatedAt returns the value of CreatedAt.
-func (s *User) GetCreatedAt() OptDateTime {
+func (s *User) GetCreatedAt() time.Time {
 	return s.CreatedAt
 }
 
 // GetUpdatedAt returns the value of UpdatedAt.
-func (s *User) GetUpdatedAt() OptDateTime {
+func (s *User) GetUpdatedAt() time.Time {
 	return s.UpdatedAt
+}
+
+// SetID sets the value of ID.
+func (s *User) SetID(val uuid.UUID) {
+	s.ID = val
 }
 
 // SetEmail sets the value of Email.
@@ -272,36 +526,21 @@ func (s *User) SetLastName(val string) {
 }
 
 // SetCreatedAt sets the value of CreatedAt.
-func (s *User) SetCreatedAt(val OptDateTime) {
+func (s *User) SetCreatedAt(val time.Time) {
 	s.CreatedAt = val
 }
 
 // SetUpdatedAt sets the value of UpdatedAt.
-func (s *User) SetUpdatedAt(val OptDateTime) {
+func (s *User) SetUpdatedAt(val time.Time) {
 	s.UpdatedAt = val
 }
+
+func (*User) userGetByIdRes() {}
 
 // UserCreateCreated is response for UserCreate operation.
 type UserCreateCreated struct{}
 
 func (*UserCreateCreated) userCreateRes() {}
-
-// Ref: #/components/schemas/UserCreateDomainError
-type UserCreateDomainError struct {
-	Message string `json:"message"`
-}
-
-// GetMessage returns the value of Message.
-func (s *UserCreateDomainError) GetMessage() string {
-	return s.Message
-}
-
-// SetMessage sets the value of Message.
-func (s *UserCreateDomainError) SetMessage(val string) {
-	s.Message = val
-}
-
-func (*UserCreateDomainError) userCreateRes() {}
 
 // Ref: #/components/schemas/UserCreateRequest
 type UserCreateRequest struct {

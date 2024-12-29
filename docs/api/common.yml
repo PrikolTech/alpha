@@ -35,3 +35,11 @@ components:
           type: integer
         totalRecords:
           type: integer
+    DomainError:
+      type: object
+      description: Доменная ошибка
+      required:
+        - message
+      properties:
+        message:
+          type: string

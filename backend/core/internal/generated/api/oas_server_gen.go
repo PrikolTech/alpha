@@ -8,6 +8,30 @@ import (
 
 // Handler handles operations described by OpenAPI v3 specification.
 type Handler interface {
+	// ProjectCreate implements projectCreate operation.
+	//
+	// Создать новый проект.
+	//
+	// POST /v1/projects
+	ProjectCreate(ctx context.Context, req *ProjectCreateRequest) error
+	// ProjectDeleteById implements projectDeleteById operation.
+	//
+	// Удалить проект по id.
+	//
+	// DELETE /v1/projects/{id}
+	ProjectDeleteById(ctx context.Context, params ProjectDeleteByIdParams) error
+	// ProjectGetAll implements projectGetAll operation.
+	//
+	// Получить все проекты с пагинацией.
+	//
+	// GET /v1/projects
+	ProjectGetAll(ctx context.Context, params ProjectGetAllParams) (*ProjectGetAllResponse, error)
+	// ProjectGetById implements projectGetById operation.
+	//
+	// Получить проект по id.
+	//
+	// GET /v1/projects/{id}
+	ProjectGetById(ctx context.Context, params ProjectGetByIdParams) (*Project, error)
 	// UserCreate implements userCreate operation.
 	//
 	// Создать нового пользователя.
@@ -25,7 +49,7 @@ type Handler interface {
 	// Получить пользователя по id.
 	//
 	// GET /v1/users/{id}
-	UserGetById(ctx context.Context, params UserGetByIdParams) (*User, error)
+	UserGetById(ctx context.Context, params UserGetByIdParams) (UserGetByIdRes, error)
 }
 
 // Server implements http server based on OpenAPI v3 specification and

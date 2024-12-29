@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/PrikolTech/alpha/backend/core/internal/common"
 	"github.com/PrikolTech/alpha/backend/core/internal/generated/api"
 	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_create/domain"
 	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
@@ -22,7 +23,7 @@ func (h *Handler) Handle(ctx context.Context, req *api.UserCreateRequest) (api.U
 	if err != nil {
 		var (
 			validationErr *domain.ValidationError
-			domainErr     *domain.DomainError
+			domainErr     *common.DomainError
 		)
 		if errors.As(err, &validationErr) {
 			res := &api.UserCreateValidationError{
@@ -31,7 +32,7 @@ func (h *Handler) Handle(ctx context.Context, req *api.UserCreateRequest) (api.U
 			}
 			return res, nil
 		} else if errors.As(err, &domainErr) {
-			res := &api.UserCreateDomainError{
+			res := &api.DomainError{
 				Message: err.Error(),
 			}
 			return res, nil

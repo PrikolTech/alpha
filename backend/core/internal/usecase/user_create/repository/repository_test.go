@@ -53,9 +53,10 @@ func TestRepository_ExistsByEmail(t *testing.T) {
 	require.NoError(t, err)
 	defer func() { require.NoError(t, c.Close()) }()
 
-	user, err := test_db.GenerateEntity[test_db.User]()
+	user, err := test_db.GenerateEntity[test_db.User](func(entity *test_db.User) {
+		entity.Email = gofakeit.UUID()
+	})
 	require.NoError(t, err)
-	user.Email = gofakeit.UUID()
 
 	repo := New(c.DB(), trmsqlx.DefaultCtxGetter)
 

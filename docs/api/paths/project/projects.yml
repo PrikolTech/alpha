@@ -58,6 +58,6 @@ components:
         data:
           type: array
           items:
-            $ref: "./common.yml/#/components/schemas/Project"
+            $ref: "./common.yml#/components/schemas/Project"
         meta:
           $ref: "../../common.yml#/components/schemas/Meta"
