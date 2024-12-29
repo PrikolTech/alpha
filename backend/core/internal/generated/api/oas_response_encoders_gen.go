@@ -9,6 +9,44 @@ import (
 	"github.com/go-faster/jx"
 )
 
+func encodeProjectCreateResponse(response *ProjectCreateCreated, w http.ResponseWriter) error {
+	w.WriteHeader(201)
+
+	return nil
+}
+
+func encodeProjectDeleteByIdResponse(response *ProjectDeleteByIdNoContent, w http.ResponseWriter) error {
+	w.WriteHeader(204)
+
+	return nil
+}
+
+func encodeProjectGetAllResponse(response *ProjectGetAllResponse, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(200)
+
+	e := new(jx.Encoder)
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+
+	return nil
+}
+
+func encodeProjectGetByIdResponse(response *Project, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(200)
+
+	e := new(jx.Encoder)
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+
+	return nil
+}
+
 func encodeUserCreateResponse(response UserCreateRes, w http.ResponseWriter) error {
 	switch response := response.(type) {
 	case *UserCreateCreated:
@@ -28,7 +66,7 @@ func encodeUserCreateResponse(response UserCreateRes, w http.ResponseWriter) err
 
 		return nil
 
-	case *UserCreateDomainError:
+	case *DomainError:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(409)
 
@@ -66,23 +104,41 @@ func encodeUserGetAllResponse(response *UserGetAllResponse, w http.ResponseWrite
 	return nil
 }
 
-func encodeUserGetByIdResponse(response *User, w http.ResponseWriter) error {
-	if err := func() error {
-		if err := response.Validate(); err != nil {
-			return err
+func encodeUserGetByIdResponse(response UserGetByIdRes, w http.ResponseWriter) error {
+	switch response := response.(type) {
+	case *User:
+		if err := func() error {
+			if err := response.Validate(); err != nil {
+				return err
+			}
+			return nil
+		}(); err != nil {
+			return errors.Wrap(err, "validate")
 		}
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(200)
+
+		e := new(jx.Encoder)
+		response.Encode(e)
+		if _, err := e.WriteTo(w); err != nil {
+			return errors.Wrap(err, "write")
+		}
+
 		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "validate")
-	}
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.WriteHeader(200)
 
-	e := new(jx.Encoder)
-	response.Encode(e)
-	if _, err := e.WriteTo(w); err != nil {
-		return errors.Wrap(err, "write")
-	}
+	case *DomainError:
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(404)
 
-	return nil
+		e := new(jx.Encoder)
+		response.Encode(e)
+		if _, err := e.WriteTo(w); err != nil {
+			return errors.Wrap(err, "write")
+		}
+
+		return nil
+
+	default:
+		return errors.Errorf("unexpected response type: %T", response)
+	}
 }

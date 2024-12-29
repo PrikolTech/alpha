@@ -14,6 +14,12 @@ paths:
             application/json:
               schema:
                 $ref: "./common.yml#/components/schemas/User"
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "../../common.yml#/components/schemas/DomainError"
 
 components:
   parameters:

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/PrikolTech/alpha/backend/core/internal/common"
 	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_create/domain"
 	"github.com/avito-tech/go-transaction-manager/trm/v2"
 )
@@ -28,7 +29,7 @@ func (u *Usecase) Handle(ctx context.Context, in domain.UserCreateIn) error {
 			return fmt.Errorf("user exists by email: %w", err)
 		}
 		if exists {
-			return domain.NewDomainError("user with email exists")
+			return common.NewDomainError("user with email exists")
 		}
 
 		err = u.userRepo.Create(ctx, in)

@@ -4,3 +4,7 @@ package api
 type UserCreateRes interface {
 	userCreateRes()
 }
+
+type UserGetByIdRes interface {
+	userGetByIdRes()
+}

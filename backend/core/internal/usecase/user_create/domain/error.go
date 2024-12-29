@@ -21,15 +21,3 @@ func NewValidationError(field string, err error) *ValidationError {
 func (e *ValidationError) Error() string {
 	return fmt.Sprintf("value of field '%s' is invalid: %s", e.Field, e.Reason)
 }
-
-type DomainError struct {
-	Msg string
-}
-
-func NewDomainError(msg string) *DomainError {
-	return &DomainError{Msg: msg}
-}
-
-func (e *DomainError) Error() string {
-	return e.Msg
-}

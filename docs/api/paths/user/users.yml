@@ -25,7 +25,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserCreateDomainError"
+                $ref: "../../common.yml#/components/schemas/DomainError"
 
     get:
       tags:
@@ -54,13 +54,6 @@ components:
         field:
           type: string
         reason:
-          type: string
-    UserCreateDomainError:
-      type: object
-      required:
-        - message
-      properties:
-        message:
           type: string
     UserCreateRequest:
       type: object

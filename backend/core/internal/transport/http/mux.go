@@ -7,10 +7,12 @@ import (
 
 	"github.com/PrikolTech/alpha/backend/core/internal/generated/api"
 	user_create_handler "github.com/PrikolTech/alpha/backend/core/internal/transport/http/user_create"
+	user_get_by_id_handler "github.com/PrikolTech/alpha/backend/core/internal/transport/http/user_get_by_id"
 )
 
 type Handlers struct {
-	UserCreate *user_create_handler.Handler
+	UserCreate  *user_create_handler.Handler
+	UserGetById *user_get_by_id_handler.Handler
 }
 
 type mux struct {
@@ -34,4 +36,8 @@ func New(handlers Handlers) *api.Server {
 
 func (h mux) UserCreate(ctx context.Context, req *api.UserCreateRequest) (api.UserCreateRes, error) {
 	return h.handlers.UserCreate.Handle(ctx, req)
+}
+
+func (h mux) UserGetById(ctx context.Context, params api.UserGetByIdParams) (api.UserGetByIdRes, error) {
+	return h.handlers.UserGetById.Handle(ctx, params)
 }

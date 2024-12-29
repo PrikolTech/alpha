@@ -13,6 +13,42 @@ type UnimplementedHandler struct{}
 
 var _ Handler = UnimplementedHandler{}
 
+// ProjectCreate implements projectCreate operation.
+//
+// Создать новый проект.
+//
+// POST /v1/projects
+func (UnimplementedHandler) ProjectCreate(ctx context.Context, req *ProjectCreateRequest) error {
+	return ht.ErrNotImplemented
+}
+
+// ProjectDeleteById implements projectDeleteById operation.
+//
+// Удалить проект по id.
+//
+// DELETE /v1/projects/{id}
+func (UnimplementedHandler) ProjectDeleteById(ctx context.Context, params ProjectDeleteByIdParams) error {
+	return ht.ErrNotImplemented
+}
+
+// ProjectGetAll implements projectGetAll operation.
+//
+// Получить все проекты с пагинацией.
+//
+// GET /v1/projects
+func (UnimplementedHandler) ProjectGetAll(ctx context.Context, params ProjectGetAllParams) (r *ProjectGetAllResponse, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// ProjectGetById implements projectGetById operation.
+//
+// Получить проект по id.
+//
+// GET /v1/projects/{id}
+func (UnimplementedHandler) ProjectGetById(ctx context.Context, params ProjectGetByIdParams) (r *Project, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // UserCreate implements userCreate operation.
 //
 // Создать нового пользователя.
@@ -36,6 +72,6 @@ func (UnimplementedHandler) UserGetAll(ctx context.Context, params UserGetAllPar
 // Получить пользователя по id.
 //
 // GET /v1/users/{id}
-func (UnimplementedHandler) UserGetById(ctx context.Context, params UserGetByIdParams) (r *User, _ error) {
+func (UnimplementedHandler) UserGetById(ctx context.Context, params UserGetByIdParams) (r UserGetByIdRes, _ error) {
 	return r, ht.ErrNotImplemented
 }

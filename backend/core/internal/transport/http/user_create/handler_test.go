@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/PrikolTech/alpha/backend/core/internal/common"
 	"github.com/PrikolTech/alpha/backend/core/internal/generated/api"
 	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_create/domain"
 	"github.com/brianvoe/gofakeit/v7"
@@ -29,7 +30,7 @@ func TestHandler_Handle(t *testing.T) {
 		require.IsType(t, &api.UserCreateCreated{}, res)
 	})
 
-	t.Run("UserUsecaseValidationError", func(t *testing.T) {
+	t.Run("userUsecase_ValidationError", func(t *testing.T) {
 		userUsecase := NewMockuserUsecase(ctrl)
 		userUsecase.EXPECT().Handle(ctx, gomock.Any()).Return(&domain.ValidationError{
 			Reason: gofakeit.Error(),
@@ -42,18 +43,18 @@ func TestHandler_Handle(t *testing.T) {
 		require.IsType(t, &api.UserCreateValidationError{}, res)
 	})
 
-	t.Run("UserUsecaseDomainError", func(t *testing.T) {
+	t.Run("userUsecase_DomainError", func(t *testing.T) {
 		userUsecase := NewMockuserUsecase(ctrl)
-		userUsecase.EXPECT().Handle(ctx, gomock.Any()).Return(&domain.DomainError{})
+		userUsecase.EXPECT().Handle(ctx, gomock.Any()).Return(&common.DomainError{})
 
 		handler := New(userUsecase)
 
 		res, err := handler.Handle(ctx, &api.UserCreateRequest{})
 		require.NoError(t, err)
-		require.IsType(t, &api.UserCreateDomainError{}, res)
+		require.IsType(t, &api.DomainError{}, res)
 	})
 
-	t.Run("UserUsecaseInternalError", func(t *testing.T) {
+	t.Run("userUsecase_InternalError", func(t *testing.T) {
 		userUsecase := NewMockuserUsecase(ctrl)
 		userUsecase.EXPECT().Handle(ctx, gomock.Any()).Return(gofakeit.Error())
 

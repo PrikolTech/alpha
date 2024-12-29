@@ -49,52 +49,123 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 		switch elem[0] {
-		case '/': // Prefix: "/v1/users"
+		case '/': // Prefix: "/v1/"
 			origElem := elem
-			if l := len("/v1/users"); len(elem) >= l && elem[0:l] == "/v1/users" {
+			if l := len("/v1/"); len(elem) >= l && elem[0:l] == "/v1/" {
 				elem = elem[l:]
 			} else {
 				break
 			}
 
 			if len(elem) == 0 {
-				switch r.Method {
-				case "GET":
-					s.handleUserGetAllRequest([0]string{}, elemIsEscaped, w, r)
-				case "POST":
-					s.handleUserCreateRequest([0]string{}, elemIsEscaped, w, r)
-				default:
-					s.notAllowed(w, r, "GET,POST")
-				}
-
-				return
+				break
 			}
 			switch elem[0] {
-			case '/': // Prefix: "/"
+			case 'p': // Prefix: "projects"
 				origElem := elem
-				if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+				if l := len("projects"); len(elem) >= l && elem[0:l] == "projects" {
 					elem = elem[l:]
 				} else {
 					break
 				}
 
-				// Param: "id"
-				// Leaf parameter
-				args[0] = elem
-				elem = ""
-
 				if len(elem) == 0 {
-					// Leaf node.
 					switch r.Method {
 					case "GET":
-						s.handleUserGetByIdRequest([1]string{
-							args[0],
-						}, elemIsEscaped, w, r)
+						s.handleProjectGetAllRequest([0]string{}, elemIsEscaped, w, r)
+					case "POST":
+						s.handleProjectCreateRequest([0]string{}, elemIsEscaped, w, r)
 					default:
-						s.notAllowed(w, r, "GET")
+						s.notAllowed(w, r, "GET,POST")
 					}
 
 					return
+				}
+				switch elem[0] {
+				case '/': // Prefix: "/"
+					origElem := elem
+					if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					// Param: "id"
+					// Leaf parameter
+					args[0] = elem
+					elem = ""
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch r.Method {
+						case "DELETE":
+							s.handleProjectDeleteByIdRequest([1]string{
+								args[0],
+							}, elemIsEscaped, w, r)
+						case "GET":
+							s.handleProjectGetByIdRequest([1]string{
+								args[0],
+							}, elemIsEscaped, w, r)
+						default:
+							s.notAllowed(w, r, "DELETE,GET")
+						}
+
+						return
+					}
+
+					elem = origElem
+				}
+
+				elem = origElem
+			case 'u': // Prefix: "users"
+				origElem := elem
+				if l := len("users"); len(elem) >= l && elem[0:l] == "users" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					switch r.Method {
+					case "GET":
+						s.handleUserGetAllRequest([0]string{}, elemIsEscaped, w, r)
+					case "POST":
+						s.handleUserCreateRequest([0]string{}, elemIsEscaped, w, r)
+					default:
+						s.notAllowed(w, r, "GET,POST")
+					}
+
+					return
+				}
+				switch elem[0] {
+				case '/': // Prefix: "/"
+					origElem := elem
+					if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					// Param: "id"
+					// Leaf parameter
+					args[0] = elem
+					elem = ""
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch r.Method {
+						case "GET":
+							s.handleUserGetByIdRequest([1]string{
+								args[0],
+							}, elemIsEscaped, w, r)
+						default:
+							s.notAllowed(w, r, "GET")
+						}
+
+						return
+					}
+
+					elem = origElem
 				}
 
 				elem = origElem
@@ -181,64 +252,151 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 			break
 		}
 		switch elem[0] {
-		case '/': // Prefix: "/v1/users"
+		case '/': // Prefix: "/v1/"
 			origElem := elem
-			if l := len("/v1/users"); len(elem) >= l && elem[0:l] == "/v1/users" {
+			if l := len("/v1/"); len(elem) >= l && elem[0:l] == "/v1/" {
 				elem = elem[l:]
 			} else {
 				break
 			}
 
 			if len(elem) == 0 {
-				switch method {
-				case "GET":
-					r.name = UserGetAllOperation
-					r.summary = "Получить всех пользователей"
-					r.operationID = "userGetAll"
-					r.pathPattern = "/v1/users"
-					r.args = args
-					r.count = 0
-					return r, true
-				case "POST":
-					r.name = UserCreateOperation
-					r.summary = "Создать нового пользователя"
-					r.operationID = "userCreate"
-					r.pathPattern = "/v1/users"
-					r.args = args
-					r.count = 0
-					return r, true
-				default:
-					return
-				}
+				break
 			}
 			switch elem[0] {
-			case '/': // Prefix: "/"
+			case 'p': // Prefix: "projects"
 				origElem := elem
-				if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+				if l := len("projects"); len(elem) >= l && elem[0:l] == "projects" {
 					elem = elem[l:]
 				} else {
 					break
 				}
 
-				// Param: "id"
-				// Leaf parameter
-				args[0] = elem
-				elem = ""
-
 				if len(elem) == 0 {
-					// Leaf node.
 					switch method {
 					case "GET":
-						r.name = UserGetByIdOperation
-						r.summary = "Получить пользователя по id"
-						r.operationID = "userGetById"
-						r.pathPattern = "/v1/users/{id}"
+						r.name = ProjectGetAllOperation
+						r.summary = "Получить все проекты с пагинацией"
+						r.operationID = "projectGetAll"
+						r.pathPattern = "/v1/projects"
 						r.args = args
-						r.count = 1
+						r.count = 0
+						return r, true
+					case "POST":
+						r.name = ProjectCreateOperation
+						r.summary = "Создать новый проект"
+						r.operationID = "projectCreate"
+						r.pathPattern = "/v1/projects"
+						r.args = args
+						r.count = 0
 						return r, true
 					default:
 						return
 					}
+				}
+				switch elem[0] {
+				case '/': // Prefix: "/"
+					origElem := elem
+					if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					// Param: "id"
+					// Leaf parameter
+					args[0] = elem
+					elem = ""
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch method {
+						case "DELETE":
+							r.name = ProjectDeleteByIdOperation
+							r.summary = "Удалить проект по id"
+							r.operationID = "projectDeleteById"
+							r.pathPattern = "/v1/projects/{id}"
+							r.args = args
+							r.count = 1
+							return r, true
+						case "GET":
+							r.name = ProjectGetByIdOperation
+							r.summary = "Получить проект по id"
+							r.operationID = "projectGetById"
+							r.pathPattern = "/v1/projects/{id}"
+							r.args = args
+							r.count = 1
+							return r, true
+						default:
+							return
+						}
+					}
+
+					elem = origElem
+				}
+
+				elem = origElem
+			case 'u': // Prefix: "users"
+				origElem := elem
+				if l := len("users"); len(elem) >= l && elem[0:l] == "users" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					switch method {
+					case "GET":
+						r.name = UserGetAllOperation
+						r.summary = "Получить всех пользователей"
+						r.operationID = "userGetAll"
+						r.pathPattern = "/v1/users"
+						r.args = args
+						r.count = 0
+						return r, true
+					case "POST":
+						r.name = UserCreateOperation
+						r.summary = "Создать нового пользователя"
+						r.operationID = "userCreate"
+						r.pathPattern = "/v1/users"
+						r.args = args
+						r.count = 0
+						return r, true
+					default:
+						return
+					}
+				}
+				switch elem[0] {
+				case '/': // Prefix: "/"
+					origElem := elem
+					if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					// Param: "id"
+					// Leaf parameter
+					args[0] = elem
+					elem = ""
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch method {
+						case "GET":
+							r.name = UserGetByIdOperation
+							r.summary = "Получить пользователя по id"
+							r.operationID = "userGetById"
+							r.pathPattern = "/v1/users/{id}"
+							r.args = args
+							r.count = 1
+							return r, true
+						default:
+							return
+						}
+					}
+
+					elem = origElem
 				}
 
 				elem = origElem
