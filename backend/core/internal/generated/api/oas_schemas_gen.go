@@ -30,9 +30,13 @@ func (*DomainError) userGetByIdRes() {}
 // Мета данные.
 // Ref: #/components/schemas/Meta
 type Meta struct {
-	Page         int `json:"page"`
-	TotalPages   int `json:"totalPages"`
-	Per          int `json:"per"`
+	// Номер страницы.
+	Page int `json:"page"`
+	// Общее количество страниц.
+	TotalPages int `json:"totalPages"`
+	// Количество записей на странице.
+	PerPage OptInt `json:"perPage"`
+	// Общее количество записей.
 	TotalRecords int `json:"totalRecords"`
 }
 
@@ -46,9 +50,9 @@ func (s *Meta) GetTotalPages() int {
 	return s.TotalPages
 }
 
-// GetPer returns the value of Per.
-func (s *Meta) GetPer() int {
-	return s.Per
+// GetPerPage returns the value of PerPage.
+func (s *Meta) GetPerPage() OptInt {
+	return s.PerPage
 }
 
 // GetTotalRecords returns the value of TotalRecords.
@@ -66,9 +70,9 @@ func (s *Meta) SetTotalPages(val int) {
 	s.TotalPages = val
 }
 
-// SetPer sets the value of Per.
-func (s *Meta) SetPer(val int) {
-	s.Per = val
+// SetPerPage sets the value of PerPage.
+func (s *Meta) SetPerPage(val OptInt) {
+	s.PerPage = val
 }
 
 // SetTotalRecords sets the value of TotalRecords.

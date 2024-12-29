@@ -229,9 +229,9 @@ func (s *Server) handleProjectGetAllRequest(args [0]string, argsEscaped bool, w 
 					In:   "query",
 				}: params.Page,
 				{
-					Name: "per",
+					Name: "perPage",
 					In:   "query",
-				}: params.Per,
+				}: params.PerPage,
 			},
 			Raw: r,
 		}
@@ -476,9 +476,9 @@ func (s *Server) handleUserGetAllRequest(args [0]string, argsEscaped bool, w htt
 					In:   "query",
 				}: params.Page,
 				{
-					Name: "per",
+					Name: "perPage",
 					In:   "query",
-				}: params.Per,
+				}: params.PerPage,
 			},
 			Raw: r,
 		}

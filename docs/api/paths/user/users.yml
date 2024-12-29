@@ -76,7 +76,7 @@ components:
       type: object
       description: Список пользователей
       required:
-        - users
+        - data
         - meta
       properties:
         data:

@@ -2,15 +2,15 @@ components:
   parameters:
     Page:
       name: page
-      description: номер страницы
+      description: Номер страницы
       in: query
       required: false
       schema:
         type: integer
         default: 1
     PerPage:
-      name: per
-      description: количество записей на странице
+      name: perPage
+      description: Количество записей на странице
       in: query
       required: false
       schema:
@@ -29,12 +29,16 @@ components:
       properties:
         page:
           type: integer
+          description: Номер страницы
         totalPages:
           type: integer
-        per:
+          description: Общее количество страниц
+        perPage:
           type: integer
+          description: Количество записей на странице
         totalRecords:
           type: integer
+          description: Общее количество записей
     DomainError:
       type: object
       description: Доменная ошибка

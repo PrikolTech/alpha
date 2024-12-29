@@ -87,7 +87,7 @@ type ProjectGetAllParams struct {
 	// Номер страницы.
 	Page OptInt
 	// Количество записей на странице.
-	Per OptInt
+	PerPage OptInt
 }
 
 func unpackProjectGetAllParams(packed middleware.Parameters) (params ProjectGetAllParams) {
@@ -102,11 +102,11 @@ func unpackProjectGetAllParams(packed middleware.Parameters) (params ProjectGetA
 	}
 	{
 		key := middleware.ParameterKey{
-			Name: "per",
+			Name: "perPage",
 			In:   "query",
 		}
 		if v, ok := packed[key]; ok {
-			params.Per = v.(OptInt)
+			params.PerPage = v.(OptInt)
 		}
 	}
 	return params
@@ -160,22 +160,22 @@ func decodeProjectGetAllParams(args [0]string, argsEscaped bool, r *http.Request
 			Err:  err,
 		}
 	}
-	// Set default value for query: per.
+	// Set default value for query: perPage.
 	{
 		val := int(20)
-		params.Per.SetTo(val)
+		params.PerPage.SetTo(val)
 	}
-	// Decode query: per.
+	// Decode query: perPage.
 	if err := func() error {
 		cfg := uri.QueryParameterDecodingConfig{
-			Name:    "per",
+			Name:    "perPage",
 			Style:   uri.QueryStyleForm,
 			Explode: true,
 		}
 
 		if err := q.HasParam(cfg); err == nil {
 			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
-				var paramsDotPerVal int
+				var paramsDotPerPageVal int
 				if err := func() error {
 					val, err := d.DecodeValue()
 					if err != nil {
@@ -187,12 +187,12 @@ func decodeProjectGetAllParams(args [0]string, argsEscaped bool, r *http.Request
 						return err
 					}
 
-					paramsDotPerVal = c
+					paramsDotPerPageVal = c
 					return nil
 				}(); err != nil {
 					return err
 				}
-				params.Per.SetTo(paramsDotPerVal)
+				params.PerPage.SetTo(paramsDotPerPageVal)
 				return nil
 			}); err != nil {
 				return err
@@ -201,7 +201,7 @@ func decodeProjectGetAllParams(args [0]string, argsEscaped bool, r *http.Request
 		return nil
 	}(); err != nil {
 		return params, &ogenerrors.DecodeParamError{
-			Name: "per",
+			Name: "perPage",
 			In:   "query",
 			Err:  err,
 		}
@@ -280,7 +280,7 @@ type UserGetAllParams struct {
 	// Номер страницы.
 	Page OptInt
 	// Количество записей на странице.
-	Per OptInt
+	PerPage OptInt
 }
 
 func unpackUserGetAllParams(packed middleware.Parameters) (params UserGetAllParams) {
@@ -295,11 +295,11 @@ func unpackUserGetAllParams(packed middleware.Parameters) (params UserGetAllPara
 	}
 	{
 		key := middleware.ParameterKey{
-			Name: "per",
+			Name: "perPage",
 			In:   "query",
 		}
 		if v, ok := packed[key]; ok {
-			params.Per = v.(OptInt)
+			params.PerPage = v.(OptInt)
 		}
 	}
 	return params
@@ -353,22 +353,22 @@ func decodeUserGetAllParams(args [0]string, argsEscaped bool, r *http.Request) (
 			Err:  err,
 		}
 	}
-	// Set default value for query: per.
+	// Set default value for query: perPage.
 	{
 		val := int(20)
-		params.Per.SetTo(val)
+		params.PerPage.SetTo(val)
 	}
-	// Decode query: per.
+	// Decode query: perPage.
 	if err := func() error {
 		cfg := uri.QueryParameterDecodingConfig{
-			Name:    "per",
+			Name:    "perPage",
 			Style:   uri.QueryStyleForm,
 			Explode: true,
 		}
 
 		if err := q.HasParam(cfg); err == nil {
 			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
-				var paramsDotPerVal int
+				var paramsDotPerPageVal int
 				if err := func() error {
 					val, err := d.DecodeValue()
 					if err != nil {
@@ -380,12 +380,12 @@ func decodeUserGetAllParams(args [0]string, argsEscaped bool, r *http.Request) (
 						return err
 					}
 
-					paramsDotPerVal = c
+					paramsDotPerPageVal = c
 					return nil
 				}(); err != nil {
 					return err
 				}
-				params.Per.SetTo(paramsDotPerVal)
+				params.PerPage.SetTo(paramsDotPerPageVal)
 				return nil
 			}); err != nil {
 				return err
@@ -394,7 +394,7 @@ func decodeUserGetAllParams(args [0]string, argsEscaped bool, r *http.Request) (
 		return nil
 	}(); err != nil {
 		return params, &ogenerrors.DecodeParamError{
-			Name: "per",
+			Name: "perPage",
 			In:   "query",
 			Err:  err,
 		}

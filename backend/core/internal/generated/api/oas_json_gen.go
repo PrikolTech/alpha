@@ -128,8 +128,10 @@ func (s *Meta) encodeFields(e *jx.Encoder) {
 		e.Int(s.TotalPages)
 	}
 	{
-		e.FieldStart("per")
-		e.Int(s.Per)
+		if s.PerPage.Set {
+			e.FieldStart("perPage")
+			s.PerPage.Encode(e)
+		}
 	}
 	{
 		e.FieldStart("totalRecords")
@@ -140,7 +142,7 @@ func (s *Meta) encodeFields(e *jx.Encoder) {
 var jsonFieldsNameOfMeta = [4]string{
 	0: "page",
 	1: "totalPages",
-	2: "per",
+	2: "perPage",
 	3: "totalRecords",
 }
 
@@ -177,17 +179,15 @@ func (s *Meta) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"totalPages\"")
 			}
-		case "per":
-			requiredBitSet[0] |= 1 << 2
+		case "perPage":
 			if err := func() error {
-				v, err := d.Int()
-				s.Per = int(v)
-				if err != nil {
+				s.PerPage.Reset()
+				if err := s.PerPage.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"per\"")
+				return errors.Wrap(err, "decode field \"perPage\"")
 			}
 		case "totalRecords":
 			requiredBitSet[0] |= 1 << 3
@@ -211,7 +211,7 @@ func (s *Meta) Decode(d *jx.Decoder) error {
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [1]uint8{
-		0b00001111,
+		0b00001011,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.
@@ -336,6 +336,41 @@ func (s OptDateTime) MarshalJSON() ([]byte, error) {
 func (s *OptDateTime) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d, json.DecodeDateTime)
+}
+
+// Encode encodes int as json.
+func (o OptInt) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	e.Int(int(o.Value))
+}
+
+// Decode decodes int from json.
+func (o *OptInt) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptInt to nil")
+	}
+	o.Set = true
+	v, err := d.Int()
+	if err != nil {
+		return err
+	}
+	o.Value = int(v)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptInt) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptInt) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
 }
 
 // Encode encodes Meta as json.
@@ -1271,14 +1306,12 @@ func (s *UserGetAllResponse) Encode(e *jx.Encoder) {
 // encodeFields encodes fields.
 func (s *UserGetAllResponse) encodeFields(e *jx.Encoder) {
 	{
-		if s.Data != nil {
-			e.FieldStart("data")
-			e.ArrStart()
-			for _, elem := range s.Data {
-				elem.Encode(e)
-			}
-			e.ArrEnd()
+		e.FieldStart("data")
+		e.ArrStart()
+		for _, elem := range s.Data {
+			elem.Encode(e)
 		}
+		e.ArrEnd()
 	}
 	{
 		e.FieldStart("meta")
@@ -1301,6 +1334,7 @@ func (s *UserGetAllResponse) Decode(d *jx.Decoder) error {
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "data":
+			requiredBitSet[0] |= 1 << 0
 			if err := func() error {
 				s.Data = make([]User, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
@@ -1337,7 +1371,7 @@ func (s *UserGetAllResponse) Decode(d *jx.Decoder) error {
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [1]uint8{
-		0b00000010,
+		0b00000011,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.
