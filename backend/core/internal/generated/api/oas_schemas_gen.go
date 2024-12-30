@@ -326,6 +326,52 @@ func (o OptNilString) Or(d string) string {
 	return d
 }
 
+// NewOptString returns new OptString with value set to v.
+func NewOptString(v string) OptString {
+	return OptString{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptString is optional string.
+type OptString struct {
+	Value string
+	Set   bool
+}
+
+// IsSet returns true if OptString was set.
+func (o OptString) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptString) Reset() {
+	var v string
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptString) SetTo(v string) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptString) Get() (v string, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptString) Or(d string) string {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // Проект.
 // Ref: #/components/schemas/Project
 type Project struct {
@@ -623,28 +669,28 @@ func (s *UserCreateValidationError) SetReason(val string) {
 func (*UserCreateValidationError) userCreateRes() {}
 
 // Список пользователей.
-// Ref: #/components/schemas/UserGetAllResponse
-type UserGetAllResponse struct {
+// Ref: #/components/schemas/UserListResponse
+type UserListResponse struct {
 	Data []User `json:"data"`
 	Meta Meta   `json:"meta"`
 }
 
 // GetData returns the value of Data.
-func (s *UserGetAllResponse) GetData() []User {
+func (s *UserListResponse) GetData() []User {
 	return s.Data
 }
 
 // GetMeta returns the value of Meta.
-func (s *UserGetAllResponse) GetMeta() Meta {
+func (s *UserListResponse) GetMeta() Meta {
 	return s.Meta
 }
 
 // SetData sets the value of Data.
-func (s *UserGetAllResponse) SetData(val []User) {
+func (s *UserListResponse) SetData(val []User) {
 	s.Data = val
 }
 
 // SetMeta sets the value of Meta.
-func (s *UserGetAllResponse) SetMeta(val Meta) {
+func (s *UserListResponse) SetMeta(val Meta) {
 	s.Meta = val
 }

@@ -23,7 +23,7 @@ type Meta struct {
 	TotalRecords int
 }
 
-type UserGetAllOut struct {
+type UserListOut struct {
 	Data []User
 	Meta Meta
 }

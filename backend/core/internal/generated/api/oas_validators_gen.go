@@ -72,7 +72,7 @@ func (s *UserCreateRequest) Validate() error {
 	return nil
 }
 
-func (s *UserGetAllResponse) Validate() error {
+func (s *UserListResponse) Validate() error {
 	if s == nil {
 		return validate.ErrNilPointer
 	}

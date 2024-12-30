@@ -13,7 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
-	domain "github.com/PrikolTech/alpha/backend/core/internal/usecase/user_get_all/domain"
+	domain "github.com/PrikolTech/alpha/backend/core/internal/usecase/user_list/domain"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -41,19 +41,19 @@ func (m *MockuserRepo) EXPECT() *MockuserRepoMockRecorder {
 	return m.recorder
 }
 
-// GetAll mocks base method.
-func (m *MockuserRepo) GetAll(ctx context.Context, in domain.UserGetAllIn) ([]domain.User, error) {
+// Get mocks base method.
+func (m *MockuserRepo) Get(ctx context.Context, in domain.UserListIn) ([]domain.User, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAll", ctx, in)
+	ret := m.ctrl.Call(m, "Get", ctx, in)
 	ret0, _ := ret[0].([]domain.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetAll indicates an expected call of GetAll.
-func (mr *MockuserRepoMockRecorder) GetAll(ctx, in any) *gomock.Call {
+// Get indicates an expected call of Get.
+func (mr *MockuserRepoMockRecorder) Get(ctx, in any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAll", reflect.TypeOf((*MockuserRepo)(nil).GetAll), ctx, in)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockuserRepo)(nil).Get), ctx, in)
 }
 
 // GetTotalCount mocks base method.

@@ -1,13 +1,24 @@
 package domain
 
+import "time"
+
 const MaxPerPage = 500
 
-type UserGetAllIn struct {
+type UserListIn struct {
 	Page    int
 	PerPage int
+	Filters UserListFilters
 }
 
-func (i *UserGetAllIn) Validate() error {
+type UserListFilters struct {
+	Email      *string
+	FirstName  *string
+	MiddleName *string
+	LastName   *string
+	CreatedAt  *time.Time
+}
+
+func (i *UserListIn) Validate() error {
 	if i.Page < 1 {
 		return NewValidationError("page", ErrPageValue)
 	}

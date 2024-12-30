@@ -5,10 +5,10 @@ package usecase
 import (
 	"context"
 
-	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_get_all/domain"
+	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_list/domain"
 )
 
 type userRepo interface {
-	GetAll(ctx context.Context, in domain.UserGetAllIn) ([]domain.User, error)
+	Get(ctx context.Context, in domain.UserListIn) ([]domain.User, error)
 	GetTotalCount(ctx context.Context) (int, error)
 }

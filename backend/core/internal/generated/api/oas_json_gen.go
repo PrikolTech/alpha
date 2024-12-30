@@ -1297,14 +1297,14 @@ func (s *UserCreateValidationError) UnmarshalJSON(data []byte) error {
 }
 
 // Encode implements json.Marshaler.
-func (s *UserGetAllResponse) Encode(e *jx.Encoder) {
+func (s *UserListResponse) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields encodes fields.
-func (s *UserGetAllResponse) encodeFields(e *jx.Encoder) {
+func (s *UserListResponse) encodeFields(e *jx.Encoder) {
 	{
 		e.FieldStart("data")
 		e.ArrStart()
@@ -1319,15 +1319,15 @@ func (s *UserGetAllResponse) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfUserGetAllResponse = [2]string{
+var jsonFieldsNameOfUserListResponse = [2]string{
 	0: "data",
 	1: "meta",
 }
 
-// Decode decodes UserGetAllResponse from json.
-func (s *UserGetAllResponse) Decode(d *jx.Decoder) error {
+// Decode decodes UserListResponse from json.
+func (s *UserListResponse) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode UserGetAllResponse to nil")
+		return errors.New("invalid: unable to decode UserListResponse to nil")
 	}
 	var requiredBitSet [1]uint8
 
@@ -1366,7 +1366,7 @@ func (s *UserGetAllResponse) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode UserGetAllResponse")
+		return errors.Wrap(err, "decode UserListResponse")
 	}
 	// Validate required fields.
 	var failures []validate.FieldError
@@ -1383,8 +1383,8 @@ func (s *UserGetAllResponse) Decode(d *jx.Decoder) error {
 				bitIdx := bits.TrailingZeros8(result)
 				fieldIdx := i*8 + bitIdx
 				var name string
-				if fieldIdx < len(jsonFieldsNameOfUserGetAllResponse) {
-					name = jsonFieldsNameOfUserGetAllResponse[fieldIdx]
+				if fieldIdx < len(jsonFieldsNameOfUserListResponse) {
+					name = jsonFieldsNameOfUserListResponse[fieldIdx]
 				} else {
 					name = strconv.Itoa(fieldIdx)
 				}
@@ -1405,14 +1405,14 @@ func (s *UserGetAllResponse) Decode(d *jx.Decoder) error {
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *UserGetAllResponse) MarshalJSON() ([]byte, error) {
+func (s *UserListResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *UserGetAllResponse) UnmarshalJSON(data []byte) error {
+func (s *UserListResponse) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }

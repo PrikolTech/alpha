@@ -58,20 +58,20 @@ func (UnimplementedHandler) UserCreate(ctx context.Context, req *UserCreateReque
 	return r, ht.ErrNotImplemented
 }
 
-// UserGetAll implements userGetAll operation.
-//
-// Получить всех пользователей.
-//
-// GET /v1/users
-func (UnimplementedHandler) UserGetAll(ctx context.Context, params UserGetAllParams) (r *UserGetAllResponse, _ error) {
-	return r, ht.ErrNotImplemented
-}
-
 // UserGetById implements userGetById operation.
 //
 // Получить пользователя по id.
 //
 // GET /v1/users/{id}
 func (UnimplementedHandler) UserGetById(ctx context.Context, params UserGetByIdParams) (r UserGetByIdRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// UserList implements userList operation.
+//
+// Получить список пользователей.
+//
+// GET /v1/users
+func (UnimplementedHandler) UserList(ctx context.Context, params UserListParams) (r *UserListResponse, _ error) {
 	return r, ht.ErrNotImplemented
 }

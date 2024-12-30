@@ -434,91 +434,6 @@ func (s *Server) handleUserCreateRequest(args [0]string, argsEscaped bool, w htt
 	}
 }
 
-// handleUserGetAllRequest handles userGetAll operation.
-//
-// Получить всех пользователей.
-//
-// GET /v1/users
-func (s *Server) handleUserGetAllRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
-	statusWriter := &codeRecorder{ResponseWriter: w}
-	w = statusWriter
-	ctx := r.Context()
-
-	var (
-		err          error
-		opErrContext = ogenerrors.OperationContext{
-			Name: UserGetAllOperation,
-			ID:   "userGetAll",
-		}
-	)
-	params, err := decodeUserGetAllParams(args, argsEscaped, r)
-	if err != nil {
-		err = &ogenerrors.DecodeParamsError{
-			OperationContext: opErrContext,
-			Err:              err,
-		}
-		defer recordError("DecodeParams", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
-		return
-	}
-
-	var response *UserGetAllResponse
-	if m := s.cfg.Middleware; m != nil {
-		mreq := middleware.Request{
-			Context:          ctx,
-			OperationName:    UserGetAllOperation,
-			OperationSummary: "Получить всех пользователей",
-			OperationID:      "userGetAll",
-			Body:             nil,
-			Params: middleware.Parameters{
-				{
-					Name: "page",
-					In:   "query",
-				}: params.Page,
-				{
-					Name: "perPage",
-					In:   "query",
-				}: params.PerPage,
-			},
-			Raw: r,
-		}
-
-		type (
-			Request  = struct{}
-			Params   = UserGetAllParams
-			Response = *UserGetAllResponse
-		)
-		response, err = middleware.HookMiddleware[
-			Request,
-			Params,
-			Response,
-		](
-			m,
-			mreq,
-			unpackUserGetAllParams,
-			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				response, err = s.h.UserGetAll(ctx, params)
-				return response, err
-			},
-		)
-	} else {
-		response, err = s.h.UserGetAll(ctx, params)
-	}
-	if err != nil {
-		defer recordError("Internal", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
-		return
-	}
-
-	if err := encodeUserGetAllResponse(response, w); err != nil {
-		defer recordError("EncodeResponse", err)
-		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
-			s.cfg.ErrorHandler(ctx, w, r, err)
-		}
-		return
-	}
-}
-
 // handleUserGetByIdRequest handles userGetById operation.
 //
 // Получить пользователя по id.
@@ -592,6 +507,111 @@ func (s *Server) handleUserGetByIdRequest(args [1]string, argsEscaped bool, w ht
 	}
 
 	if err := encodeUserGetByIdResponse(response, w); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
+// handleUserListRequest handles userList operation.
+//
+// Получить список пользователей.
+//
+// GET /v1/users
+func (s *Server) handleUserListRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
+	ctx := r.Context()
+
+	var (
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: UserListOperation,
+			ID:   "userList",
+		}
+	)
+	params, err := decodeUserListParams(args, argsEscaped, r)
+	if err != nil {
+		err = &ogenerrors.DecodeParamsError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeParams", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	var response *UserListResponse
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    UserListOperation,
+			OperationSummary: "Получить список пользователей",
+			OperationID:      "userList",
+			Body:             nil,
+			Params: middleware.Parameters{
+				{
+					Name: "page",
+					In:   "query",
+				}: params.Page,
+				{
+					Name: "perPage",
+					In:   "query",
+				}: params.PerPage,
+				{
+					Name: "email",
+					In:   "query",
+				}: params.Email,
+				{
+					Name: "firstName",
+					In:   "query",
+				}: params.FirstName,
+				{
+					Name: "middleName",
+					In:   "query",
+				}: params.MiddleName,
+				{
+					Name: "lastName",
+					In:   "query",
+				}: params.LastName,
+				{
+					Name: "createdAt",
+					In:   "query",
+				}: params.CreatedAt,
+			},
+			Raw: r,
+		}
+
+		type (
+			Request  = struct{}
+			Params   = UserListParams
+			Response = *UserListResponse
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			unpackUserListParams,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.UserList(ctx, params)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.UserList(ctx, params)
+	}
+	if err != nil {
+		defer recordError("Internal", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	if err := encodeUserListResponse(response, w); err != nil {
 		defer recordError("EncodeResponse", err)
 		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
 			s.cfg.ErrorHandler(ctx, w, r, err)

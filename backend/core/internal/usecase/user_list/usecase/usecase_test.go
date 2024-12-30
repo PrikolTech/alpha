@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_get_all/domain"
+	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_list/domain"
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/stretchr/testify/require"
 	gomock "go.uber.org/mock/gomock"
@@ -16,12 +16,12 @@ func TestUsecase_Handle(t *testing.T) {
 	defer ctrl.Finish()
 
 	t.Run("Success", func(t *testing.T) {
-		in := domain.UserGetAllIn{
+		in := domain.UserListIn{
 			Page:    1,
 			PerPage: 2,
 		}
 
-		expectedOut := domain.UserGetAllOut{
+		expectedOut := domain.UserListOut{
 			Data: make([]domain.User, 3),
 			Meta: domain.Meta{
 				Page:         1,
@@ -32,7 +32,7 @@ func TestUsecase_Handle(t *testing.T) {
 		}
 
 		userRepo := NewMockuserRepo(ctrl)
-		userRepo.EXPECT().GetAll(gomock.Any(), in).Return(expectedOut.Data, nil)
+		userRepo.EXPECT().Get(gomock.Any(), in).Return(expectedOut.Data, nil)
 		userRepo.EXPECT().GetTotalCount(gomock.Any()).Return(expectedOut.Meta.TotalRecords, nil)
 
 		usecase := New(userRepo)
@@ -42,7 +42,7 @@ func TestUsecase_Handle(t *testing.T) {
 	})
 
 	t.Run("ValidationError", func(t *testing.T) {
-		in := domain.UserGetAllIn{}
+		in := domain.UserListIn{}
 
 		userRepo := NewMockuserRepo(ctrl)
 
@@ -51,8 +51,8 @@ func TestUsecase_Handle(t *testing.T) {
 		require.Error(t, err)
 	})
 
-	t.Run("userRepo_GetAllError", func(t *testing.T) {
-		in := domain.UserGetAllIn{
+	t.Run("userRepo_GetError", func(t *testing.T) {
+		in := domain.UserListIn{
 			Page:    1,
 			PerPage: 2,
 		}
@@ -60,7 +60,7 @@ func TestUsecase_Handle(t *testing.T) {
 		expectedError := gofakeit.Error()
 
 		userRepo := NewMockuserRepo(ctrl)
-		userRepo.EXPECT().GetAll(gomock.Any(), in).Return(nil, expectedError)
+		userRepo.EXPECT().Get(gomock.Any(), in).Return(nil, expectedError)
 		userRepo.EXPECT().GetTotalCount(gomock.Any()).Return(3, nil)
 
 		usecase := New(userRepo)
@@ -69,7 +69,7 @@ func TestUsecase_Handle(t *testing.T) {
 	})
 
 	t.Run("userRepo_GetTotalCountError", func(t *testing.T) {
-		in := domain.UserGetAllIn{
+		in := domain.UserListIn{
 			Page:    1,
 			PerPage: 2,
 		}
@@ -77,7 +77,7 @@ func TestUsecase_Handle(t *testing.T) {
 		expectedError := gofakeit.Error()
 
 		userRepo := NewMockuserRepo(ctrl)
-		userRepo.EXPECT().GetAll(gomock.Any(), in).Return(make([]domain.User, 1), nil)
+		userRepo.EXPECT().Get(gomock.Any(), in).Return(make([]domain.User, 1), nil)
 		userRepo.EXPECT().GetTotalCount(gomock.Any()).Return(0, expectedError)
 
 		usecase := New(userRepo)

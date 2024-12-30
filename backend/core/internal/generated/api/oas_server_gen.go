@@ -38,18 +38,18 @@ type Handler interface {
 	//
 	// POST /v1/users
 	UserCreate(ctx context.Context, req *UserCreateRequest) (UserCreateRes, error)
-	// UserGetAll implements userGetAll operation.
-	//
-	// Получить всех пользователей.
-	//
-	// GET /v1/users
-	UserGetAll(ctx context.Context, params UserGetAllParams) (*UserGetAllResponse, error)
 	// UserGetById implements userGetById operation.
 	//
 	// Получить пользователя по id.
 	//
 	// GET /v1/users/{id}
 	UserGetById(ctx context.Context, params UserGetByIdParams) (UserGetByIdRes, error)
+	// UserList implements userList operation.
+	//
+	// Получить список пользователей.
+	//
+	// GET /v1/users
+	UserList(ctx context.Context, params UserListParams) (*UserListResponse, error)
 }
 
 // Server implements http server based on OpenAPI v3 specification and

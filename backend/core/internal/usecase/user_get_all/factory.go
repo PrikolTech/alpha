@@ -1,1 +1,0 @@
-package user_get_all_usecase
