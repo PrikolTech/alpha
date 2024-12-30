@@ -72,6 +72,6 @@ func (UnimplementedHandler) UserGetById(ctx context.Context, params UserGetByIdP
 // Получить список пользователей.
 //
 // GET /v1/users
-func (UnimplementedHandler) UserList(ctx context.Context, params UserListParams) (r *UserListResponse, _ error) {
+func (UnimplementedHandler) UserList(ctx context.Context, params UserListParams) (r UserListRes, _ error) {
 	return r, ht.ErrNotImplemented
 }

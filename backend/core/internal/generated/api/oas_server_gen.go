@@ -49,7 +49,7 @@ type Handler interface {
 	// Получить список пользователей.
 	//
 	// GET /v1/users
-	UserList(ctx context.Context, params UserListParams) (*UserListResponse, error)
+	UserList(ctx context.Context, params UserListParams) (UserListRes, error)
 }
 
 // Server implements http server based on OpenAPI v3 specification and

@@ -347,6 +347,8 @@ type UserListParams struct {
 	Page OptInt
 	// Количество записей на странице.
 	PerPage OptInt
+	// Сортировка списка.
+	Sorting OptSorting
 	// Почтовый адрес.
 	Email OptString
 	// Имя.
@@ -357,6 +359,8 @@ type UserListParams struct {
 	LastName OptString
 	// Дата и время создания.
 	CreatedAt OptDateTimeFilter
+	// Дата и время обновления.
+	UpdatedAt OptDateTimeFilter
 }
 
 func unpackUserListParams(packed middleware.Parameters) (params UserListParams) {
@@ -376,6 +380,15 @@ func unpackUserListParams(packed middleware.Parameters) (params UserListParams) 
 		}
 		if v, ok := packed[key]; ok {
 			params.PerPage = v.(OptInt)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "sorting",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Sorting = v.(OptSorting)
 		}
 	}
 	{
@@ -421,6 +434,15 @@ func unpackUserListParams(packed middleware.Parameters) (params UserListParams) 
 		}
 		if v, ok := packed[key]; ok {
 			params.CreatedAt = v.(OptDateTimeFilter)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "updatedAt",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.UpdatedAt = v.(OptDateTimeFilter)
 		}
 	}
 	return params
@@ -516,6 +538,52 @@ func decodeUserListParams(args [0]string, argsEscaped bool, r *http.Request) (pa
 	}(); err != nil {
 		return params, &ogenerrors.DecodeParamError{
 			Name: "perPage",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: sorting.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "sorting",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+			Fields:  []uri.QueryParameterObjectField{{Name: "field", Required: true}, {Name: "direction", Required: true}},
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotSortingVal Sorting
+				if err := func() error {
+					return paramsDotSortingVal.DecodeURI(d)
+				}(); err != nil {
+					return err
+				}
+				params.Sorting.SetTo(paramsDotSortingVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+			if err := func() error {
+				if value, ok := params.Sorting.Get(); ok {
+					if err := func() error {
+						if err := value.Validate(); err != nil {
+							return err
+						}
+						return nil
+					}(); err != nil {
+						return err
+					}
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "sorting",
 			In:   "query",
 			Err:  err,
 		}
@@ -711,6 +779,37 @@ func decodeUserListParams(args [0]string, argsEscaped bool, r *http.Request) (pa
 	}(); err != nil {
 		return params, &ogenerrors.DecodeParamError{
 			Name: "createdAt",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: updatedAt.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "updatedAt",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+			Fields:  []uri.QueryParameterObjectField{{Name: "start", Required: false}, {Name: "end", Required: false}},
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotUpdatedAtVal DateTimeFilter
+				if err := func() error {
+					return paramsDotUpdatedAtVal.DecodeURI(d)
+				}(); err != nil {
+					return err
+				}
+				params.UpdatedAt.SetTo(paramsDotUpdatedAtVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "updatedAt",
 			In:   "query",
 			Err:  err,
 		}

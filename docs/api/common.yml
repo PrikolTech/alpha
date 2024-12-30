@@ -16,6 +16,26 @@ components:
       schema:
         type: integer
         default: 20
+    Sorting:
+      name: sorting
+      description: Сортировка списка
+      in: query
+      required: false
+      schema:
+        type: object
+        required:
+          - field
+          - direction
+        properties:
+          field:
+            type: string
+            description: Поле, по которому сортируется список
+          direction:
+            type: string
+            description: Направление, по которому сортируется список
+            enum:
+              - asc
+              - desc
 
   schemas:
     Meta:
@@ -24,7 +44,7 @@ components:
       required:
         - page
         - totalPages
-        - per
+        - perPage
         - totalRecords
       properties:
         page:

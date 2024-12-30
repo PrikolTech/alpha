@@ -19,7 +19,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserCreateValidationError"
+                $ref: "#/components/schemas/UserValidationError"
         409:
           description: Conflict
           content:
@@ -35,11 +35,13 @@ paths:
       parameters:
         - $ref: "../../common.yml#/components/parameters/Page"
         - $ref: "../../common.yml#/components/parameters/PerPage"
+        - $ref: "../../common.yml#/components/parameters/Sorting"
         - $ref: "#/components/parameters/Email"
         - $ref: "#/components/parameters/FirstName"
         - $ref: "#/components/parameters/MiddleName"
         - $ref: "#/components/parameters/LastName"
         - $ref: "#/components/parameters/CreatedAt"
+        - $ref: "#/components/parameters/UpdatedAt"
       responses:
         200:
           description: Ok
@@ -47,6 +49,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UserListResponse"
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserValidationError"
 
 components:
   parameters:
@@ -85,15 +93,15 @@ components:
       required: false
       schema:
         $ref: "../../common.yml#/components/schemas/DateTimeFilter"
-      UpdatedAt:
-        name: updatedAt
-        description: Дата и время обновления
-        in: query
-        required: false
-        schema:
-          $ref: "../../common.yml#/components/schemas/DateTimeFilter"
+    UpdatedAt:
+      name: updatedAt
+      description: Дата и время обновления
+      in: query
+      required: false
+      schema:
+        $ref: "../../common.yml#/components/schemas/DateTimeFilter"
   schemas:
-    UserCreateValidationError:
+    UserValidationError:
       type: object
       required:
         - field

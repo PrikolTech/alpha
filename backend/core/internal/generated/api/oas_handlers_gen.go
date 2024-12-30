@@ -543,7 +543,7 @@ func (s *Server) handleUserListRequest(args [0]string, argsEscaped bool, w http.
 		return
 	}
 
-	var response *UserListResponse
+	var response UserListRes
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -560,6 +560,10 @@ func (s *Server) handleUserListRequest(args [0]string, argsEscaped bool, w http.
 					Name: "perPage",
 					In:   "query",
 				}: params.PerPage,
+				{
+					Name: "sorting",
+					In:   "query",
+				}: params.Sorting,
 				{
 					Name: "email",
 					In:   "query",
@@ -580,6 +584,10 @@ func (s *Server) handleUserListRequest(args [0]string, argsEscaped bool, w http.
 					Name: "createdAt",
 					In:   "query",
 				}: params.CreatedAt,
+				{
+					Name: "updatedAt",
+					In:   "query",
+				}: params.UpdatedAt,
 			},
 			Raw: r,
 		}
@@ -587,7 +595,7 @@ func (s *Server) handleUserListRequest(args [0]string, argsEscaped bool, w http.
 		type (
 			Request  = struct{}
 			Params   = UserListParams
-			Response = *UserListResponse
+			Response = UserListRes
 		)
 		response, err = middleware.HookMiddleware[
 			Request,

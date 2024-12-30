@@ -5,6 +5,7 @@ package api
 import (
 	"time"
 
+	"github.com/go-faster/errors"
 	"github.com/google/uuid"
 )
 
@@ -61,7 +62,7 @@ type Meta struct {
 	// Общее количество страниц.
 	TotalPages int `json:"totalPages"`
 	// Количество записей на странице.
-	PerPage OptInt `json:"perPage"`
+	PerPage int `json:"perPage"`
 	// Общее количество записей.
 	TotalRecords int `json:"totalRecords"`
 }
@@ -77,7 +78,7 @@ func (s *Meta) GetTotalPages() int {
 }
 
 // GetPerPage returns the value of PerPage.
-func (s *Meta) GetPerPage() OptInt {
+func (s *Meta) GetPerPage() int {
 	return s.PerPage
 }
 
@@ -97,7 +98,7 @@ func (s *Meta) SetTotalPages(val int) {
 }
 
 // SetPerPage sets the value of PerPage.
-func (s *Meta) SetPerPage(val OptInt) {
+func (s *Meta) SetPerPage(val int) {
 	s.PerPage = val
 }
 
@@ -461,6 +462,52 @@ func (o OptNilString) Or(d string) string {
 	return d
 }
 
+// NewOptSorting returns new OptSorting with value set to v.
+func NewOptSorting(v Sorting) OptSorting {
+	return OptSorting{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptSorting is optional Sorting.
+type OptSorting struct {
+	Value Sorting
+	Set   bool
+}
+
+// IsSet returns true if OptSorting was set.
+func (o OptSorting) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptSorting) Reset() {
+	var v Sorting
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptSorting) SetTo(v Sorting) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptSorting) Get() (v Sorting, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptSorting) Or(d Sorting) Sorting {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptString returns new OptString with value set to v.
 func NewOptString(v string) OptString {
 	return OptString{
@@ -638,6 +685,75 @@ func (s *ProjectGetAllResponse) SetMeta(val OptMeta) {
 	s.Meta = val
 }
 
+type Sorting struct {
+	// Поле, по которому сортируется список.
+	Field string `json:"field"`
+	// Направление, по которому сортируется список.
+	Direction SortingDirection `json:"direction"`
+}
+
+// GetField returns the value of Field.
+func (s *Sorting) GetField() string {
+	return s.Field
+}
+
+// GetDirection returns the value of Direction.
+func (s *Sorting) GetDirection() SortingDirection {
+	return s.Direction
+}
+
+// SetField sets the value of Field.
+func (s *Sorting) SetField(val string) {
+	s.Field = val
+}
+
+// SetDirection sets the value of Direction.
+func (s *Sorting) SetDirection(val SortingDirection) {
+	s.Direction = val
+}
+
+// Направление, по которому сортируется список.
+type SortingDirection string
+
+const (
+	SortingDirectionAsc  SortingDirection = "asc"
+	SortingDirectionDesc SortingDirection = "desc"
+)
+
+// AllValues returns all SortingDirection values.
+func (SortingDirection) AllValues() []SortingDirection {
+	return []SortingDirection{
+		SortingDirectionAsc,
+		SortingDirectionDesc,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s SortingDirection) MarshalText() ([]byte, error) {
+	switch s {
+	case SortingDirectionAsc:
+		return []byte(s), nil
+	case SortingDirectionDesc:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *SortingDirection) UnmarshalText(data []byte) error {
+	switch SortingDirection(data) {
+	case SortingDirectionAsc:
+		*s = SortingDirectionAsc
+		return nil
+	case SortingDirectionDesc:
+		*s = SortingDirectionDesc
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
+}
+
 // Пользователь.
 // Ref: #/components/schemas/User
 type User struct {
@@ -775,34 +891,6 @@ func (s *UserCreateRequest) SetLastName(val string) {
 	s.LastName = val
 }
 
-// Ref: #/components/schemas/UserCreateValidationError
-type UserCreateValidationError struct {
-	Field  string `json:"field"`
-	Reason string `json:"reason"`
-}
-
-// GetField returns the value of Field.
-func (s *UserCreateValidationError) GetField() string {
-	return s.Field
-}
-
-// GetReason returns the value of Reason.
-func (s *UserCreateValidationError) GetReason() string {
-	return s.Reason
-}
-
-// SetField sets the value of Field.
-func (s *UserCreateValidationError) SetField(val string) {
-	s.Field = val
-}
-
-// SetReason sets the value of Reason.
-func (s *UserCreateValidationError) SetReason(val string) {
-	s.Reason = val
-}
-
-func (*UserCreateValidationError) userCreateRes() {}
-
 // Список пользователей.
 // Ref: #/components/schemas/UserListResponse
 type UserListResponse struct {
@@ -829,3 +917,34 @@ func (s *UserListResponse) SetData(val []User) {
 func (s *UserListResponse) SetMeta(val Meta) {
 	s.Meta = val
 }
+
+func (*UserListResponse) userListRes() {}
+
+// Ref: #/components/schemas/UserValidationError
+type UserValidationError struct {
+	Field  string `json:"field"`
+	Reason string `json:"reason"`
+}
+
+// GetField returns the value of Field.
+func (s *UserValidationError) GetField() string {
+	return s.Field
+}
+
+// GetReason returns the value of Reason.
+func (s *UserValidationError) GetReason() string {
+	return s.Reason
+}
+
+// SetField sets the value of Field.
+func (s *UserValidationError) SetField(val string) {
+	s.Field = val
+}
+
+// SetReason sets the value of Reason.
+func (s *UserValidationError) SetReason(val string) {
+	s.Reason = val
+}
+
+func (*UserValidationError) userCreateRes() {}
+func (*UserValidationError) userListRes()   {}
