@@ -84,16 +84,14 @@ components:
       in: query
       required: false
       schema:
-        type: object
-        properties:
-          start:
-            type: string
-            format: date-time
-            nullable: true
-          end:
-            type: string
-            format: date-time
-            nullable: true
+        $ref: "../../common.yml#/components/schemas/DateTimeFilter"
+      UpdatedAt:
+        name: updatedAt
+        description: Дата и время обновления
+        in: query
+        required: false
+        schema:
+          $ref: "../../common.yml#/components/schemas/DateTimeFilter"
   schemas:
     UserCreateValidationError:
       type: object

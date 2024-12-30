@@ -8,6 +8,7 @@ type UserListFilters struct {
 	MiddleName *string
 	LastName   *string
 	CreatedAt  *DateTimeFilter
+	UpdatedAt  *DateTimeFilter
 }
 
 type DateTimeFilter struct {

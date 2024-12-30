@@ -356,7 +356,7 @@ type UserListParams struct {
 	// Фамилия.
 	LastName OptString
 	// Дата и время создания.
-	CreatedAt OptCreatedAt
+	CreatedAt OptDateTimeFilter
 }
 
 func unpackUserListParams(packed middleware.Parameters) (params UserListParams) {
@@ -420,7 +420,7 @@ func unpackUserListParams(packed middleware.Parameters) (params UserListParams) 
 			In:   "query",
 		}
 		if v, ok := packed[key]; ok {
-			params.CreatedAt = v.(OptCreatedAt)
+			params.CreatedAt = v.(OptDateTimeFilter)
 		}
 	}
 	return params
@@ -695,7 +695,7 @@ func decodeUserListParams(args [0]string, argsEscaped bool, r *http.Request) (pa
 
 		if err := q.HasParam(cfg); err == nil {
 			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
-				var paramsDotCreatedAtVal CreatedAt
+				var paramsDotCreatedAtVal DateTimeFilter
 				if err := func() error {
 					return paramsDotCreatedAtVal.DecodeURI(d)
 				}(); err != nil {

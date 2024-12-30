@@ -47,3 +47,14 @@ components:
       properties:
         message:
           type: string
+    DateTimeFilter:
+      type: object
+      properties:
+        start:
+          type: string
+          format: date-time
+          nullable: true
+        end:
+          type: string
+          format: date-time
+          nullable: true

@@ -86,12 +86,11 @@ func (r *Repository) addWhereQuery(builder sq.SelectBuilder, filters domain.User
 	}
 
 	if filters.CreatedAt != nil {
-		if filters.CreatedAt.Start != nil {
-			res = append(res, sq.GtOrEq{"created_at": *filters.CreatedAt.Start})
-		}
-		if filters.CreatedAt.End != nil {
-			res = append(res, sq.LtOrEq{"created_at": *filters.CreatedAt.End})
-		}
+		res = append(res, r.buildDatetimeQuery("created_at", filters.CreatedAt))
+	}
+
+	if filters.UpdatedAt != nil {
+		res = append(res, r.buildDatetimeQuery("updated_at", filters.UpdatedAt))
 	}
 
 	if len(res) == 0 {
@@ -103,6 +102,17 @@ func (r *Repository) addWhereQuery(builder sq.SelectBuilder, filters domain.User
 
 func (r *Repository) buildLikeQuery(field string, value *string) sq.ILike {
 	return sq.ILike{field: fmt.Sprintf("%%%s%%", strings.ToLower(*value))}
+}
+
+func (r *Repository) buildDatetimeQuery(field string, value *domain.DateTimeFilter) sq.And {
+	res := make(sq.And, 0, 2)
+	if value.Start != nil {
+		res = append(res, sq.GtOrEq{field: *value.Start})
+	}
+	if value.End != nil {
+		res = append(res, sq.LtOrEq{field: *value.End})
+	}
+	return res
 }
 
 func (r *Repository) GetTotalCount(ctx context.Context) (int, error) {

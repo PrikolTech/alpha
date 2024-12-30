@@ -8,28 +8,29 @@ import (
 	"github.com/google/uuid"
 )
 
-type CreatedAt struct {
+// Ref: #/components/schemas/DateTimeFilter
+type DateTimeFilter struct {
 	Start OptNilDateTime `json:"start"`
 	End   OptNilDateTime `json:"end"`
 }
 
 // GetStart returns the value of Start.
-func (s *CreatedAt) GetStart() OptNilDateTime {
+func (s *DateTimeFilter) GetStart() OptNilDateTime {
 	return s.Start
 }
 
 // GetEnd returns the value of End.
-func (s *CreatedAt) GetEnd() OptNilDateTime {
+func (s *DateTimeFilter) GetEnd() OptNilDateTime {
 	return s.End
 }
 
 // SetStart sets the value of Start.
-func (s *CreatedAt) SetStart(val OptNilDateTime) {
+func (s *DateTimeFilter) SetStart(val OptNilDateTime) {
 	s.Start = val
 }
 
 // SetEnd sets the value of End.
-func (s *CreatedAt) SetEnd(val OptNilDateTime) {
+func (s *DateTimeFilter) SetEnd(val OptNilDateTime) {
 	s.End = val
 }
 
@@ -150,52 +151,6 @@ func (o NilString) Or(d string) string {
 	return d
 }
 
-// NewOptCreatedAt returns new OptCreatedAt with value set to v.
-func NewOptCreatedAt(v CreatedAt) OptCreatedAt {
-	return OptCreatedAt{
-		Value: v,
-		Set:   true,
-	}
-}
-
-// OptCreatedAt is optional CreatedAt.
-type OptCreatedAt struct {
-	Value CreatedAt
-	Set   bool
-}
-
-// IsSet returns true if OptCreatedAt was set.
-func (o OptCreatedAt) IsSet() bool { return o.Set }
-
-// Reset unsets value.
-func (o *OptCreatedAt) Reset() {
-	var v CreatedAt
-	o.Value = v
-	o.Set = false
-}
-
-// SetTo sets value to v.
-func (o *OptCreatedAt) SetTo(v CreatedAt) {
-	o.Set = true
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o OptCreatedAt) Get() (v CreatedAt, ok bool) {
-	if !o.Set {
-		return v, false
-	}
-	return o.Value, true
-}
-
-// Or returns value if set, or given parameter if does not.
-func (o OptCreatedAt) Or(d CreatedAt) CreatedAt {
-	if v, ok := o.Get(); ok {
-		return v
-	}
-	return d
-}
-
 // NewOptDateTime returns new OptDateTime with value set to v.
 func NewOptDateTime(v time.Time) OptDateTime {
 	return OptDateTime{
@@ -236,6 +191,52 @@ func (o OptDateTime) Get() (v time.Time, ok bool) {
 
 // Or returns value if set, or given parameter if does not.
 func (o OptDateTime) Or(d time.Time) time.Time {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptDateTimeFilter returns new OptDateTimeFilter with value set to v.
+func NewOptDateTimeFilter(v DateTimeFilter) OptDateTimeFilter {
+	return OptDateTimeFilter{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptDateTimeFilter is optional DateTimeFilter.
+type OptDateTimeFilter struct {
+	Value DateTimeFilter
+	Set   bool
+}
+
+// IsSet returns true if OptDateTimeFilter was set.
+func (o OptDateTimeFilter) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptDateTimeFilter) Reset() {
+	var v DateTimeFilter
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptDateTimeFilter) SetTo(v DateTimeFilter) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptDateTimeFilter) Get() (v DateTimeFilter, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptDateTimeFilter) Or(d DateTimeFilter) DateTimeFilter {
 	if v, ok := o.Get(); ok {
 		return v
 	}

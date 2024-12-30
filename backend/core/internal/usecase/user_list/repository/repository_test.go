@@ -124,11 +124,46 @@ func TestRepository_Get_Filters(t *testing.T) {
 				return []test_db.User{user1, user2, user3}, nil
 			},
 		},
+		{
+			name: "FiltersUpdatedAt",
+			in: domain.UserListIn{
+				Page:    1,
+				PerPage: 6,
+				Filters: domain.UserListFilters{
+					UpdatedAt: &domain.DateTimeFilter{
+						Start: ptr.To(lo.Must1(time.Parse(time.DateOnly, "2001-02-03"))),
+						End:   ptr.To(lo.Must1(time.Parse(time.DateOnly, "2001-02-05"))),
+					},
+				},
+			},
+			setup: func() ([]test_db.User, error) {
+				user1, err := test_db.GenerateEntity[test_db.User](func(entity *test_db.User) {
+					entity.UpdatedAt = lo.Must1(time.Parse(time.DateOnly, "2001-02-03"))
+				})
+				if err != nil {
+					return nil, err
+				}
+				user2, err := test_db.GenerateEntity[test_db.User](func(entity *test_db.User) {
+					entity.UpdatedAt = lo.Must1(time.Parse(time.DateOnly, "2001-02-04"))
+				})
+				if err != nil {
+					return nil, err
+				}
+				user3, err := test_db.GenerateEntity[test_db.User](func(entity *test_db.User) {
+					entity.UpdatedAt = lo.Must1(time.Parse(time.DateOnly, "2001-02-05"))
+				})
+				if err != nil {
+					return nil, err
+				}
+				return []test_db.User{user1, user2, user3}, nil
+			},
+		},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			notExpectedUsers, err := test_db.GenerateEntities[test_db.User](3, func(entity *test_db.User) {
 				entity.CreatedAt = time.Time{}
+				entity.UpdatedAt = time.Time{}
 			})
 			require.NoError(t, err)
 

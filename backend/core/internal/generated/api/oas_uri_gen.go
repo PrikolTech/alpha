@@ -11,8 +11,8 @@ import (
 	"github.com/ogen-go/ogen/uri"
 )
 
-// EncodeURI encodes CreatedAt as URI form.
-func (s *CreatedAt) EncodeURI(e uri.Encoder) error {
+// EncodeURI encodes DateTimeFilter as URI form.
+func (s *DateTimeFilter) EncodeURI(e uri.Encoder) error {
 	if err := e.EncodeField("start", func(e uri.Encoder) error {
 		if val, ok := s.Start.Get(); ok {
 			return e.EncodeValue(conv.DateTimeToString(val))
@@ -32,15 +32,15 @@ func (s *CreatedAt) EncodeURI(e uri.Encoder) error {
 	return nil
 }
 
-var uriFieldsNameOfCreatedAt = [2]string{
+var uriFieldsNameOfDateTimeFilter = [2]string{
 	0: "start",
 	1: "end",
 }
 
-// DecodeURI decodes CreatedAt from URI form.
-func (s *CreatedAt) DecodeURI(d uri.Decoder) error {
+// DecodeURI decodes DateTimeFilter from URI form.
+func (s *DateTimeFilter) DecodeURI(d uri.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CreatedAt to nil")
+		return errors.New("invalid: unable to decode DateTimeFilter to nil")
 	}
 
 	if err := d.DecodeFields(func(k string, d uri.Decoder) error {
@@ -98,7 +98,7 @@ func (s *CreatedAt) DecodeURI(d uri.Decoder) error {
 		}
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode CreatedAt")
+		return errors.Wrap(err, "decode DateTimeFilter")
 	}
 
 	return nil
