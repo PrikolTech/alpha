@@ -23,9 +23,11 @@ func (r *Repository) Get(ctx context.Context, in domain.UserListIn) ([]domain.Us
 	builder := sq.StatementBuilder.PlaceholderFormat(sq.Dollar).
 		Select("*").
 		From("_user").
-		Where(r.buildWhereQuery(in.Filters)).
 		Limit(uint64(in.PerPage)).
 		Offset(uint64((in.Page - 1) * in.PerPage))
+
+	builder = r.addWhereQuery(builder, in.Filters)
+	builder = r.addOrderQuery(builder, in.Sorting)
 
 	query, args, err := builder.ToSql()
 	if err != nil {
@@ -42,7 +44,29 @@ func (r *Repository) Get(ctx context.Context, in domain.UserListIn) ([]domain.Us
 	return lo.Map(entities, func(item entity, _ int) domain.User { return item.toDomain() }), nil
 }
 
-func (r *Repository) buildWhereQuery(filters domain.UserListFilters) sq.Sqlizer {
+var fieldToColumn = map[domain.SortingField]string{
+	domain.SortingFieldEmail:      "email",
+	domain.SortingFieldFirstName:  "first_name",
+	domain.SortingFieldMiddleName: "middle_name",
+	domain.SortingFieldLastName:   "last_name",
+	domain.SortingFieldCreatedAt:  "created_at",
+	domain.SortingFieldUpdatedAt:  "updated_at",
+}
+
+func (r *Repository) addOrderQuery(builder sq.SelectBuilder, sorting *domain.UserListSorting) sq.SelectBuilder {
+	if sorting == nil {
+		return builder
+	}
+
+	column, found := fieldToColumn[sorting.Field]
+	if !found {
+		return builder
+	}
+
+	return builder.OrderBy(fmt.Sprintf("%s %s", column, sorting.Direction))
+}
+
+func (r *Repository) addWhereQuery(builder sq.SelectBuilder, filters domain.UserListFilters) sq.SelectBuilder {
 	var res sq.And
 
 	if filters.Email != nil {
@@ -70,7 +94,11 @@ func (r *Repository) buildWhereQuery(filters domain.UserListFilters) sq.Sqlizer 
 		}
 	}
 
-	return res
+	if len(res) == 0 {
+		return builder
+	}
+
+	return builder.Where(res)
 }
 
 func (r *Repository) buildLikeQuery(field string, value *string) sq.ILike {

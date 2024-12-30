@@ -2,6 +2,8 @@ package repository
 
 import (
 	"context"
+	"slices"
+	"strings"
 	"testing"
 	"time"
 
@@ -132,7 +134,7 @@ func TestRepository_Get_Filters(t *testing.T) {
 
 			expectedUsers, err := test.setup()
 			require.NoError(t, err)
-			expectedIDs := lo.Map(expectedUsers, func(item test_db.User, _ int) string { return item.ID.String() })
+			expectedIDs := lo.Map(expectedUsers, func(item test_db.User, _ int) uuid.UUID { return item.ID })
 
 			totalIDs, err := test_db.InsertEntitiesWithId[test_db.User, uuid.UUID](c, test_db.TableUser, append(expectedUsers, notExpectedUsers...))
 			require.NoError(t, err)
@@ -143,8 +145,79 @@ func TestRepository_Get_Filters(t *testing.T) {
 			users, err := repo.Get(ctx, test.in)
 			require.NoError(t, err)
 
-			ids := lo.Map(users, func(item domain.User, _ int) string { return item.ID.String() })
+			ids := lo.Map(users, func(item domain.User, _ int) uuid.UUID { return item.ID })
 
+			require.Equal(t, expectedIDs, ids)
+		})
+	}
+}
+
+func TestRepository_Get_Sorting(t *testing.T) {
+	ctx := context.Background()
+
+	c, err := test_db.NewPsql()
+	require.NoError(t, err)
+	defer func() { require.NoError(t, c.Close()) }()
+
+	repo := New(c.DB())
+
+	tests := []struct {
+		name    string
+		in      domain.UserListIn
+		compare func(a test_db.User, b test_db.User) int
+	}{
+		{
+			name: "FirstNameAsc",
+			in: domain.UserListIn{
+				Page:    1,
+				PerPage: 10,
+				Sorting: &domain.UserListSorting{
+					Field:     "firstName",
+					Direction: domain.SortingDirectionAsc,
+				},
+			},
+			compare: func(a, b test_db.User) int { return strings.Compare(a.FirstName, b.FirstName) },
+		},
+		{
+			name: "CreatedAtDesc",
+			in: domain.UserListIn{
+				Page:    1,
+				PerPage: 10,
+				Sorting: &domain.UserListSorting{
+					Field:     "createdAt",
+					Direction: domain.SortingDirectionDesc,
+				},
+			},
+			compare: func(a, b test_db.User) int { return b.CreatedAt.Compare(a.CreatedAt) },
+		},
+		{
+			name: "InvalidColumn",
+			in: domain.UserListIn{
+				Page:    1,
+				PerPage: 10,
+				Sorting: &domain.UserListSorting{},
+			},
+			compare: func(a, b test_db.User) int { return 0 },
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			expectedUsers, err := test_db.GenerateEntities[test_db.User](10)
+			require.NoError(t, err)
+
+			totalIDs, err := test_db.InsertEntitiesWithId[test_db.User, uuid.UUID](c, test_db.TableUser, expectedUsers)
+			require.NoError(t, err)
+			defer func() {
+				require.NoError(t, test_db.DeleteEntitiesById(c, test_db.TableUser, totalIDs))
+			}()
+
+			slices.SortFunc(expectedUsers, test.compare)
+			expectedIDs := lo.Map(expectedUsers, func(item test_db.User, _ int) uuid.UUID { return item.ID })
+
+			users, err := repo.Get(ctx, test.in)
+			require.NoError(t, err)
+
+			ids := lo.Map(users, func(item domain.User, _ int) uuid.UUID { return item.ID })
 			require.Equal(t, expectedIDs, ids)
 		})
 	}

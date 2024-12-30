@@ -6,8 +6,10 @@ import (
 )
 
 var (
-	ErrPageValue    = errors.New("must be positive")
-	ErrPerPageValue = fmt.Errorf("must be between 1 and %d", MaxPerPage)
+	ErrPage             = errors.New("must be positive")
+	ErrPerPage          = fmt.Errorf("must be between 1 and %d", MaxPerPage)
+	ErrSortingField     = errors.New("there is no such field")
+	ErrSortingDirection = errors.New("direction must be 'asc' or 'desc'")
 )
 
 type ValidationError struct {
@@ -20,5 +22,5 @@ func NewValidationError(field string, err error) *ValidationError {
 }
 
 func (e *ValidationError) Error() string {
-	return fmt.Sprintf("value of field '%s' is invalid: %s", e.Field, e.Reason)
+	return fmt.Sprintf("value of '%s' is invalid: %s", e.Field, e.Reason)
 }
