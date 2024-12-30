@@ -58,7 +58,7 @@ func TestHandler_Handle(t *testing.T) {
 		}
 
 		for i := range out.Data {
-			gofakeit.Struct(&out.Data[i])
+			require.NoError(t, gofakeit.Struct(&out.Data[i]))
 		}
 
 		userUsecase := NewMockuserUsecase(ctrl)
