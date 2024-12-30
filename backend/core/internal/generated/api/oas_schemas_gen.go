@@ -8,6 +8,31 @@ import (
 	"github.com/google/uuid"
 )
 
+type CreatedAt struct {
+	Start OptNilDateTime `json:"start"`
+	End   OptNilDateTime `json:"end"`
+}
+
+// GetStart returns the value of Start.
+func (s *CreatedAt) GetStart() OptNilDateTime {
+	return s.Start
+}
+
+// GetEnd returns the value of End.
+func (s *CreatedAt) GetEnd() OptNilDateTime {
+	return s.End
+}
+
+// SetStart sets the value of Start.
+func (s *CreatedAt) SetStart(val OptNilDateTime) {
+	s.Start = val
+}
+
+// SetEnd sets the value of End.
+func (s *CreatedAt) SetEnd(val OptNilDateTime) {
+	s.End = val
+}
+
 // Доменная ошибка.
 // Ref: #/components/schemas/DomainError
 type DomainError struct {
@@ -119,6 +144,52 @@ func (o NilString) Get() (v string, ok bool) {
 
 // Or returns value if set, or given parameter if does not.
 func (o NilString) Or(d string) string {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptCreatedAt returns new OptCreatedAt with value set to v.
+func NewOptCreatedAt(v CreatedAt) OptCreatedAt {
+	return OptCreatedAt{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptCreatedAt is optional CreatedAt.
+type OptCreatedAt struct {
+	Value CreatedAt
+	Set   bool
+}
+
+// IsSet returns true if OptCreatedAt was set.
+func (o OptCreatedAt) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptCreatedAt) Reset() {
+	var v CreatedAt
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptCreatedAt) SetTo(v CreatedAt) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptCreatedAt) Get() (v CreatedAt, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptCreatedAt) Or(d CreatedAt) CreatedAt {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -257,6 +328,69 @@ func (o OptMeta) Get() (v Meta, ok bool) {
 
 // Or returns value if set, or given parameter if does not.
 func (o OptMeta) Or(d Meta) Meta {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptNilDateTime returns new OptNilDateTime with value set to v.
+func NewOptNilDateTime(v time.Time) OptNilDateTime {
+	return OptNilDateTime{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptNilDateTime is optional nullable time.Time.
+type OptNilDateTime struct {
+	Value time.Time
+	Set   bool
+	Null  bool
+}
+
+// IsSet returns true if OptNilDateTime was set.
+func (o OptNilDateTime) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptNilDateTime) Reset() {
+	var v time.Time
+	o.Value = v
+	o.Set = false
+	o.Null = false
+}
+
+// SetTo sets value to v.
+func (o *OptNilDateTime) SetTo(v time.Time) {
+	o.Set = true
+	o.Null = false
+	o.Value = v
+}
+
+// IsSet returns true if value is Null.
+func (o OptNilDateTime) IsNull() bool { return o.Null }
+
+// SetNull sets value to null.
+func (o *OptNilDateTime) SetToNull() {
+	o.Set = true
+	o.Null = true
+	var v time.Time
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptNilDateTime) Get() (v time.Time, ok bool) {
+	if o.Null {
+		return v, false
+	}
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptNilDateTime) Or(d time.Time) time.Time {
 	if v, ok := o.Get(); ok {
 		return v
 	}

@@ -5,7 +5,6 @@ package api
 import (
 	"net/http"
 	"net/url"
-	"time"
 
 	"github.com/go-faster/errors"
 	"github.com/google/uuid"
@@ -357,7 +356,7 @@ type UserListParams struct {
 	// Фамилия.
 	LastName OptString
 	// Дата и время создания.
-	CreatedAt OptDateTime
+	CreatedAt OptCreatedAt
 }
 
 func unpackUserListParams(packed middleware.Parameters) (params UserListParams) {
@@ -421,7 +420,7 @@ func unpackUserListParams(packed middleware.Parameters) (params UserListParams) 
 			In:   "query",
 		}
 		if v, ok := packed[key]; ok {
-			params.CreatedAt = v.(OptDateTime)
+			params.CreatedAt = v.(OptCreatedAt)
 		}
 	}
 	return params
@@ -691,24 +690,14 @@ func decodeUserListParams(args [0]string, argsEscaped bool, r *http.Request) (pa
 			Name:    "createdAt",
 			Style:   uri.QueryStyleForm,
 			Explode: true,
+			Fields:  []uri.QueryParameterObjectField{{Name: "start", Required: false}, {Name: "end", Required: false}},
 		}
 
 		if err := q.HasParam(cfg); err == nil {
 			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
-				var paramsDotCreatedAtVal time.Time
+				var paramsDotCreatedAtVal CreatedAt
 				if err := func() error {
-					val, err := d.DecodeValue()
-					if err != nil {
-						return err
-					}
-
-					c, err := conv.ToDateTime(val)
-					if err != nil {
-						return err
-					}
-
-					paramsDotCreatedAtVal = c
-					return nil
+					return paramsDotCreatedAtVal.DecodeURI(d)
 				}(); err != nil {
 					return err
 				}

@@ -84,8 +84,16 @@ components:
       in: query
       required: false
       schema:
-        type: string
-        format: date-time
+        type: object
+        properties:
+          start:
+            type: string
+            format: date-time
+            nullable: true
+          end:
+            type: string
+            format: date-time
+            nullable: true
   schemas:
     UserCreateValidationError:
       type: object

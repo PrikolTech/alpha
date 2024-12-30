@@ -15,7 +15,12 @@ type UserListFilters struct {
 	FirstName  *string
 	MiddleName *string
 	LastName   *string
-	CreatedAt  *time.Time
+	CreatedAt  *DateTimeFilter
+}
+
+type DateTimeFilter struct {
+	Start *time.Time
+	End   *time.Time
 }
 
 func (i *UserListIn) Validate() error {
