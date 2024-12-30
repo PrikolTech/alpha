@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	test_db "github.com/PrikolTech/alpha/backend/core/internal/pkg/test/db"
-	"github.com/brianvoe/gofakeit/v7"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )
@@ -17,9 +16,7 @@ func TestRepository_GetById(t *testing.T) {
 	require.NoError(t, err)
 	defer func() { require.NoError(t, c.Close()) }()
 
-	expectedUser, err := test_db.GenerateEntity[test_db.User](func(entity *test_db.User) {
-		entity.Email = gofakeit.UUID()
-	})
+	expectedUser, err := test_db.GenerateEntity[test_db.User]()
 	require.NoError(t, err)
 
 	repo := New(c.DB())

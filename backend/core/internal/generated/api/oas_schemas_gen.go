@@ -5,8 +5,35 @@ package api
 import (
 	"time"
 
+	"github.com/go-faster/errors"
 	"github.com/google/uuid"
 )
+
+// Ref: #/components/schemas/DateTimeFilter
+type DateTimeFilter struct {
+	Start OptNilDateTime `json:"start"`
+	End   OptNilDateTime `json:"end"`
+}
+
+// GetStart returns the value of Start.
+func (s *DateTimeFilter) GetStart() OptNilDateTime {
+	return s.Start
+}
+
+// GetEnd returns the value of End.
+func (s *DateTimeFilter) GetEnd() OptNilDateTime {
+	return s.End
+}
+
+// SetStart sets the value of Start.
+func (s *DateTimeFilter) SetStart(val OptNilDateTime) {
+	s.Start = val
+}
+
+// SetEnd sets the value of End.
+func (s *DateTimeFilter) SetEnd(val OptNilDateTime) {
+	s.End = val
+}
 
 // Доменная ошибка.
 // Ref: #/components/schemas/DomainError
@@ -30,9 +57,13 @@ func (*DomainError) userGetByIdRes() {}
 // Мета данные.
 // Ref: #/components/schemas/Meta
 type Meta struct {
-	Page         int `json:"page"`
-	TotalPages   int `json:"totalPages"`
-	Per          int `json:"per"`
+	// Номер страницы.
+	Page int `json:"page"`
+	// Общее количество страниц.
+	TotalPages int `json:"totalPages"`
+	// Количество записей на странице.
+	PerPage int `json:"perPage"`
+	// Общее количество записей.
 	TotalRecords int `json:"totalRecords"`
 }
 
@@ -46,9 +77,9 @@ func (s *Meta) GetTotalPages() int {
 	return s.TotalPages
 }
 
-// GetPer returns the value of Per.
-func (s *Meta) GetPer() int {
-	return s.Per
+// GetPerPage returns the value of PerPage.
+func (s *Meta) GetPerPage() int {
+	return s.PerPage
 }
 
 // GetTotalRecords returns the value of TotalRecords.
@@ -66,9 +97,9 @@ func (s *Meta) SetTotalPages(val int) {
 	s.TotalPages = val
 }
 
-// SetPer sets the value of Per.
-func (s *Meta) SetPer(val int) {
-	s.Per = val
+// SetPerPage sets the value of PerPage.
+func (s *Meta) SetPerPage(val int) {
+	s.PerPage = val
 }
 
 // SetTotalRecords sets the value of TotalRecords.
@@ -167,6 +198,52 @@ func (o OptDateTime) Or(d time.Time) time.Time {
 	return d
 }
 
+// NewOptDateTimeFilter returns new OptDateTimeFilter with value set to v.
+func NewOptDateTimeFilter(v DateTimeFilter) OptDateTimeFilter {
+	return OptDateTimeFilter{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptDateTimeFilter is optional DateTimeFilter.
+type OptDateTimeFilter struct {
+	Value DateTimeFilter
+	Set   bool
+}
+
+// IsSet returns true if OptDateTimeFilter was set.
+func (o OptDateTimeFilter) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptDateTimeFilter) Reset() {
+	var v DateTimeFilter
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptDateTimeFilter) SetTo(v DateTimeFilter) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptDateTimeFilter) Get() (v DateTimeFilter, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptDateTimeFilter) Or(d DateTimeFilter) DateTimeFilter {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptInt returns new OptInt with value set to v.
 func NewOptInt(v int) OptInt {
 	return OptInt{
@@ -259,6 +336,69 @@ func (o OptMeta) Or(d Meta) Meta {
 	return d
 }
 
+// NewOptNilDateTime returns new OptNilDateTime with value set to v.
+func NewOptNilDateTime(v time.Time) OptNilDateTime {
+	return OptNilDateTime{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptNilDateTime is optional nullable time.Time.
+type OptNilDateTime struct {
+	Value time.Time
+	Set   bool
+	Null  bool
+}
+
+// IsSet returns true if OptNilDateTime was set.
+func (o OptNilDateTime) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptNilDateTime) Reset() {
+	var v time.Time
+	o.Value = v
+	o.Set = false
+	o.Null = false
+}
+
+// SetTo sets value to v.
+func (o *OptNilDateTime) SetTo(v time.Time) {
+	o.Set = true
+	o.Null = false
+	o.Value = v
+}
+
+// IsSet returns true if value is Null.
+func (o OptNilDateTime) IsNull() bool { return o.Null }
+
+// SetNull sets value to null.
+func (o *OptNilDateTime) SetToNull() {
+	o.Set = true
+	o.Null = true
+	var v time.Time
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptNilDateTime) Get() (v time.Time, ok bool) {
+	if o.Null {
+		return v, false
+	}
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptNilDateTime) Or(d time.Time) time.Time {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptNilString returns new OptNilString with value set to v.
 func NewOptNilString(v string) OptNilString {
 	return OptNilString{
@@ -316,6 +456,98 @@ func (o OptNilString) Get() (v string, ok bool) {
 
 // Or returns value if set, or given parameter if does not.
 func (o OptNilString) Or(d string) string {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptSorting returns new OptSorting with value set to v.
+func NewOptSorting(v Sorting) OptSorting {
+	return OptSorting{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptSorting is optional Sorting.
+type OptSorting struct {
+	Value Sorting
+	Set   bool
+}
+
+// IsSet returns true if OptSorting was set.
+func (o OptSorting) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptSorting) Reset() {
+	var v Sorting
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptSorting) SetTo(v Sorting) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptSorting) Get() (v Sorting, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptSorting) Or(d Sorting) Sorting {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptString returns new OptString with value set to v.
+func NewOptString(v string) OptString {
+	return OptString{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptString is optional string.
+type OptString struct {
+	Value string
+	Set   bool
+}
+
+// IsSet returns true if OptString was set.
+func (o OptString) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptString) Reset() {
+	var v string
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptString) SetTo(v string) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptString) Get() (v string, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptString) Or(d string) string {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -451,6 +683,75 @@ func (s *ProjectGetAllResponse) SetData(val []Project) {
 // SetMeta sets the value of Meta.
 func (s *ProjectGetAllResponse) SetMeta(val OptMeta) {
 	s.Meta = val
+}
+
+type Sorting struct {
+	// Поле, по которому сортируется список.
+	Field string `json:"field"`
+	// Направление, по которому сортируется список.
+	Direction SortingDirection `json:"direction"`
+}
+
+// GetField returns the value of Field.
+func (s *Sorting) GetField() string {
+	return s.Field
+}
+
+// GetDirection returns the value of Direction.
+func (s *Sorting) GetDirection() SortingDirection {
+	return s.Direction
+}
+
+// SetField sets the value of Field.
+func (s *Sorting) SetField(val string) {
+	s.Field = val
+}
+
+// SetDirection sets the value of Direction.
+func (s *Sorting) SetDirection(val SortingDirection) {
+	s.Direction = val
+}
+
+// Направление, по которому сортируется список.
+type SortingDirection string
+
+const (
+	SortingDirectionAsc  SortingDirection = "asc"
+	SortingDirectionDesc SortingDirection = "desc"
+)
+
+// AllValues returns all SortingDirection values.
+func (SortingDirection) AllValues() []SortingDirection {
+	return []SortingDirection{
+		SortingDirectionAsc,
+		SortingDirectionDesc,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s SortingDirection) MarshalText() ([]byte, error) {
+	switch s {
+	case SortingDirectionAsc:
+		return []byte(s), nil
+	case SortingDirectionDesc:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *SortingDirection) UnmarshalText(data []byte) error {
+	switch SortingDirection(data) {
+	case SortingDirectionAsc:
+		*s = SortingDirectionAsc
+		return nil
+	case SortingDirectionDesc:
+		*s = SortingDirectionDesc
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
 }
 
 // Пользователь.
@@ -590,57 +891,60 @@ func (s *UserCreateRequest) SetLastName(val string) {
 	s.LastName = val
 }
 
-// Ref: #/components/schemas/UserCreateValidationError
-type UserCreateValidationError struct {
-	Field  string `json:"field"`
-	Reason string `json:"reason"`
-}
-
-// GetField returns the value of Field.
-func (s *UserCreateValidationError) GetField() string {
-	return s.Field
-}
-
-// GetReason returns the value of Reason.
-func (s *UserCreateValidationError) GetReason() string {
-	return s.Reason
-}
-
-// SetField sets the value of Field.
-func (s *UserCreateValidationError) SetField(val string) {
-	s.Field = val
-}
-
-// SetReason sets the value of Reason.
-func (s *UserCreateValidationError) SetReason(val string) {
-	s.Reason = val
-}
-
-func (*UserCreateValidationError) userCreateRes() {}
-
 // Список пользователей.
-// Ref: #/components/schemas/UserGetAllResponse
-type UserGetAllResponse struct {
+// Ref: #/components/schemas/UserListResponse
+type UserListResponse struct {
 	Data []User `json:"data"`
 	Meta Meta   `json:"meta"`
 }
 
 // GetData returns the value of Data.
-func (s *UserGetAllResponse) GetData() []User {
+func (s *UserListResponse) GetData() []User {
 	return s.Data
 }
 
 // GetMeta returns the value of Meta.
-func (s *UserGetAllResponse) GetMeta() Meta {
+func (s *UserListResponse) GetMeta() Meta {
 	return s.Meta
 }
 
 // SetData sets the value of Data.
-func (s *UserGetAllResponse) SetData(val []User) {
+func (s *UserListResponse) SetData(val []User) {
 	s.Data = val
 }
 
 // SetMeta sets the value of Meta.
-func (s *UserGetAllResponse) SetMeta(val Meta) {
+func (s *UserListResponse) SetMeta(val Meta) {
 	s.Meta = val
 }
+
+func (*UserListResponse) userListRes() {}
+
+// Ref: #/components/schemas/UserValidationError
+type UserValidationError struct {
+	Field  string `json:"field"`
+	Reason string `json:"reason"`
+}
+
+// GetField returns the value of Field.
+func (s *UserValidationError) GetField() string {
+	return s.Field
+}
+
+// GetReason returns the value of Reason.
+func (s *UserValidationError) GetReason() string {
+	return s.Reason
+}
+
+// SetField sets the value of Field.
+func (s *UserValidationError) SetField(val string) {
+	s.Field = val
+}
+
+// SetReason sets the value of Reason.
+func (s *UserValidationError) SetReason(val string) {
+	s.Reason = val
+}
+
+func (*UserValidationError) userCreateRes() {}
+func (*UserValidationError) userListRes()   {}

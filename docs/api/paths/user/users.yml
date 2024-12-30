@@ -19,7 +19,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserCreateValidationError"
+                $ref: "#/components/schemas/UserValidationError"
         409:
           description: Conflict
           content:
@@ -30,22 +30,78 @@ paths:
     get:
       tags:
         - user
-      operationId: userGetAll
-      summary: Получить всех пользователей
+      operationId: userList
+      summary: Получить список пользователей
       parameters:
         - $ref: "../../common.yml#/components/parameters/Page"
         - $ref: "../../common.yml#/components/parameters/PerPage"
+        - $ref: "../../common.yml#/components/parameters/Sorting"
+        - $ref: "#/components/parameters/Email"
+        - $ref: "#/components/parameters/FirstName"
+        - $ref: "#/components/parameters/MiddleName"
+        - $ref: "#/components/parameters/LastName"
+        - $ref: "#/components/parameters/CreatedAt"
+        - $ref: "#/components/parameters/UpdatedAt"
       responses:
         200:
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserGetAllResponse"
+                $ref: "#/components/schemas/UserListResponse"
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserValidationError"
 
 components:
+  parameters:
+    Email:
+      name: email
+      description: Почтовый адрес
+      in: query
+      required: false
+      schema:
+        type: string
+    FirstName:
+      name: firstName
+      description: Имя
+      in: query
+      required: false
+      schema:
+        type: string
+    MiddleName:
+      name: middleName
+      description: Отчество
+      in: query
+      required: false
+      schema:
+        type: string
+    LastName:
+      name: lastName
+      description: Фамилия
+      in: query
+      required: false
+      schema:
+        type: string
+    CreatedAt:
+      name: createdAt
+      description: Дата и время создания
+      in: query
+      required: false
+      schema:
+        $ref: "../../common.yml#/components/schemas/DateTimeFilter"
+    UpdatedAt:
+      name: updatedAt
+      description: Дата и время обновления
+      in: query
+      required: false
+      schema:
+        $ref: "../../common.yml#/components/schemas/DateTimeFilter"
   schemas:
-    UserCreateValidationError:
+    UserValidationError:
       type: object
       required:
         - field
@@ -72,11 +128,11 @@ components:
           nullable: true
         lastName:
           type: string
-    UserGetAllResponse:
+    UserListResponse:
       type: object
       description: Список пользователей
       required:
-        - users
+        - data
         - meta
       properties:
         data:
