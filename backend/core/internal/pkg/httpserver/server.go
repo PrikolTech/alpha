@@ -33,6 +33,8 @@ func New(handler http.Handler, opts ...OptionFunc) *Server {
 	return server
 }
 
+func (s *Server) Addr() string { return s.server.Addr }
+
 func (s *Server) Start(ctx context.Context) {
 	s.server.BaseContext = func(_ net.Listener) context.Context {
 		return ctx

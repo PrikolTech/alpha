@@ -4,29 +4,31 @@ package http
 
 import (
 	"context"
+	"errors"
+	"log/slog"
+	"net/http"
+
+	"github.com/go-faster/jx"
+	ht "github.com/ogen-go/ogen/http"
+	"github.com/ogen-go/ogen/ogenerrors"
 
 	"github.com/PrikolTech/alpha/backend/core/internal/generated/api"
-	user_create_handler "github.com/PrikolTech/alpha/backend/core/internal/transport/http/user_create"
-	user_get_by_id_handler "github.com/PrikolTech/alpha/backend/core/internal/transport/http/user_get_by_id"
 )
-
-type Handlers struct {
-	UserCreate  *user_create_handler.Handler
-	UserGetById *user_get_by_id_handler.Handler
-}
 
 type mux struct {
 	*api.UnimplementedHandler
 	handlers Handlers
+	logger   *slog.Logger
 }
 
-func New(handlers Handlers) *api.Server {
+func New(logger *slog.Logger, handlers Handlers) *api.Server {
 	mux := mux{
 		UnimplementedHandler: new(api.UnimplementedHandler),
 		handlers:             handlers,
+		logger:               logger,
 	}
 
-	server, err := api.NewServer(mux)
+	server, err := api.NewServer(mux, api.WithErrorHandler(mux.handleError))
 	if err != nil {
 		return nil
 	}
@@ -34,10 +36,24 @@ func New(handlers Handlers) *api.Server {
 	return server
 }
 
-func (h mux) UserCreate(ctx context.Context, req *api.UserCreateRequest) (api.UserCreateRes, error) {
-	return h.handlers.UserCreate.Handle(ctx, req)
-}
+func (m mux) handleError(ctx context.Context, w http.ResponseWriter, r *http.Request, err error) {
+	var ogenErr ogenerrors.Error
+	switch {
+	case errors.As(err, &ogenErr):
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(ogenErr.Code())
+		e := jx.GetEncoder()
+		e.ObjStart()
+		e.FieldStart("message")
+		e.StrEscape(err.Error())
+		e.ObjEnd()
+		_, _ = w.Write(e.Bytes())
 
-func (h mux) UserGetById(ctx context.Context, params api.UserGetByIdParams) (api.UserGetByIdRes, error) {
-	return h.handlers.UserGetById.Handle(ctx, params)
+	case errors.Is(err, ht.ErrNotImplemented):
+		w.WriteHeader(http.StatusNotImplemented)
+
+	default:
+		w.WriteHeader(http.StatusInternalServerError)
+		m.logger.Error(err.Error())
+	}
 }
