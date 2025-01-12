@@ -26,7 +26,7 @@ func (h *Handler) Handle(ctx context.Context, req *api.UserCreateRequest) (api.U
 			domainErr     *common.DomainError
 		)
 		if errors.As(err, &validationErr) {
-			res := &api.UserCreateValidationError{
+			res := &api.UserValidationError{
 				Field:  validationErr.Field,
 				Reason: validationErr.Reason.Error(),
 			}

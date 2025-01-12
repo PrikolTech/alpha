@@ -128,7 +128,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				if len(elem) == 0 {
 					switch r.Method {
 					case "GET":
-						s.handleUserGetAllRequest([0]string{}, elemIsEscaped, w, r)
+						s.handleUserListRequest([0]string{}, elemIsEscaped, w, r)
 					case "POST":
 						s.handleUserCreateRequest([0]string{}, elemIsEscaped, w, r)
 					default:
@@ -347,9 +347,9 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				if len(elem) == 0 {
 					switch method {
 					case "GET":
-						r.name = UserGetAllOperation
-						r.summary = "Получить всех пользователей"
-						r.operationID = "userGetAll"
+						r.name = UserListOperation
+						r.summary = "Получить список пользователей"
+						r.operationID = "userList"
 						r.pathPattern = "/v1/users"
 						r.args = args
 						r.count = 0

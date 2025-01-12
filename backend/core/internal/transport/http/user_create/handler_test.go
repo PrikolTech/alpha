@@ -40,7 +40,7 @@ func TestHandler_Handle(t *testing.T) {
 
 		res, err := handler.Handle(ctx, &api.UserCreateRequest{})
 		require.NoError(t, err)
-		require.IsType(t, &api.UserCreateValidationError{}, res)
+		require.IsType(t, &api.UserValidationError{}, res)
 	})
 
 	t.Run("userUsecase_DomainError", func(t *testing.T) {

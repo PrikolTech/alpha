@@ -35,6 +35,7 @@ func (h *Handler) Handle(ctx context.Context, params api.UserGetByIdParams) (api
 
 func (h *Handler) convertDomainToDto(user *domain.User) *api.User {
 	dto := api.User{
+		ID:        user.ID,
 		Email:     user.Email,
 		FirstName: user.FirstName,
 		LastName:  user.LastName,
