@@ -8,3 +8,7 @@ type UserCreateRes interface {
 type UserGetByIdRes interface {
 	userGetByIdRes()
 }
+
+type UserListRes interface {
+	userListRes()
+}

@@ -11,6 +11,6 @@ const (
 	ProjectGetAllOperation     OperationName = "ProjectGetAll"
 	ProjectGetByIdOperation    OperationName = "ProjectGetById"
 	UserCreateOperation        OperationName = "UserCreate"
-	UserGetAllOperation        OperationName = "UserGetAll"
 	UserGetByIdOperation       OperationName = "UserGetById"
+	UserListOperation          OperationName = "UserList"
 )
