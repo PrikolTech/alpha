@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"log/slog"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -22,13 +23,19 @@ func main() {
 }
 
 func run() int {
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+		Level: slog.LevelInfo,
+	}))
+
 	err := godotenv.Overload()
 	if err != nil {
+		logger.Error(err.Error())
 		return 1
 	}
 
 	db, err := psql.Connect()
 	if err != nil {
+		logger.Error(err.Error())
 		return 1
 	}
 	defer db.Close()
@@ -37,7 +44,7 @@ func run() int {
 	userGetByIdUsecase := user_get_by_id_usecase.New(db)
 	userListUsecase := user_list_usecase.New(db)
 
-	mux := http.New(http.Handlers{
+	mux := http.New(logger, http.Handlers{
 		UserCreate:  user_create_handler.New(userCreateUsecase),
 		UserGetById: user_get_by_id_handler.New(userGetByIdUsecase),
 		UserList:    user_list_handler.New(userListUsecase),
@@ -45,7 +52,13 @@ func run() int {
 
 	server := httpserver.New(mux)
 	server.Start(context.TODO())
-	<-server.Err()
+	logger.Info("server started", "addr", server.Addr())
+
+	err = <-server.Err()
+	if err != nil {
+		logger.Error(err.Error())
+		return 1
+	}
 
 	return 0
 }
