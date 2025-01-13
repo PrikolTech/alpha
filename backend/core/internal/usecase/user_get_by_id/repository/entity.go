@@ -3,8 +3,9 @@ package repository
 import (
 	"time"
 
-	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_get_by_id/domain"
 	"github.com/google/uuid"
+
+	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_get_by_id/domain"
 )
 
 type entity struct {

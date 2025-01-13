@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_list/domain"
 	"golang.org/x/sync/errgroup"
+
+	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_list/domain"
 )
 
 type Usecase struct {

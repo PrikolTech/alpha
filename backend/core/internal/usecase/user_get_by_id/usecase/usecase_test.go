@@ -4,11 +4,12 @@ import (
 	"context"
 	"testing"
 
-	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_get_by_id/domain"
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
+
+	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_get_by_id/domain"
 )
 
 func TestUsecase_Handle(t *testing.T) {

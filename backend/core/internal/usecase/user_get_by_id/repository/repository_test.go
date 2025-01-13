@@ -4,9 +4,10 @@ import (
 	"context"
 	"testing"
 
-	test_db "github.com/PrikolTech/alpha/backend/core/internal/pkg/test/db"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
+
+	test_db "github.com/PrikolTech/alpha/backend/core/internal/pkg/test/db"
 )
 
 func TestRepository_GetById(t *testing.T) {

@@ -7,13 +7,14 @@ import (
 	"testing"
 	"time"
 
-	test_db "github.com/PrikolTech/alpha/backend/core/internal/pkg/test/db"
-	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_list/domain"
-	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/require"
+
+	test_db "github.com/PrikolTech/alpha/backend/core/internal/pkg/test/db"
+	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_list/domain"
+	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
 )
 
 func TestRepository_Get_Filters(t *testing.T) {

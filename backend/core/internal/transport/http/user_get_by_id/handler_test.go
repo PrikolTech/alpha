@@ -4,12 +4,13 @@ import (
 	"context"
 	"testing"
 
-	"github.com/PrikolTech/alpha/backend/core/internal/common"
-	"github.com/PrikolTech/alpha/backend/core/internal/generated/api"
-	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_get_by_id/domain"
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/stretchr/testify/require"
 	gomock "go.uber.org/mock/gomock"
+
+	"github.com/PrikolTech/alpha/backend/core/internal/common"
+	"github.com/PrikolTech/alpha/backend/core/internal/generated/api"
+	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_get_by_id/domain"
 )
 
 func TestHandler_Handle(t *testing.T) {
