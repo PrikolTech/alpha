@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: project-alpha
-  version: 0.0.2
+  version: 0.0.3
 paths:
   # Users
   /v1/users:
