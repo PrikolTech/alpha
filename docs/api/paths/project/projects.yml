@@ -19,10 +19,12 @@ paths:
       tags:
         - project
       operationId: projectGetAll
-      summary: Получить все проекты с пагинацией
+      summary: Получить список проектов
       parameters:
         - $ref: "../../common.yml#/components/parameters/Page"
         - $ref: "../../common.yml#/components/parameters/PerPage"
+        - $ref: "#/components/parameters/Query"
+        - $ref: "../../common.yml#/components/parameters/Sorting"
       responses:
         200:
           description: Ok
@@ -30,6 +32,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ProjectGetAllResponse"
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectValidationError"
 
 components:
   schemas:
@@ -48,7 +56,6 @@ components:
           nullable: true
         code:
           type: string
-
     ProjectGetAllResponse:
       type: object
       description: Список проектов
@@ -61,3 +68,22 @@ components:
             $ref: "./common.yml#/components/schemas/Project"
         meta:
           $ref: "../../common.yml#/components/schemas/Meta"
+    ProjectValidationError:
+      type: object
+      required:
+        - field
+        - reason
+      properties:
+        field:
+          type: string
+        reason:
+          type: string
+
+  parameters:
+    Query:
+      name: query
+      description: Строка поиска по полям Название и Код проекта
+      in: query
+      required: false
+      schema:
+        type: string
