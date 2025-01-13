@@ -6,9 +6,10 @@ import (
 	"strings"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_list/domain"
 	"github.com/jmoiron/sqlx"
 	"github.com/samber/lo"
+
+	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_list/domain"
 )
 
 type Repository struct {

@@ -4,6 +4,7 @@ import (
 	"context"
 	"net"
 	"net/http"
+	"time"
 
 	"github.com/PrikolTech/alpha/backend/core/pkg/env"
 )
@@ -18,8 +19,10 @@ func New(handler http.Handler, opts ...OptionFunc) *Server {
 	port := env.GetString("SERVICE_PORT", "3000")
 
 	httpServer := &http.Server{
-		Handler: handler,
-		Addr:    net.JoinHostPort(host, port),
+		Handler:      handler,
+		Addr:         net.JoinHostPort(host, port),
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 5 * time.Second,
 	}
 
 	server := &Server{

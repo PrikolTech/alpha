@@ -5,9 +5,7 @@ import (
 	"fmt"
 )
 
-var (
-	ErrEmptyValue = errors.New("value is empty")
-)
+var ErrEmptyValue = errors.New("value is empty")
 
 type ValidationError struct {
 	Field  string

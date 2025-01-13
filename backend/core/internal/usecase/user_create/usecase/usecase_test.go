@@ -4,12 +4,13 @@ import (
 	"context"
 	"testing"
 
-	test_trm "github.com/PrikolTech/alpha/backend/core/internal/pkg/test/trm"
-	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_create/domain"
-	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
+
+	test_trm "github.com/PrikolTech/alpha/backend/core/internal/pkg/test/trm"
+	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_create/domain"
+	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
 )
 
 func Test_usecase_Handle(t *testing.T) {

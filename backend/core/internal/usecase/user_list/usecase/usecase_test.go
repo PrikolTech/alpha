@@ -4,10 +4,11 @@ import (
 	"context"
 	"testing"
 
-	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_list/domain"
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/stretchr/testify/require"
 	gomock "go.uber.org/mock/gomock"
+
+	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_list/domain"
 )
 
 func TestUsecase_Handle(t *testing.T) {

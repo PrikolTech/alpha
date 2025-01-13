@@ -5,9 +5,10 @@ import (
 	"fmt"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_create/domain"
 	trmsqlx "github.com/avito-tech/go-transaction-manager/drivers/sqlx/v2"
 	"github.com/jmoiron/sqlx"
+
+	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_create/domain"
 )
 
 type Repository struct {

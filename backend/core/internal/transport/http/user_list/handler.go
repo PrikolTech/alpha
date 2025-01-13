@@ -5,10 +5,11 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/samber/lo"
+
 	"github.com/PrikolTech/alpha/backend/core/internal/generated/api"
 	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_list/domain"
 	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
-	"github.com/samber/lo"
 )
 
 type Handler struct {

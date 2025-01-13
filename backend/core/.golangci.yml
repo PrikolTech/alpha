@@ -1,0 +1,33 @@
+linters:
+  disable-all: true
+  enable:
+    - errcheck
+    - gci
+    - gochecknoinits
+    - gofumpt
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - makezero
+    - revive
+    - staticcheck
+    - typecheck
+    - unused
+    - whitespace
+
+linters-settings:
+  revive:
+    rules:
+      - name: var-naming
+        disabled: true
+  gci:
+    sections:
+      - standard # Captures all standard packages
+      - localmodule # Contains all local packages
+      - default # Contains all imports that could not be matched to another section type
+    skip-generated: true
+
+  gosec:
+    excludes:
+      - G115 # Potential integer overflow when converting between integer types

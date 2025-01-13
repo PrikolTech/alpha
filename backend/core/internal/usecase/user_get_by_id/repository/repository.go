@@ -5,9 +5,10 @@ import (
 	"fmt"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_get_by_id/domain"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+
+	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_get_by_id/domain"
 )
 
 type Repository struct {
