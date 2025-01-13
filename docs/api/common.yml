@@ -1,0 +1,80 @@
+components:
+  parameters:
+    Page:
+      name: page
+      description: Номер страницы
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+    PerPage:
+      name: perPage
+      description: Количество записей на странице
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 20
+    Sorting:
+      name: sorting
+      description: Сортировка списка
+      in: query
+      required: false
+      schema:
+        type: object
+        required:
+          - field
+          - direction
+        properties:
+          field:
+            type: string
+            description: Поле, по которому сортируется список
+          direction:
+            type: string
+            description: Направление, по которому сортируется список
+            enum:
+              - asc
+              - desc
+
+  schemas:
+    Meta:
+      type: object
+      description: Мета данные
+      required:
+        - page
+        - totalPages
+        - perPage
+        - totalRecords
+      properties:
+        page:
+          type: integer
+          description: Номер страницы
+        totalPages:
+          type: integer
+          description: Общее количество страниц
+        perPage:
+          type: integer
+          description: Количество записей на странице
+        totalRecords:
+          type: integer
+          description: Общее количество записей
+    DomainError:
+      type: object
+      description: Доменная ошибка
+      required:
+        - message
+      properties:
+        message:
+          type: string
+    DateTimeFilter:
+      type: object
+      properties:
+        start:
+          type: string
+          format: date-time
+          nullable: true
+        end:
+          type: string
+          format: date-time
+          nullable: true

@@ -1,0 +1,5 @@
+ALTER TABLE _user
+ADD created_at TIMESTAMP NOT NULL DEFAULT now();
+
+ALTER TABLE _user
+ADD updated_at TIMESTAMP NOT NULL DEFAULT now();

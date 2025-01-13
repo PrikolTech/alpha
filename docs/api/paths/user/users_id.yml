@@ -1,0 +1,33 @@
+paths:
+  users_id:
+    get:
+      tags:
+        - user
+      operationId: userGetById
+      summary: Получить пользователя по id
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "./common.yml#/components/schemas/User"
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "../../common.yml#/components/schemas/DomainError"
+
+components:
+  parameters:
+    UserId:
+      name: id
+      description: id пользователя
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
