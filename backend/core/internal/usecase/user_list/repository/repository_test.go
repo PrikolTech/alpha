@@ -14,7 +14,6 @@ import (
 
 	test_db "github.com/PrikolTech/alpha/backend/core/internal/pkg/test/db"
 	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_list/domain"
-	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
 )
 
 func TestRepository_Get_Filters(t *testing.T) {
@@ -37,7 +36,7 @@ func TestRepository_Get_Filters(t *testing.T) {
 				Page:    1,
 				PerPage: 5,
 				Filters: domain.UserListFilters{
-					Email: ptr.To("Test"),
+					Email: lo.ToPtr("Test"),
 				},
 			},
 			setup: func() ([]test_db.User, error) {
@@ -52,7 +51,7 @@ func TestRepository_Get_Filters(t *testing.T) {
 				Page:    1,
 				PerPage: 5,
 				Filters: domain.UserListFilters{
-					FirstName: ptr.To("Test"),
+					FirstName: lo.ToPtr("Test"),
 				},
 			},
 			setup: func() ([]test_db.User, error) {
@@ -67,12 +66,12 @@ func TestRepository_Get_Filters(t *testing.T) {
 				Page:    1,
 				PerPage: 5,
 				Filters: domain.UserListFilters{
-					MiddleName: ptr.To("Test"),
+					MiddleName: lo.ToPtr("Test"),
 				},
 			},
 			setup: func() ([]test_db.User, error) {
 				return test_db.GenerateEntities[test_db.User](2, func(entity *test_db.User) {
-					entity.MiddleName = ptr.To("_test_" + gofakeit.MiddleName())
+					entity.MiddleName = lo.ToPtr("_test_" + gofakeit.MiddleName())
 				})
 			},
 		},
@@ -82,7 +81,7 @@ func TestRepository_Get_Filters(t *testing.T) {
 				Page:    1,
 				PerPage: 5,
 				Filters: domain.UserListFilters{
-					LastName: ptr.To("Test"),
+					LastName: lo.ToPtr("Test"),
 				},
 			},
 			setup: func() ([]test_db.User, error) {
@@ -98,8 +97,8 @@ func TestRepository_Get_Filters(t *testing.T) {
 				PerPage: 6,
 				Filters: domain.UserListFilters{
 					CreatedAt: &domain.DateTimeFilter{
-						Start: ptr.To(lo.Must1(time.Parse(time.DateOnly, "2001-02-03"))),
-						End:   ptr.To(lo.Must1(time.Parse(time.DateOnly, "2001-02-05"))),
+						Start: lo.ToPtr(lo.Must1(time.Parse(time.DateOnly, "2001-02-03"))),
+						End:   lo.ToPtr(lo.Must1(time.Parse(time.DateOnly, "2001-02-05"))),
 					},
 				},
 			},
@@ -132,8 +131,8 @@ func TestRepository_Get_Filters(t *testing.T) {
 				PerPage: 6,
 				Filters: domain.UserListFilters{
 					UpdatedAt: &domain.DateTimeFilter{
-						Start: ptr.To(lo.Must1(time.Parse(time.DateOnly, "2001-02-03"))),
-						End:   ptr.To(lo.Must1(time.Parse(time.DateOnly, "2001-02-05"))),
+						Start: lo.ToPtr(lo.Must1(time.Parse(time.DateOnly, "2001-02-03"))),
+						End:   lo.ToPtr(lo.Must1(time.Parse(time.DateOnly, "2001-02-05"))),
 					},
 				},
 			},

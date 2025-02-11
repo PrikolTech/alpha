@@ -4,10 +4,11 @@ import (
 	"context"
 	"errors"
 
+	"github.com/samber/lo"
+
 	"github.com/PrikolTech/alpha/backend/core/internal/common"
 	"github.com/PrikolTech/alpha/backend/core/internal/generated/api"
 	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_create/domain"
-	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
 )
 
 type Handler struct {
@@ -52,7 +53,7 @@ func (h *Handler) convertDtoToDomain(req *api.UserCreateRequest) domain.UserCrea
 	}
 
 	if req.MiddleName.IsSet() && !req.MiddleName.IsNull() {
-		in.MiddleName = ptr.To(req.MiddleName.Value)
+		in.MiddleName = lo.ToPtr(req.MiddleName.Value)
 	}
 
 	return in

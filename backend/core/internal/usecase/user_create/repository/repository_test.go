@@ -7,11 +7,11 @@ import (
 	trmsqlx "github.com/avito-tech/go-transaction-manager/drivers/sqlx/v2"
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"github.com/stretchr/testify/require"
 
 	test_db "github.com/PrikolTech/alpha/backend/core/internal/pkg/test/db"
 	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_create/domain"
-	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
 )
 
 func TestRepository_Create(t *testing.T) {
@@ -24,7 +24,7 @@ func TestRepository_Create(t *testing.T) {
 	in := domain.UserCreateIn{
 		Email:      gofakeit.UUID(),
 		FirstName:  gofakeit.FirstName(),
-		MiddleName: ptr.To(gofakeit.MiddleName()),
+		MiddleName: lo.ToPtr(gofakeit.MiddleName()),
 		LastName:   gofakeit.LastName(),
 	}
 

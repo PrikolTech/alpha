@@ -5,12 +5,12 @@ import (
 	"testing"
 
 	"github.com/brianvoe/gofakeit/v7"
+	"github.com/samber/lo"
 	"github.com/stretchr/testify/require"
 	gomock "go.uber.org/mock/gomock"
 
 	"github.com/PrikolTech/alpha/backend/core/internal/generated/api"
 	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_list/domain"
-	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
 )
 
 func TestHandler_Handle(t *testing.T) {
@@ -35,17 +35,17 @@ func TestHandler_Handle(t *testing.T) {
 			Page:    3,
 			PerPage: 10,
 			Filters: domain.UserListFilters{
-				Email:      ptr.To("email"),
-				FirstName:  ptr.To("firstName"),
-				MiddleName: ptr.To("middleName"),
-				LastName:   ptr.To("lastName"),
+				Email:      lo.ToPtr("email"),
+				FirstName:  lo.ToPtr("firstName"),
+				MiddleName: lo.ToPtr("middleName"),
+				LastName:   lo.ToPtr("lastName"),
 				CreatedAt: &domain.DateTimeFilter{
-					Start: ptr.To(params.CreatedAt.Value.Start.Value),
-					End:   ptr.To(params.CreatedAt.Value.End.Value),
+					Start: lo.ToPtr(params.CreatedAt.Value.Start.Value),
+					End:   lo.ToPtr(params.CreatedAt.Value.End.Value),
 				},
 				UpdatedAt: &domain.DateTimeFilter{
-					Start: ptr.To(params.UpdatedAt.Value.Start.Value),
-					End:   ptr.To(params.UpdatedAt.Value.End.Value),
+					Start: lo.ToPtr(params.UpdatedAt.Value.Start.Value),
+					End:   lo.ToPtr(params.UpdatedAt.Value.End.Value),
 				},
 			},
 			Sorting: &domain.UserListSorting{
