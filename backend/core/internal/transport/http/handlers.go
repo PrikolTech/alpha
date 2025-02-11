@@ -2,9 +2,9 @@ package http
 
 import (
 	"context"
-	project_create_handler "github.com/PrikolTech/alpha/backend/core/internal/transport/http/project_create"
 
 	"github.com/PrikolTech/alpha/backend/core/internal/generated/api"
+	project_create_handler "github.com/PrikolTech/alpha/backend/core/internal/transport/http/project_create"
 	user_create_handler "github.com/PrikolTech/alpha/backend/core/internal/transport/http/user_create"
 	user_get_by_id_handler "github.com/PrikolTech/alpha/backend/core/internal/transport/http/user_get_by_id"
 	user_list_handler "github.com/PrikolTech/alpha/backend/core/internal/transport/http/user_list"

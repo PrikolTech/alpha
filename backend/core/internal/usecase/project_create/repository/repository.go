@@ -3,10 +3,12 @@ package repository
 import (
 	"context"
 	"fmt"
+
 	sq "github.com/Masterminds/squirrel"
-	"github.com/PrikolTech/alpha/backend/core/internal/usecase/project_create/domain"
 	trmsqlx "github.com/avito-tech/go-transaction-manager/drivers/sqlx/v2"
 	"github.com/jmoiron/sqlx"
+
+	"github.com/PrikolTech/alpha/backend/core/internal/usecase/project_create/domain"
 )
 
 type Repository struct {
