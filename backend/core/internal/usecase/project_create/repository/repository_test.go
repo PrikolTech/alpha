@@ -70,5 +70,4 @@ func TestRepository_ExistsByCode(t *testing.T) {
 		require.NoError(t, err)
 		require.True(t, exists)
 	})
-
 }
