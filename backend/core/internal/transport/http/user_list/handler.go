@@ -12,15 +12,15 @@ import (
 )
 
 type Handler struct {
-	userUsecase userUsecase
+	usecase usecase
 }
 
-func New(userUsecase userUsecase) *Handler {
-	return &Handler{userUsecase: userUsecase}
+func New(usecase usecase) *Handler {
+	return &Handler{usecase: usecase}
 }
 
 func (h *Handler) Handle(ctx context.Context, params api.UserListParams) (api.UserListRes, error) {
-	out, err := h.userUsecase.Handle(ctx, h.convertParamsToDomain(params))
+	out, err := h.usecase.Handle(ctx, h.convertParamsToDomain(params))
 	if err != nil {
 		var validationErr *domain.ValidationError
 		if errors.As(err, &validationErr) {

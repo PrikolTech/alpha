@@ -62,7 +62,7 @@ func TestHandler_Handle(t *testing.T) {
 			require.NoError(t, gofakeit.Struct(&out.Data[i]))
 		}
 
-		userUsecase := NewMockuserUsecase(ctrl)
+		userUsecase := NewMockusecase(ctrl)
 		userUsecase.EXPECT().Handle(ctx, in).Return(&out, nil)
 
 		handler := New(userUsecase)
@@ -79,7 +79,7 @@ func TestHandler_Handle(t *testing.T) {
 	})
 
 	t.Run("userUsecase_ValidationError", func(t *testing.T) {
-		userUsecase := NewMockuserUsecase(ctrl)
+		userUsecase := NewMockusecase(ctrl)
 		userUsecase.EXPECT().Handle(ctx, gomock.Any()).Return(nil, &domain.ValidationError{
 			Reason: gofakeit.Error(),
 		})
@@ -92,7 +92,7 @@ func TestHandler_Handle(t *testing.T) {
 	})
 
 	t.Run("userUsecase_InternalError", func(t *testing.T) {
-		userUsecase := NewMockuserUsecase(ctrl)
+		userUsecase := NewMockusecase(ctrl)
 		userUsecase.EXPECT().Handle(ctx, gomock.Any()).Return(nil, gofakeit.Error())
 
 		handler := New(userUsecase)

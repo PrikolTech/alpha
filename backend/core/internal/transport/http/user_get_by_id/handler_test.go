@@ -22,7 +22,7 @@ func TestHandler_Handle(t *testing.T) {
 		var expectedUser domain.User
 		require.NoError(t, gofakeit.Struct(&expectedUser))
 
-		userUsecase := NewMockuserUsecase(ctrl)
+		userUsecase := NewMockusecase(ctrl)
 		userUsecase.EXPECT().Handle(ctx, gomock.Any()).Return(&expectedUser, nil)
 
 		handler := New(userUsecase)
@@ -36,7 +36,7 @@ func TestHandler_Handle(t *testing.T) {
 	})
 
 	t.Run("userUsecase_DomainError", func(t *testing.T) {
-		userUsecase := NewMockuserUsecase(ctrl)
+		userUsecase := NewMockusecase(ctrl)
 		userUsecase.EXPECT().Handle(ctx, gomock.Any()).Return(nil, &common.DomainError{})
 
 		handler := New(userUsecase)
@@ -47,7 +47,7 @@ func TestHandler_Handle(t *testing.T) {
 	})
 
 	t.Run("userUsecase_InternalError", func(t *testing.T) {
-		userUsecase := NewMockuserUsecase(ctrl)
+		userUsecase := NewMockusecase(ctrl)
 		userUsecase.EXPECT().Handle(ctx, gomock.Any()).Return(nil, gofakeit.Error())
 
 		handler := New(userUsecase)
