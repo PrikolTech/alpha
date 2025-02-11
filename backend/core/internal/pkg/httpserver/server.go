@@ -2,6 +2,7 @@ package httpserver
 
 import (
 	"context"
+	"log/slog"
 	"net"
 	"net/http"
 	"time"
@@ -11,10 +12,10 @@ import (
 
 type Server struct {
 	server *http.Server
-	errCh  chan error
+	logger *slog.Logger
 }
 
-func New(handler http.Handler, opts ...OptionFunc) *Server {
+func New(handler http.Handler, logger *slog.Logger, opts ...OptionFunc) *Server {
 	host := env.GetString("SERVICE_HOST", "localhost")
 	port := env.GetString("SERVICE_PORT", "3000")
 
@@ -27,6 +28,7 @@ func New(handler http.Handler, opts ...OptionFunc) *Server {
 
 	server := &Server{
 		server: httpServer,
+		logger: logger,
 	}
 
 	for _, opt := range opts {
@@ -36,19 +38,24 @@ func New(handler http.Handler, opts ...OptionFunc) *Server {
 	return server
 }
 
-func (s *Server) Addr() string { return s.server.Addr }
-
-func (s *Server) Start(ctx context.Context) {
+func (s *Server) Run(ctx context.Context) error {
 	s.server.BaseContext = func(_ net.Listener) context.Context {
 		return ctx
 	}
 
+	errCh := make(chan error, 1)
+
 	go func() {
-		s.errCh <- s.server.ListenAndServe()
-		close(s.errCh)
+		errCh <- s.server.ListenAndServe()
+		close(errCh)
 	}()
+
+	s.logger.Info("start server", "addr", s.server.Addr)
+
+	select {
+	case <-ctx.Done():
+		return s.server.Shutdown(ctx)
+	case err := <-errCh:
+		return err
+	}
 }
-
-func (s *Server) Err() <-chan error { return s.errCh }
-
-func (s *Server) Stop(ctx context.Context) error { return s.server.Shutdown(ctx) }

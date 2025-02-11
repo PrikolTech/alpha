@@ -34,13 +34,13 @@ func run() int {
 
 	err := godotenv.Overload()
 	if err != nil {
-		logger.Error(err.Error())
+		logger.Error("overload env", "err", err)
 		return 1
 	}
 
 	db, err := psql.Connect(ctx)
 	if err != nil {
-		logger.Error(err.Error())
+		logger.Error("connect database", "err", err)
 		return 1
 	}
 	defer db.Close()
@@ -55,16 +55,12 @@ func run() int {
 		UserList:    user_list_handler.New(userListUsecase),
 	})
 
-	server := httpserver.New(mux)
-	server.Start(ctx)
-	logger.Info("server started", "addr", server.Addr())
-
-	select {
-	case <-ctx.Done():
-		logger.Info("server stopped")
-		return 0
-	case err := <-server.Err():
-		logger.Error(err.Error())
+	server := httpserver.New(mux, logger)
+	if err := server.Run(ctx); err != nil {
+		logger.Error("fail server", "err", err)
 		return 1
 	}
+
+	logger.Info("stop server")
+	return 0
 }
