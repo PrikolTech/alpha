@@ -13,24 +13,24 @@ func insertEntities[T, U any](c *Container, table string, entities []T, idCol st
 		return make([]U, 0), nil
 	}
 
-	fieldsSlice := lo.Map(entities, func(item T, _ int) []Field {
+	fieldsSlice := lo.Map(entities, func(item T, _ int) []field {
 		fields := toFields(item)
 		if idSkip {
-			fields = slices.DeleteFunc(fields, func(field Field) bool {
-				return field.Key == idCol
+			fields = slices.DeleteFunc(fields, func(field field) bool {
+				return field.key == idCol
 			})
 		}
 		return fields
 	})
 
-	keys := lo.Map(fieldsSlice[0], func(item Field, _ int) string { return item.Key })
+	keys := lo.Map(fieldsSlice[0], func(item field, _ int) string { return item.key })
 
 	builder := c.builder.
 		Insert(table).
 		Columns(keys...)
 
 	for _, fields := range fieldsSlice {
-		values := lo.Map(fields, func(item Field, _ int) any { return item.Value })
+		values := lo.Map(fields, func(item field, _ int) any { return item.value })
 		builder = builder.Values(values...)
 	}
 
@@ -137,7 +137,7 @@ func DeleteEntityById[U any](c *Container, table string, id U) error {
 func SelectEntitiesByIdCol[T, U any](c *Container, table string, idCol string, ids []U) ([]T, error) {
 	var entity T
 	fields := toFields(entity)
-	keys := lo.Map(fields, func(item Field, _ int) string { return item.Key })
+	keys := lo.Map(fields, func(item field, _ int) string { return item.key })
 
 	builder := c.builder.
 		Select(keys...).

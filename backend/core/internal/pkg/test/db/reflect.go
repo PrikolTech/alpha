@@ -4,12 +4,12 @@ import (
 	"reflect"
 )
 
-type Field struct {
-	Key   string
-	Value any
+type field struct {
+	key   string
+	value any
 }
 
-func toFields[T any](item T) []Field {
+func toFields[T any](item T) []field {
 	v := reflect.ValueOf(item)
 	t := v.Type()
 
@@ -17,10 +17,10 @@ func toFields[T any](item T) []Field {
 		return nil
 	}
 
-	fields := make([]Field, v.NumField())
+	fields := make([]field, v.NumField())
 	for i := range fields {
-		fields[i].Key = t.Field(i).Tag.Get("db")
-		fields[i].Value = v.Field(i).Interface()
+		fields[i].key = t.Field(i).Tag.Get("db")
+		fields[i].value = v.Field(i).Interface()
 	}
 
 	return fields
