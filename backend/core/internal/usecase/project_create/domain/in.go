@@ -2,8 +2,7 @@ package domain
 
 type ProjectCreateIn struct {
 	Name        string
-	Description string
-	IsArchived  bool
+	Description *string
 	Code        string
 }
 
@@ -12,7 +11,7 @@ func (i *ProjectCreateIn) Validate() error {
 		return NewValidationError("name", ErrEmptyValue)
 	}
 
-	if i.Description == "" {
+	if i.Description != nil && *i.Description == "" {
 		return NewValidationError("description", ErrEmptyValue)
 	}
 

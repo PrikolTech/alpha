@@ -51,8 +51,9 @@ func (s *DomainError) SetMessage(val string) {
 	s.Message = val
 }
 
-func (*DomainError) userCreateRes()  {}
-func (*DomainError) userGetByIdRes() {}
+func (*DomainError) projectCreateRes() {}
+func (*DomainError) userCreateRes()    {}
+func (*DomainError) userGetByIdRes()   {}
 
 // Мета данные.
 // Ref: #/components/schemas/Meta
@@ -617,6 +618,8 @@ func (s *Project) SetUpdatedAt(val OptDateTime) {
 // ProjectCreateCreated is response for ProjectCreate operation.
 type ProjectCreateCreated struct{}
 
+func (*ProjectCreateCreated) projectCreateRes() {}
+
 // Запрос на создание проекта.
 // Ref: #/components/schemas/ProjectCreateRequest
 type ProjectCreateRequest struct {
@@ -684,6 +687,37 @@ func (s *ProjectGetAllResponse) SetData(val []Project) {
 func (s *ProjectGetAllResponse) SetMeta(val OptMeta) {
 	s.Meta = val
 }
+
+func (*ProjectGetAllResponse) projectGetAllRes() {}
+
+// Ref: #/components/schemas/ProjectValidationError
+type ProjectValidationError struct {
+	Field  string `json:"field"`
+	Reason string `json:"reason"`
+}
+
+// GetField returns the value of Field.
+func (s *ProjectValidationError) GetField() string {
+	return s.Field
+}
+
+// GetReason returns the value of Reason.
+func (s *ProjectValidationError) GetReason() string {
+	return s.Reason
+}
+
+// SetField sets the value of Field.
+func (s *ProjectValidationError) SetField(val string) {
+	s.Field = val
+}
+
+// SetReason sets the value of Reason.
+func (s *ProjectValidationError) SetReason(val string) {
+	s.Reason = val
+}
+
+func (*ProjectValidationError) projectCreateRes() {}
+func (*ProjectValidationError) projectGetAllRes() {}
 
 type Sorting struct {
 	// Поле, по которому сортируется список.

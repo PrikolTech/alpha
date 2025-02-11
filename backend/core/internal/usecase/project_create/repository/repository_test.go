@@ -4,6 +4,7 @@ import (
 	"context"
 	test_db "github.com/PrikolTech/alpha/backend/core/internal/pkg/test/db"
 	"github.com/PrikolTech/alpha/backend/core/internal/usecase/project_create/domain"
+	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
 	trmsqlx "github.com/avito-tech/go-transaction-manager/drivers/sqlx/v2"
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/google/uuid"
@@ -20,8 +21,7 @@ func TestRepository_Create(t *testing.T) {
 
 	in := domain.ProjectCreateIn{
 		Name:        gofakeit.Name(),
-		Description: gofakeit.ProductDescription(),
-		IsArchived:  gofakeit.Bool(),
+		Description: ptr.To(gofakeit.ProductDescription()),
 		Code:        gofakeit.AppName(),
 	}
 
@@ -39,7 +39,6 @@ func TestRepository_Create(t *testing.T) {
 
 	require.Equal(t, in.Name, project.Name)
 	require.Equal(t, in.Description, project.Description)
-	require.Equal(t, in.IsArchived, project.IsArchived)
 	require.Equal(t, in.Code, project.Code)
 }
 

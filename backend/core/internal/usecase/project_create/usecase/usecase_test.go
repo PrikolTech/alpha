@@ -4,6 +4,7 @@ import (
 	"context"
 	test_trm "github.com/PrikolTech/alpha/backend/core/internal/pkg/test/trm"
 	"github.com/PrikolTech/alpha/backend/core/internal/usecase/project_create/domain"
+	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -20,8 +21,7 @@ func TestUsecase_Handler(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		in := domain.ProjectCreateIn{
 			Name:        gofakeit.Name(),
-			Description: gofakeit.ProductDescription(),
-			IsArchived:  gofakeit.Bool(),
+			Description: ptr.To(gofakeit.ProductDescription()),
 			Code:        gofakeit.UUID(),
 		}
 
@@ -37,8 +37,7 @@ func TestUsecase_Handler(t *testing.T) {
 	t.Run("project already exists", func(t *testing.T) {
 		in := domain.ProjectCreateIn{
 			Name:        gofakeit.Name(),
-			Description: gofakeit.ProductDescription(),
-			IsArchived:  gofakeit.Bool(),
+			Description: ptr.To(gofakeit.ProductDescription()),
 			Code:        gofakeit.UUID(),
 		}
 		projectRepo := NewMockprojectRepo(ctrl)
@@ -60,8 +59,7 @@ func TestUsecase_Handler(t *testing.T) {
 	t.Run("error from ExistsByCode", func(t *testing.T) {
 		in := domain.ProjectCreateIn{
 			Name:        gofakeit.Name(),
-			Description: gofakeit.ProductDescription(),
-			IsArchived:  gofakeit.Bool(),
+			Description: ptr.To(gofakeit.ProductDescription()),
 			Code:        gofakeit.UUID(),
 		}
 		expectedErr := gofakeit.Error()
@@ -77,8 +75,7 @@ func TestUsecase_Handler(t *testing.T) {
 	t.Run("error from Create", func(t *testing.T) {
 		in := domain.ProjectCreateIn{
 			Name:        gofakeit.Name(),
-			Description: gofakeit.ProductDescription(),
-			IsArchived:  gofakeit.Bool(),
+			Description: ptr.To(gofakeit.ProductDescription()),
 			Code:        gofakeit.UUID(),
 		}
 		expectedErr := gofakeit.Error()

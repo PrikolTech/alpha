@@ -9,10 +9,40 @@ import (
 	"github.com/go-faster/jx"
 )
 
-func encodeProjectCreateResponse(response *ProjectCreateCreated, w http.ResponseWriter) error {
-	w.WriteHeader(201)
+func encodeProjectCreateResponse(response ProjectCreateRes, w http.ResponseWriter) error {
+	switch response := response.(type) {
+	case *ProjectCreateCreated:
+		w.WriteHeader(201)
 
-	return nil
+		return nil
+
+	case *ProjectValidationError:
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(400)
+
+		e := new(jx.Encoder)
+		response.Encode(e)
+		if _, err := e.WriteTo(w); err != nil {
+			return errors.Wrap(err, "write")
+		}
+
+		return nil
+
+	case *DomainError:
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(409)
+
+		e := new(jx.Encoder)
+		response.Encode(e)
+		if _, err := e.WriteTo(w); err != nil {
+			return errors.Wrap(err, "write")
+		}
+
+		return nil
+
+	default:
+		return errors.Errorf("unexpected response type: %T", response)
+	}
 }
 
 func encodeProjectDeleteByIdResponse(response *ProjectDeleteByIdNoContent, w http.ResponseWriter) error {
@@ -21,17 +51,35 @@ func encodeProjectDeleteByIdResponse(response *ProjectDeleteByIdNoContent, w htt
 	return nil
 }
 
-func encodeProjectGetAllResponse(response *ProjectGetAllResponse, w http.ResponseWriter) error {
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.WriteHeader(200)
+func encodeProjectGetAllResponse(response ProjectGetAllRes, w http.ResponseWriter) error {
+	switch response := response.(type) {
+	case *ProjectGetAllResponse:
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(200)
 
-	e := new(jx.Encoder)
-	response.Encode(e)
-	if _, err := e.WriteTo(w); err != nil {
-		return errors.Wrap(err, "write")
+		e := new(jx.Encoder)
+		response.Encode(e)
+		if _, err := e.WriteTo(w); err != nil {
+			return errors.Wrap(err, "write")
+		}
+
+		return nil
+
+	case *ProjectValidationError:
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(400)
+
+		e := new(jx.Encoder)
+		response.Encode(e)
+		if _, err := e.WriteTo(w); err != nil {
+			return errors.Wrap(err, "write")
+		}
+
+		return nil
+
+	default:
+		return errors.Errorf("unexpected response type: %T", response)
 	}
-
-	return nil
 }
 
 func encodeProjectGetByIdResponse(response *Project, w http.ResponseWriter) error {

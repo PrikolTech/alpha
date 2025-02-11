@@ -49,8 +49,8 @@ func (r *Repository) ExistsByCode(ctx context.Context, code string) (bool, error
 func (r *Repository) Create(ctx context.Context, in domain.ProjectCreateIn) error {
 	builder := sq.StatementBuilder.PlaceholderFormat(sq.Dollar).
 		Insert("project").
-		Columns("name", "description", "code", "is_archived").
-		Values(in.Name, in.Description, in.Code, in.IsArchived)
+		Columns("name", "description", "code").
+		Values(in.Name, in.Description, in.Code)
 
 	query, args, err := builder.ToSql()
 	if err != nil {
