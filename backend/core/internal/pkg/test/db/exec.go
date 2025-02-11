@@ -38,13 +38,13 @@ func insertEntities[T, U any](c *Container, table string, entities []T, idCol st
 
 	query, args, err := builder.ToSql()
 	if err != nil {
-		return nil, fmt.Errorf("failed to build query for '%s': %w", table, err)
+		return nil, fmt.Errorf("build query for %q: %w", table, err)
 	}
 
 	var ids []U
 	err = c.db.Select(&ids, query, args...)
 	if err != nil {
-		return nil, fmt.Errorf("failed to exec query for '%s': %w", table, err)
+		return nil, fmt.Errorf("exec query for %q: %w", table, err)
 	}
 
 	return ids, nil
@@ -107,12 +107,12 @@ func DeleteEntitiesByIdCol[U any](c *Container, table string, idCol string, ids 
 
 	query, args, err := builder.ToSql()
 	if err != nil {
-		return fmt.Errorf("failed to build query for '%s': %w", table, err)
+		return fmt.Errorf("build query for %q: %w", table, err)
 	}
 
 	_, err = c.db.Exec(query, args...)
 	if err != nil {
-		return fmt.Errorf("failed to exec query for '%s': %w", table, err)
+		return fmt.Errorf("exec query for %q: %w", table, err)
 	}
 
 	return nil
@@ -146,13 +146,13 @@ func SelectEntitiesByIdCol[T, U any](c *Container, table string, idCol string, i
 
 	query, args, err := builder.ToSql()
 	if err != nil {
-		return nil, fmt.Errorf("failed to build query for '%s': %w", table, err)
+		return nil, fmt.Errorf("build query for %q: %w", table, err)
 	}
 
 	var entities []T
 	err = c.db.Select(&entities, query, args...)
 	if err != nil {
-		return nil, fmt.Errorf("failed to exec query for '%s': %w", table, err)
+		return nil, fmt.Errorf("exec query for %q: %w", table, err)
 	}
 
 	return entities, nil
