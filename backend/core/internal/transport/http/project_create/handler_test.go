@@ -2,13 +2,15 @@ package project_create
 
 import (
 	"context"
-	"github.com/PrikolTech/alpha/backend/core/internal/common"
-	"github.com/PrikolTech/alpha/backend/core/internal/generated/api"
-	"github.com/PrikolTech/alpha/backend/core/internal/usecase/project_create/domain"
+	"testing"
+
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
-	"testing"
+
+	"github.com/PrikolTech/alpha/backend/core/internal/common"
+	"github.com/PrikolTech/alpha/backend/core/internal/generated/api"
+	"github.com/PrikolTech/alpha/backend/core/internal/usecase/project_create/domain"
 )
 
 func TestHandler(t *testing.T) {

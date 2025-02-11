@@ -3,9 +3,11 @@ package usecase
 import (
 	"context"
 	"fmt"
+
+	"github.com/avito-tech/go-transaction-manager/trm/v2"
+
 	"github.com/PrikolTech/alpha/backend/core/internal/common"
 	"github.com/PrikolTech/alpha/backend/core/internal/usecase/project_create/domain"
-	"github.com/avito-tech/go-transaction-manager/trm/v2"
 )
 
 type Usecase struct {

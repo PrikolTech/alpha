@@ -2,14 +2,16 @@ package repository
 
 import (
 	"context"
-	test_db "github.com/PrikolTech/alpha/backend/core/internal/pkg/test/db"
-	"github.com/PrikolTech/alpha/backend/core/internal/usecase/project_create/domain"
-	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
+	"testing"
+
 	trmsqlx "github.com/avito-tech/go-transaction-manager/drivers/sqlx/v2"
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
-	"testing"
+
+	test_db "github.com/PrikolTech/alpha/backend/core/internal/pkg/test/db"
+	"github.com/PrikolTech/alpha/backend/core/internal/usecase/project_create/domain"
+	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
 )
 
 func TestRepository_Create(t *testing.T) {

@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	project_create_handler "github.com/PrikolTech/alpha/backend/core/internal/transport/http/project_create"
 	"log/slog"
 	"os"
 
@@ -11,6 +10,7 @@ import (
 	"github.com/PrikolTech/alpha/backend/core/internal/pkg/httpserver"
 	"github.com/PrikolTech/alpha/backend/core/internal/pkg/psql"
 	"github.com/PrikolTech/alpha/backend/core/internal/transport/http"
+	project_create_handler "github.com/PrikolTech/alpha/backend/core/internal/transport/http/project_create"
 	user_create_handler "github.com/PrikolTech/alpha/backend/core/internal/transport/http/user_create"
 	user_get_by_id_handler "github.com/PrikolTech/alpha/backend/core/internal/transport/http/user_get_by_id"
 	user_list_handler "github.com/PrikolTech/alpha/backend/core/internal/transport/http/user_list"
