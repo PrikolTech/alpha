@@ -10,6 +10,10 @@
 package usecase
 
 import (
+	context "context"
+	reflect "reflect"
+
+	domain "github.com/PrikolTech/alpha/backend/core/internal/usecase/project_create/domain"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -34,4 +38,33 @@ func NewMockprojectRepo(ctrl *gomock.Controller) *MockprojectRepo {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockprojectRepo) EXPECT() *MockprojectRepoMockRecorder {
 	return m.recorder
+}
+
+// Create mocks base method.
+func (m *MockprojectRepo) Create(ctx context.Context, in domain.ProjectCreateIn) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Create", ctx, in)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Create indicates an expected call of Create.
+func (mr *MockprojectRepoMockRecorder) Create(ctx, in any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockprojectRepo)(nil).Create), ctx, in)
+}
+
+// ExistsByCode mocks base method.
+func (m *MockprojectRepo) ExistsByCode(ctx context.Context, code string) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ExistsByCode", ctx, code)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ExistsByCode indicates an expected call of ExistsByCode.
+func (mr *MockprojectRepoMockRecorder) ExistsByCode(ctx, code any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExistsByCode", reflect.TypeOf((*MockprojectRepo)(nil).ExistsByCode), ctx, code)
 }

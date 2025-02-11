@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"fmt"
+	"github.com/PrikolTech/alpha/backend/core/internal/common"
 	"github.com/PrikolTech/alpha/backend/core/internal/usecase/project_create/domain"
 	"github.com/avito-tech/go-transaction-manager/trm/v2"
 )
@@ -26,8 +27,8 @@ func (u *Usecase) Handle(ctx context.Context, in domain.ProjectCreateIn) error {
 		if err != nil {
 			return fmt.Errorf("project repo exists by code: %w", err)
 		}
-		if !exists {
-			return domain.NewDomainError("project with code exists")
+		if exists {
+			return common.NewDomainError("project with code exists")
 		}
 
 		err = u.projectRepo.Create(ctx, in)
