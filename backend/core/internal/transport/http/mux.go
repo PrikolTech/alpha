@@ -52,6 +52,9 @@ func (m mux) handleError(ctx context.Context, w http.ResponseWriter, r *http.Req
 	case errors.Is(err, ht.ErrNotImplemented):
 		w.WriteHeader(http.StatusNotImplemented)
 
+	case errors.Is(err, context.Canceled):
+		w.WriteHeader(http.StatusNoContent)
+
 	default:
 		w.WriteHeader(http.StatusInternalServerError)
 		m.logger.Error(err.Error())

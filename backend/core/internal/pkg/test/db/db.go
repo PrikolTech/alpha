@@ -1,6 +1,8 @@
 package test_db
 
 import (
+	"context"
+
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
 
@@ -21,7 +23,7 @@ func (c *Container) DB() *sqlx.DB { return c.db }
 func (c *Container) Close() error { return c.db.Close() }
 
 func NewPsql() (*Container, error) {
-	db, err := psql.Connect()
+	db, err := psql.Connect(context.Background())
 	if err != nil {
 		return nil, err
 	}
