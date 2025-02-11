@@ -3,7 +3,6 @@ package usecase
 import (
 	"context"
 	"fmt"
-	"math"
 
 	"golang.org/x/sync/errgroup"
 
@@ -37,14 +36,14 @@ func (u *Usecase) Handle(ctx context.Context, in domain.UserListIn) (*domain.Use
 	})
 
 	g.Go(func() error {
-		totalCount, err := u.userRepo.GetTotalCount(ctx)
+		totalCount, err := u.userRepo.GetTotalCount(ctx, in.Filters)
 		if err != nil {
 			return fmt.Errorf("user repo get total count: %w", err)
 		}
 		out.Meta = domain.Meta{
 			Page:         in.Page,
 			PerPage:      in.PerPage,
-			TotalPages:   int(math.Ceil(float64(totalCount) / float64(in.PerPage))),
+			TotalPages:   (totalCount + in.PerPage - 1) / in.PerPage,
 			TotalRecords: totalCount,
 		}
 		return nil

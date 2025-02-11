@@ -32,7 +32,7 @@ func (r *Repository) Create(ctx context.Context, in domain.UserCreateIn) error {
 		return fmt.Errorf("build %q query: %w", op, err)
 	}
 
-	query = fmt.Sprintf("-- %s\n%s", query, op)
+	query = fmt.Sprintf("-- %s\n%s", op, query)
 	_, err = r.getter.DefaultTrOrDB(ctx, r.db).ExecContext(ctx, query, args...)
 	if err != nil {
 		return fmt.Errorf("exec %q query: %w", op, err)
@@ -53,7 +53,7 @@ func (r *Repository) ExistsByEmail(ctx context.Context, email string) (bool, err
 		return false, fmt.Errorf("build %q query: %w", op, err)
 	}
 
-	query = fmt.Sprintf("-- %s\n%s", query, op)
+	query = fmt.Sprintf("-- %s\n%s", op, query)
 	rows, err := r.getter.DefaultTrOrDB(ctx, r.db).QueryContext(ctx, query, args...)
 	if err != nil {
 		return false, fmt.Errorf("exec %q query: %w", op, err)

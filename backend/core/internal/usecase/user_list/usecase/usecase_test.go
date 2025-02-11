@@ -34,7 +34,7 @@ func TestUsecase_Handle(t *testing.T) {
 
 		userRepo := NewMockuserRepo(ctrl)
 		userRepo.EXPECT().Get(gomock.Any(), in).Return(expectedOut.Data, nil)
-		userRepo.EXPECT().GetTotalCount(gomock.Any()).Return(expectedOut.Meta.TotalRecords, nil)
+		userRepo.EXPECT().GetTotalCount(gomock.Any(), gomock.Any()).Return(expectedOut.Meta.TotalRecords, nil)
 
 		usecase := New(userRepo)
 		out, err := usecase.Handle(ctx, in)
@@ -62,7 +62,7 @@ func TestUsecase_Handle(t *testing.T) {
 
 		userRepo := NewMockuserRepo(ctrl)
 		userRepo.EXPECT().Get(gomock.Any(), in).Return(nil, expectedError)
-		userRepo.EXPECT().GetTotalCount(gomock.Any()).Return(3, nil)
+		userRepo.EXPECT().GetTotalCount(gomock.Any(), gomock.Any()).Return(3, nil)
 
 		usecase := New(userRepo)
 		_, err := usecase.Handle(ctx, in)
@@ -79,7 +79,7 @@ func TestUsecase_Handle(t *testing.T) {
 
 		userRepo := NewMockuserRepo(ctrl)
 		userRepo.EXPECT().Get(gomock.Any(), in).Return(make([]domain.User, 1), nil)
-		userRepo.EXPECT().GetTotalCount(gomock.Any()).Return(0, expectedError)
+		userRepo.EXPECT().GetTotalCount(gomock.Any(), gomock.Any()).Return(0, expectedError)
 
 		usecase := New(userRepo)
 		_, err := usecase.Handle(ctx, in)

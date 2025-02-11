@@ -183,6 +183,10 @@ func TestRepository_Get_Filters(t *testing.T) {
 			ids := lo.Map(users, func(item domain.User, _ int) uuid.UUID { return item.ID })
 
 			require.Equal(t, expectedIDs, ids)
+
+			totalCount, err := repo.GetTotalCount(ctx, test.in.Filters)
+			require.NoError(t, err)
+			require.Equal(t, len(expectedIDs), totalCount)
 		})
 	}
 }
@@ -321,24 +325,4 @@ func TestRepository_Get_Pagination(t *testing.T) {
 			require.Len(t, users, test.expectedLen)
 		})
 	}
-}
-
-func TestRepository_GetTotalCount(t *testing.T) {
-	ctx := context.Background()
-
-	c, err := test_db.NewPsql()
-	require.NoError(t, err)
-	defer func() { require.NoError(t, c.Close()) }()
-
-	users, err := test_db.GenerateEntities[test_db.User](5)
-	require.NoError(t, err)
-
-	ids, err := test_db.InsertEntitiesById[test_db.User, uuid.UUID](c, test_db.TableUser, users)
-	require.NoError(t, err)
-	defer func() { require.NoError(t, test_db.DeleteEntitiesById(c, test_db.TableUser, ids)) }()
-
-	repo := New(c.DB())
-	totalCount, err := repo.GetTotalCount(ctx)
-	require.NoError(t, err)
-	require.Equal(t, len(users), totalCount)
 }

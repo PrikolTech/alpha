@@ -10,5 +10,5 @@ import (
 
 type userRepo interface {
 	Get(ctx context.Context, in domain.UserListIn) ([]domain.User, error)
-	GetTotalCount(ctx context.Context) (int, error)
+	GetTotalCount(ctx context.Context, filters domain.UserListFilters) (int, error)
 }

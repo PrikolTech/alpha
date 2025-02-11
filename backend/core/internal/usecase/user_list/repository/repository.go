@@ -38,7 +38,7 @@ func (r *Repository) Get(ctx context.Context, in domain.UserListIn) ([]domain.Us
 
 	var entities []entity
 
-	query = fmt.Sprintf("-- %s\n%s", query, op)
+	query = fmt.Sprintf("-- %s\n%s", op, query)
 	err = r.db.SelectContext(ctx, &entities, query, args...)
 	if err != nil {
 		return nil, fmt.Errorf("exec %q query: %w", op, err)
@@ -118,11 +118,13 @@ func (r *Repository) buildDatetimeQuery(field string, value *domain.DateTimeFilt
 	return res
 }
 
-func (r *Repository) GetTotalCount(ctx context.Context) (int, error) {
+func (r *Repository) GetTotalCount(ctx context.Context, filters domain.UserListFilters) (int, error) {
 	op := "user get total count"
 	builder := sq.StatementBuilder.PlaceholderFormat(sq.Dollar).
 		Select("COUNT(*)").
 		From("_user")
+
+	builder = r.addWhereQuery(builder, filters)
 
 	query, args, err := builder.ToSql()
 	if err != nil {
@@ -130,7 +132,7 @@ func (r *Repository) GetTotalCount(ctx context.Context) (int, error) {
 	}
 
 	var totalCount int
-	query = fmt.Sprintf("-- %s\n%s", query, op)
+	query = fmt.Sprintf("-- %s\n%s", op, query)
 	err = r.db.GetContext(ctx, &totalCount, query, args...)
 	if err != nil {
 		return 0, fmt.Errorf("exec %q query: %w", op, err)

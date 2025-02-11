@@ -57,16 +57,16 @@ func (mr *MockuserRepoMockRecorder) Get(ctx, in any) *gomock.Call {
 }
 
 // GetTotalCount mocks base method.
-func (m *MockuserRepo) GetTotalCount(ctx context.Context) (int, error) {
+func (m *MockuserRepo) GetTotalCount(ctx context.Context, filters domain.UserListFilters) (int, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetTotalCount", ctx)
+	ret := m.ctrl.Call(m, "GetTotalCount", ctx, filters)
 	ret0, _ := ret[0].(int)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetTotalCount indicates an expected call of GetTotalCount.
-func (mr *MockuserRepoMockRecorder) GetTotalCount(ctx any) *gomock.Call {
+func (mr *MockuserRepoMockRecorder) GetTotalCount(ctx, filters any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTotalCount", reflect.TypeOf((*MockuserRepo)(nil).GetTotalCount), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTotalCount", reflect.TypeOf((*MockuserRepo)(nil).GetTotalCount), ctx, filters)
 }

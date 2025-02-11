@@ -33,7 +33,7 @@ func (r *Repository) GetByID(ctx context.Context, id uuid.UUID) (*domain.User, e
 
 	var entities []entity
 
-	query = fmt.Sprintf("-- %s\n%s", query, op)
+	query = fmt.Sprintf("-- %s\n%s", op, query)
 	err = r.db.SelectContext(ctx, &entities, query, args...)
 	if err != nil {
 		return nil, fmt.Errorf("exec %q query: %w", op, err)
