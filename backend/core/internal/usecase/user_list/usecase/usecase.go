@@ -30,7 +30,7 @@ func (u *Usecase) Handle(ctx context.Context, in domain.UserListIn) (*domain.Use
 	g.Go(func() error {
 		users, err := u.userRepo.Get(ctx, in)
 		if err != nil {
-			return fmt.Errorf("user get all: %w", err)
+			return fmt.Errorf("user repo get all: %w", err)
 		}
 		out.Data = users
 		return nil
@@ -39,7 +39,7 @@ func (u *Usecase) Handle(ctx context.Context, in domain.UserListIn) (*domain.Use
 	g.Go(func() error {
 		totalCount, err := u.userRepo.GetTotalCount(ctx)
 		if err != nil {
-			return fmt.Errorf("user get total count: %w", err)
+			return fmt.Errorf("user repo get total count: %w", err)
 		}
 		out.Meta = domain.Meta{
 			Page:         in.Page,

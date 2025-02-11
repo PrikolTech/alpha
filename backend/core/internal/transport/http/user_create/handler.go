@@ -3,6 +3,7 @@ package user_create
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/samber/lo"
 
@@ -32,14 +33,15 @@ func (h *Handler) Handle(ctx context.Context, req *api.UserCreateRequest) (api.U
 				Reason: validationErr.Reason.Error(),
 			}
 			return res, nil
-		} else if errors.As(err, &domainErr) {
+		}
+		if errors.As(err, &domainErr) {
 			res := &api.DomainError{
 				Message: err.Error(),
 			}
 			return res, nil
 		}
 
-		return nil, err
+		return nil, fmt.Errorf("user create: %w", err)
 	}
 
 	return &api.UserCreateCreated{}, nil

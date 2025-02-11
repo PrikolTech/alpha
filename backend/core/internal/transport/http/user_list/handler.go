@@ -3,6 +3,7 @@ package user_list
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/samber/lo"
@@ -30,7 +31,7 @@ func (h *Handler) Handle(ctx context.Context, params api.UserListParams) (api.Us
 			}
 			return res, nil
 		}
-		return nil, err
+		return nil, fmt.Errorf("user list: %w", err)
 	}
 
 	return h.convertDomainToDto(out), nil

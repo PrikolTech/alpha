@@ -3,6 +3,7 @@ package user_get_by_id
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/PrikolTech/alpha/backend/core/internal/common"
 	"github.com/PrikolTech/alpha/backend/core/internal/generated/api"
@@ -27,7 +28,7 @@ func (h *Handler) Handle(ctx context.Context, params api.UserGetByIdParams) (api
 			}
 			return res, nil
 		}
-		return nil, err
+		return nil, fmt.Errorf("user get by id: %w", err)
 	}
 
 	return h.convertDomainToDto(user), nil
