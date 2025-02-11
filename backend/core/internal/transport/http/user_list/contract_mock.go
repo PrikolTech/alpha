@@ -7,7 +7,7 @@
 //
 
 // Package user_list_handler is a generated GoMock package.
-package user_list_handler
+package user_list
 
 import (
 	context "context"

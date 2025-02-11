@@ -7,7 +7,7 @@
 //
 
 // Package user_get_by_id_handler is a generated GoMock package.
-package user_get_by_id_handler
+package user_get_by_id
 
 import (
 	context "context"

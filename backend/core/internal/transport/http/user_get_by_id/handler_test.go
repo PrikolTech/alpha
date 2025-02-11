@@ -1,4 +1,4 @@
-package user_get_by_id_handler
+package user_get_by_id
 
 import (
 	"context"

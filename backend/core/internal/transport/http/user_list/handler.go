@@ -1,4 +1,4 @@
-package user_list_handler
+package user_list
 
 import (
 	"context"

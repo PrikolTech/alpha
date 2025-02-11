@@ -1,4 +1,4 @@
-package user_create_handler
+package user_create
 
 import (
 	"context"

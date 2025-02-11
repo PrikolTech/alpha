@@ -1,4 +1,4 @@
-package user_create_usecase
+package user_create
 
 import (
 	trmsqlx "github.com/avito-tech/go-transaction-manager/drivers/sqlx/v2"

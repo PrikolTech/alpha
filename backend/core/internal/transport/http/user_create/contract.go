@@ -1,6 +1,6 @@
 //go:generate mockgen -package $GOPACKAGE -source $GOFILE -destination contract_mock.go
 
-package user_create_handler
+package user_create
 
 import (
 	"context"

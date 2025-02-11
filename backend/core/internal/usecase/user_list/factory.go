@@ -1,4 +1,4 @@
-package user_list_usecase
+package user_list
 
 import (
 	"github.com/jmoiron/sqlx"

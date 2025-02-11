@@ -7,7 +7,7 @@
 //
 
 // Package user_create_handler is a generated GoMock package.
-package user_create_handler
+package user_create
 
 import (
 	context "context"
