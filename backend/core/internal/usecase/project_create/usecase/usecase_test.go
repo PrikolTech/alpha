@@ -36,7 +36,7 @@ func TestUsecase_Handle(t *testing.T) {
 		require.NoError(t, err)
 	})
 
-	t.Run("project already exists", func(t *testing.T) {
+	t.Run("project_already_exists", func(t *testing.T) {
 		in := domain.ProjectCreateIn{
 			Name:        gofakeit.Name(),
 			Description: ptr.To(gofakeit.ProductDescription()),
@@ -50,7 +50,7 @@ func TestUsecase_Handle(t *testing.T) {
 		require.Error(t, err)
 	})
 
-	t.Run("validation error", func(t *testing.T) {
+	t.Run("validation_error", func(t *testing.T) {
 		in := domain.ProjectCreateIn{}
 		projectRepo := NewMockprojectRepo(ctrl)
 		usecase := New(projectRepo, trm)
@@ -58,7 +58,7 @@ func TestUsecase_Handle(t *testing.T) {
 		require.Error(t, err)
 	})
 
-	t.Run("error from ExistsByCode", func(t *testing.T) {
+	t.Run("error_from_ExistsByCode", func(t *testing.T) {
 		in := domain.ProjectCreateIn{
 			Name:        gofakeit.Name(),
 			Description: ptr.To(gofakeit.ProductDescription()),
@@ -74,7 +74,7 @@ func TestUsecase_Handle(t *testing.T) {
 		require.ErrorIs(t, err, expectedErr)
 	})
 
-	t.Run("error from Create", func(t *testing.T) {
+	t.Run("error_from_Create", func(t *testing.T) {
 		in := domain.ProjectCreateIn{
 			Name:        gofakeit.Name(),
 			Description: ptr.To(gofakeit.ProductDescription()),
