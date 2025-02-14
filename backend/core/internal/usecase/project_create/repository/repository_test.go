@@ -40,7 +40,7 @@ func TestRepository_Create(t *testing.T) {
 	defer func() { require.NoError(t, test_db.DeleteEntityById(c, test_db.TableProject, project.ID)) }()
 
 	require.Equal(t, in.Name, project.Name)
-	require.Equal(t, in.Description, project.Description)
+	require.Equal(t, in.Description, &project.Description)
 	require.Equal(t, in.Code, project.Code)
 }
 

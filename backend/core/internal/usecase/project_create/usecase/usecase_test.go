@@ -13,7 +13,7 @@ import (
 	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
 )
 
-func TestUsecase_Handler(t *testing.T) {
+func TestUsecase_Handle(t *testing.T) {
 	ctx := context.Background()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()

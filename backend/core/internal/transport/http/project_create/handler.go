@@ -3,23 +3,24 @@ package project_create
 import (
 	"context"
 	"errors"
+	"fmt"
+	"github.com/samber/lo"
 
 	"github.com/PrikolTech/alpha/backend/core/internal/common"
 	"github.com/PrikolTech/alpha/backend/core/internal/generated/api"
 	"github.com/PrikolTech/alpha/backend/core/internal/usecase/project_create/domain"
-	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
 )
 
 type Handler struct {
-	projectUsecase projectUsecase
+	usecase usecase
 }
 
-func New(projectUsecase projectUsecase) *Handler {
-	return &Handler{projectUsecase: projectUsecase}
+func New(usecase usecase) *Handler {
+	return &Handler{usecase: usecase}
 }
 
 func (h *Handler) Handle(ctx context.Context, req *api.ProjectCreateRequest) (api.ProjectCreateRes, error) {
-	if err := h.projectUsecase.Handle(ctx, convertDtoToDomain(req)); err != nil {
+	if err := h.usecase.Handle(ctx, convertDtoToDomain(req)); err != nil {
 		var (
 			validationErr *domain.ValidationError
 			domainErr     *common.DomainError
@@ -30,14 +31,15 @@ func (h *Handler) Handle(ctx context.Context, req *api.ProjectCreateRequest) (ap
 				Reason: validationErr.Reason.Error(),
 			}
 			return res, nil
-		} else if errors.As(err, &domainErr) {
+		}
+		if errors.As(err, &domainErr) {
 			res := &api.DomainError{
 				Message: err.Error(),
 			}
 			return res, nil
 		}
 
-		return nil, err
+		return nil, fmt.Errorf("project create: %w", err)
 	}
 	return &api.ProjectCreateCreated{}, nil
 }
@@ -49,7 +51,7 @@ func convertDtoToDomain(req *api.ProjectCreateRequest) domain.ProjectCreateIn {
 	}
 
 	if req.Description.IsNull() {
-		in.Description = ptr.To(req.Description.Value)
+		in.Description = lo.ToPtr(req.Description.Value)
 	}
 
 	return in

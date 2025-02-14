@@ -8,6 +8,6 @@ import (
 	"github.com/PrikolTech/alpha/backend/core/internal/usecase/project_create/domain"
 )
 
-type projectUsecase interface {
+type usecase interface {
 	Handle(ctx context.Context, in domain.ProjectCreateIn) error
 }

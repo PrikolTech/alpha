@@ -13,13 +13,13 @@ import (
 	"github.com/PrikolTech/alpha/backend/core/internal/usecase/project_create/domain"
 )
 
-func TestHandler(t *testing.T) {
+func TestHandle(t *testing.T) {
 	ctx := context.Background()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
 	t.Run("success", func(t *testing.T) {
-		userUsecase := NewMockprojectUsecase(ctrl)
+		userUsecase := NewMockusecase(ctrl)
 		userUsecase.EXPECT().Handle(ctx, gomock.Any()).Return(nil)
 
 		handler := New(userUsecase)
@@ -35,8 +35,8 @@ func TestHandler(t *testing.T) {
 		require.IsType(t, &api.ProjectCreateCreated{}, res)
 	})
 
-	t.Run("internal error", func(t *testing.T) {
-		userUsecase := NewMockprojectUsecase(ctrl)
+	t.Run("internal_error", func(t *testing.T) {
+		userUsecase := NewMockusecase(ctrl)
 		userUsecase.EXPECT().Handle(ctx, gomock.Any()).Return(gofakeit.Error())
 
 		handler := New(userUsecase)
@@ -45,8 +45,8 @@ func TestHandler(t *testing.T) {
 		require.Error(t, err)
 	})
 
-	t.Run("validation error", func(t *testing.T) {
-		userUsecase := NewMockprojectUsecase(ctrl)
+	t.Run("validation_error", func(t *testing.T) {
+		userUsecase := NewMockusecase(ctrl)
 		userUsecase.EXPECT().Handle(ctx, gomock.Any()).Return(&domain.ValidationError{
 			Reason: gofakeit.Error(),
 		})
@@ -58,8 +58,8 @@ func TestHandler(t *testing.T) {
 		require.IsType(t, &api.ProjectValidationError{}, res)
 	})
 
-	t.Run("domain error", func(t *testing.T) {
-		userUsecase := NewMockprojectUsecase(ctrl)
+	t.Run("domain_error", func(t *testing.T) {
+		userUsecase := NewMockusecase(ctrl)
 		userUsecase.EXPECT().Handle(ctx, gomock.Any()).Return(&common.DomainError{
 			Msg: gofakeit.Error().Error(),
 		})

@@ -17,31 +17,31 @@ import (
 	gomock "go.uber.org/mock/gomock"
 )
 
-// MockprojectUsecase is a mock of projectUsecase interface.
-type MockprojectUsecase struct {
+// Mockusecase is a mock of usecase interface.
+type Mockusecase struct {
 	ctrl     *gomock.Controller
-	recorder *MockprojectUsecaseMockRecorder
+	recorder *MockusecaseMockRecorder
 }
 
-// MockprojectUsecaseMockRecorder is the mock recorder for MockprojectUsecase.
-type MockprojectUsecaseMockRecorder struct {
-	mock *MockprojectUsecase
+// MockusecaseMockRecorder is the mock recorder for Mockusecase.
+type MockusecaseMockRecorder struct {
+	mock *Mockusecase
 }
 
-// NewMockprojectUsecase creates a new mock instance.
-func NewMockprojectUsecase(ctrl *gomock.Controller) *MockprojectUsecase {
-	mock := &MockprojectUsecase{ctrl: ctrl}
-	mock.recorder = &MockprojectUsecaseMockRecorder{mock}
+// NewMockusecase creates a new mock instance.
+func NewMockusecase(ctrl *gomock.Controller) *Mockusecase {
+	mock := &Mockusecase{ctrl: ctrl}
+	mock.recorder = &MockusecaseMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockprojectUsecase) EXPECT() *MockprojectUsecaseMockRecorder {
+func (m *Mockusecase) EXPECT() *MockusecaseMockRecorder {
 	return m.recorder
 }
 
 // Handle mocks base method.
-func (m *MockprojectUsecase) Handle(ctx context.Context, in domain.ProjectCreateIn) error {
+func (m *Mockusecase) Handle(ctx context.Context, in domain.ProjectCreateIn) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Handle", ctx, in)
 	ret0, _ := ret[0].(error)
@@ -49,7 +49,7 @@ func (m *MockprojectUsecase) Handle(ctx context.Context, in domain.ProjectCreate
 }
 
 // Handle indicates an expected call of Handle.
-func (mr *MockprojectUsecaseMockRecorder) Handle(ctx, in any) *gomock.Call {
+func (mr *MockusecaseMockRecorder) Handle(ctx, in any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockprojectUsecase)(nil).Handle), ctx, in)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*Mockusecase)(nil).Handle), ctx, in)
 }
