@@ -57,6 +57,6 @@ func (m mux) handleError(ctx context.Context, w http.ResponseWriter, r *http.Req
 
 	default:
 		w.WriteHeader(http.StatusInternalServerError)
-		m.logger.Error(err.Error())
+		m.logger.Error("internal server error", slog.String("err", err.Error()))
 	}
 }

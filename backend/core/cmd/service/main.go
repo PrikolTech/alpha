@@ -34,13 +34,13 @@ func run() int {
 
 	err := godotenv.Overload()
 	if err != nil {
-		logger.Error("overload env", "err", err)
+		logger.Error("overload env", slog.String("err", err.Error()))
 		return 1
 	}
 
 	db, err := psql.Connect(ctx)
 	if err != nil {
-		logger.Error("connect database", "err", err)
+		logger.Error("connect database", slog.String("err", err.Error()))
 		return 1
 	}
 	defer db.Close()
@@ -57,7 +57,7 @@ func run() int {
 
 	server := httpserver.New(mux, logger)
 	if err := server.Run(ctx); err != nil {
-		logger.Error("fail server", "err", err)
+		logger.Error("fail server", slog.String("err", err.Error()))
 		return 1
 	}
 
