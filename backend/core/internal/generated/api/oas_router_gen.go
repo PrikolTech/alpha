@@ -276,7 +276,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					switch method {
 					case "GET":
 						r.name = ProjectGetAllOperation
-						r.summary = "Получить все проекты с пагинацией"
+						r.summary = "Получить список проектов"
 						r.operationID = "projectGetAll"
 						r.pathPattern = "/v1/projects"
 						r.args = args

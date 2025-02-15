@@ -13,7 +13,7 @@ type Handler interface {
 	// Создать новый проект.
 	//
 	// POST /v1/projects
-	ProjectCreate(ctx context.Context, req *ProjectCreateRequest) error
+	ProjectCreate(ctx context.Context, req *ProjectCreateRequest) (ProjectCreateRes, error)
 	// ProjectDeleteById implements projectDeleteById operation.
 	//
 	// Удалить проект по id.
@@ -22,10 +22,10 @@ type Handler interface {
 	ProjectDeleteById(ctx context.Context, params ProjectDeleteByIdParams) error
 	// ProjectGetAll implements projectGetAll operation.
 	//
-	// Получить все проекты с пагинацией.
+	// Получить список проектов.
 	//
 	// GET /v1/projects
-	ProjectGetAll(ctx context.Context, params ProjectGetAllParams) (*ProjectGetAllResponse, error)
+	ProjectGetAll(ctx context.Context, params ProjectGetAllParams) (ProjectGetAllRes, error)
 	// ProjectGetById implements projectGetById operation.
 	//
 	// Получить проект по id.
