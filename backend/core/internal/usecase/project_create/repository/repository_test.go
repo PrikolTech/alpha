@@ -7,11 +7,11 @@ import (
 	trmsqlx "github.com/avito-tech/go-transaction-manager/drivers/sqlx/v2"
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"github.com/stretchr/testify/require"
 
 	test_db "github.com/PrikolTech/alpha/backend/core/internal/pkg/test/db"
 	"github.com/PrikolTech/alpha/backend/core/internal/usecase/project_create/domain"
-	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
 )
 
 func TestRepository_Create(t *testing.T) {
@@ -23,7 +23,7 @@ func TestRepository_Create(t *testing.T) {
 
 	in := domain.ProjectCreateIn{
 		Name:        gofakeit.Name(),
-		Description: ptr.To(gofakeit.ProductDescription()),
+		Description: lo.ToPtr(gofakeit.ProductDescription()),
 		Code:        gofakeit.AppName(),
 	}
 
