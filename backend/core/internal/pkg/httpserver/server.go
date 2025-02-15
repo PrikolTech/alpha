@@ -50,7 +50,7 @@ func (s *Server) Run(ctx context.Context) error {
 		close(errCh)
 	}()
 
-	s.logger.Info("start server", "addr", s.server.Addr)
+	s.logger.Info("start server", slog.String("addr", s.server.Addr))
 
 	select {
 	case <-ctx.Done():
