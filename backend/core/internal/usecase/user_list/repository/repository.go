@@ -21,6 +21,7 @@ func New(db *sqlx.DB) *Repository {
 }
 
 func (r *Repository) Get(ctx context.Context, in domain.UserListIn) ([]domain.User, error) {
+	op := "user list"
 	builder := sq.StatementBuilder.PlaceholderFormat(sq.Dollar).
 		Select("*").
 		From("_user").
@@ -32,14 +33,15 @@ func (r *Repository) Get(ctx context.Context, in domain.UserListIn) ([]domain.Us
 
 	query, args, err := builder.ToSql()
 	if err != nil {
-		return nil, fmt.Errorf("failed to build query: %w", err)
+		return nil, fmt.Errorf("build %q query: %w", op, err)
 	}
 
 	var entities []entity
 
+	query = fmt.Sprintf("-- %s\n%s", op, query)
 	err = r.db.SelectContext(ctx, &entities, query, args...)
 	if err != nil {
-		return nil, fmt.Errorf("failed to exec query: %w", err)
+		return nil, fmt.Errorf("exec %q query: %w", op, err)
 	}
 
 	return lo.Map(entities, func(item entity, _ int) domain.User { return item.toDomain() }), nil
@@ -116,20 +118,24 @@ func (r *Repository) buildDatetimeQuery(field string, value *domain.DateTimeFilt
 	return res
 }
 
-func (r *Repository) GetTotalCount(ctx context.Context) (int, error) {
+func (r *Repository) GetTotalCount(ctx context.Context, filters domain.UserListFilters) (int, error) {
+	op := "user get total count"
 	builder := sq.StatementBuilder.PlaceholderFormat(sq.Dollar).
 		Select("COUNT(*)").
 		From("_user")
 
+	builder = r.addWhereQuery(builder, filters)
+
 	query, args, err := builder.ToSql()
 	if err != nil {
-		return 0, fmt.Errorf("failed to build query: %w", err)
+		return 0, fmt.Errorf("build %q query: %w", op, err)
 	}
 
 	var totalCount int
+	query = fmt.Sprintf("-- %s\n%s", op, query)
 	err = r.db.GetContext(ctx, &totalCount, query, args...)
 	if err != nil {
-		return 0, fmt.Errorf("failed to exec query: %w", err)
+		return 0, fmt.Errorf("exec %q query: %w", op, err)
 	}
 
 	return totalCount, nil

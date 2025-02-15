@@ -5,12 +5,12 @@ import (
 	"testing"
 
 	"github.com/brianvoe/gofakeit/v7"
+	"github.com/samber/lo"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
 	test_trm "github.com/PrikolTech/alpha/backend/core/internal/pkg/test/trm"
 	"github.com/PrikolTech/alpha/backend/core/internal/usecase/project_create/domain"
-	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
 )
 
 func TestUsecase_Handle(t *testing.T) {
@@ -23,7 +23,7 @@ func TestUsecase_Handle(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		in := domain.ProjectCreateIn{
 			Name:        gofakeit.Name(),
-			Description: ptr.To(gofakeit.ProductDescription()),
+			Description: lo.ToPtr(gofakeit.ProductDescription()),
 			Code:        gofakeit.UUID(),
 		}
 
@@ -39,7 +39,7 @@ func TestUsecase_Handle(t *testing.T) {
 	t.Run("project_already_exists", func(t *testing.T) {
 		in := domain.ProjectCreateIn{
 			Name:        gofakeit.Name(),
-			Description: ptr.To(gofakeit.ProductDescription()),
+			Description: lo.ToPtr(gofakeit.ProductDescription()),
 			Code:        gofakeit.UUID(),
 		}
 		projectRepo := NewMockprojectRepo(ctrl)
@@ -61,7 +61,7 @@ func TestUsecase_Handle(t *testing.T) {
 	t.Run("error_from_ExistsByCode", func(t *testing.T) {
 		in := domain.ProjectCreateIn{
 			Name:        gofakeit.Name(),
-			Description: ptr.To(gofakeit.ProductDescription()),
+			Description: lo.ToPtr(gofakeit.ProductDescription()),
 			Code:        gofakeit.UUID(),
 		}
 		expectedErr := gofakeit.Error()
@@ -77,7 +77,7 @@ func TestUsecase_Handle(t *testing.T) {
 	t.Run("error_from_Create", func(t *testing.T) {
 		in := domain.ProjectCreateIn{
 			Name:        gofakeit.Name(),
-			Description: ptr.To(gofakeit.ProductDescription()),
+			Description: lo.ToPtr(gofakeit.ProductDescription()),
 			Code:        gofakeit.UUID(),
 		}
 		expectedErr := gofakeit.Error()

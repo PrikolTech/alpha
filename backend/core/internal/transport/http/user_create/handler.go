@@ -1,25 +1,27 @@
-package user_create_handler
+package user_create
 
 import (
 	"context"
 	"errors"
+	"fmt"
+
+	"github.com/samber/lo"
 
 	"github.com/PrikolTech/alpha/backend/core/internal/common"
 	"github.com/PrikolTech/alpha/backend/core/internal/generated/api"
 	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_create/domain"
-	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
 )
 
 type Handler struct {
-	userUsecase userUsecase
+	usecase usecase
 }
 
-func New(userUsecase userUsecase) *Handler {
-	return &Handler{userUsecase: userUsecase}
+func New(usecase usecase) *Handler {
+	return &Handler{usecase: usecase}
 }
 
 func (h *Handler) Handle(ctx context.Context, req *api.UserCreateRequest) (api.UserCreateRes, error) {
-	err := h.userUsecase.Handle(ctx, h.convertDtoToDomain(req))
+	err := h.usecase.Handle(ctx, h.convertDtoToDomain(req))
 	if err != nil {
 		var (
 			validationErr *domain.ValidationError
@@ -31,14 +33,15 @@ func (h *Handler) Handle(ctx context.Context, req *api.UserCreateRequest) (api.U
 				Reason: validationErr.Reason.Error(),
 			}
 			return res, nil
-		} else if errors.As(err, &domainErr) {
+		}
+		if errors.As(err, &domainErr) {
 			res := &api.DomainError{
 				Message: err.Error(),
 			}
 			return res, nil
 		}
 
-		return nil, err
+		return nil, fmt.Errorf("user create: %w", err)
 	}
 
 	return &api.UserCreateCreated{}, nil
@@ -52,7 +55,7 @@ func (h *Handler) convertDtoToDomain(req *api.UserCreateRequest) domain.UserCrea
 	}
 
 	if req.MiddleName.IsSet() && !req.MiddleName.IsNull() {
-		in.MiddleName = ptr.To(req.MiddleName.Value)
+		in.MiddleName = lo.ToPtr(req.MiddleName.Value)
 	}
 
 	return in

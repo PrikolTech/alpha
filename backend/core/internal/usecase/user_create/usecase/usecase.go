@@ -27,10 +27,10 @@ func (u *Usecase) Handle(ctx context.Context, in domain.UserCreateIn) error {
 	return u.trm.Do(ctx, func(ctx context.Context) error {
 		exists, err := u.userRepo.ExistsByEmail(ctx, in.Email)
 		if err != nil {
-			return fmt.Errorf("user exists by email: %w", err)
+			return fmt.Errorf("user repo exists by email: %w", err)
 		}
 		if exists {
-			return common.NewDomainError("user with email exists")
+			return trm.Skippable(common.NewDomainError("user with email exists"))
 		}
 
 		err = u.userRepo.Create(ctx, in)

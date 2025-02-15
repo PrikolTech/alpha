@@ -5,15 +5,15 @@ import (
 	"testing"
 
 	"github.com/brianvoe/gofakeit/v7"
+	"github.com/samber/lo"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
 	test_trm "github.com/PrikolTech/alpha/backend/core/internal/pkg/test/trm"
 	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_create/domain"
-	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
 )
 
-func Test_usecase_Handle(t *testing.T) {
+func TestUsecase_Handle(t *testing.T) {
 	ctx := context.Background()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -24,7 +24,7 @@ func Test_usecase_Handle(t *testing.T) {
 		in := domain.UserCreateIn{
 			Email:      gofakeit.Email(),
 			FirstName:  gofakeit.FirstName(),
-			MiddleName: ptr.To(gofakeit.MiddleName()),
+			MiddleName: lo.ToPtr(gofakeit.MiddleName()),
 			LastName:   gofakeit.LastName(),
 		}
 
@@ -51,7 +51,7 @@ func Test_usecase_Handle(t *testing.T) {
 		in := domain.UserCreateIn{
 			Email:      gofakeit.Email(),
 			FirstName:  gofakeit.FirstName(),
-			MiddleName: ptr.To(gofakeit.MiddleName()),
+			MiddleName: lo.ToPtr(gofakeit.MiddleName()),
 			LastName:   gofakeit.LastName(),
 		}
 
@@ -67,7 +67,7 @@ func Test_usecase_Handle(t *testing.T) {
 		in := domain.UserCreateIn{
 			Email:      gofakeit.Email(),
 			FirstName:  gofakeit.FirstName(),
-			MiddleName: ptr.To(gofakeit.MiddleName()),
+			MiddleName: lo.ToPtr(gofakeit.MiddleName()),
 			LastName:   gofakeit.LastName(),
 		}
 		expectedErr := gofakeit.Error()
@@ -84,7 +84,7 @@ func Test_usecase_Handle(t *testing.T) {
 		in := domain.UserCreateIn{
 			Email:      gofakeit.Email(),
 			FirstName:  gofakeit.FirstName(),
-			MiddleName: ptr.To(gofakeit.MiddleName()),
+			MiddleName: lo.ToPtr(gofakeit.MiddleName()),
 			LastName:   gofakeit.LastName(),
 		}
 		expectedErr := gofakeit.Error()

@@ -1,4 +1,4 @@
-package user_get_by_id_usecase
+package user_get_by_id
 
 import (
 	"github.com/jmoiron/sqlx"

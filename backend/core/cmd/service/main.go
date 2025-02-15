@@ -4,6 +4,8 @@ import (
 	"context"
 	"log/slog"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/joho/godotenv"
 
@@ -25,19 +27,22 @@ func main() {
 }
 
 func run() int {
+	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer cancel()
+
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
 		Level: slog.LevelInfo,
 	}))
 
 	err := godotenv.Overload()
 	if err != nil {
-		logger.Error(err.Error())
+		logger.Error("overload env", slog.String("err", err.Error()))
 		return 1
 	}
 
-	db, err := psql.Connect()
+	db, err := psql.Connect(ctx)
 	if err != nil {
-		logger.Error(err.Error())
+		logger.Error("connect database", slog.String("err", err.Error()))
 		return 1
 	}
 	defer db.Close()
@@ -55,15 +60,12 @@ func run() int {
 		ProjectCreate: project_create_handler.New(projectCreateUsecase),
 	})
 
-	server := httpserver.New(mux)
-	server.Start(context.TODO())
-	logger.Info("server started", "addr", server.Addr())
-
-	err = <-server.Err()
-	if err != nil {
-		logger.Error(err.Error())
+	server := httpserver.New(mux, logger)
+	if err := server.Run(ctx); err != nil {
+		logger.Error("fail server", slog.String("err", err.Error()))
 		return 1
 	}
 
+	logger.Info("stop server")
 	return 0
 }

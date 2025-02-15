@@ -1,8 +1,9 @@
-package user_get_by_id_handler
+package user_get_by_id
 
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/PrikolTech/alpha/backend/core/internal/common"
 	"github.com/PrikolTech/alpha/backend/core/internal/generated/api"
@@ -10,15 +11,15 @@ import (
 )
 
 type Handler struct {
-	userUsecase userUsecase
+	usecase usecase
 }
 
-func New(userUsecase userUsecase) *Handler {
-	return &Handler{userUsecase: userUsecase}
+func New(usecase usecase) *Handler {
+	return &Handler{usecase: usecase}
 }
 
 func (h *Handler) Handle(ctx context.Context, params api.UserGetByIdParams) (api.UserGetByIdRes, error) {
-	user, err := h.userUsecase.Handle(ctx, params.ID)
+	user, err := h.usecase.Handle(ctx, params.ID)
 	if err != nil {
 		var domainErr *common.DomainError
 		if errors.As(err, &domainErr) {
@@ -27,7 +28,7 @@ func (h *Handler) Handle(ctx context.Context, params api.UserGetByIdParams) (api
 			}
 			return res, nil
 		}
-		return nil, err
+		return nil, fmt.Errorf("user get by id: %w", err)
 	}
 
 	return h.convertDomainToDto(user), nil

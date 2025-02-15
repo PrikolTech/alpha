@@ -21,6 +21,7 @@ func New(db *sqlx.DB, getter *trmsqlx.CtxGetter) *Repository {
 }
 
 func (r *Repository) Create(ctx context.Context, in domain.UserCreateIn) error {
+	op := "user create"
 	builder := sq.StatementBuilder.PlaceholderFormat(sq.Dollar).
 		Insert("_user").
 		Columns("email", "first_name", "middle_name", "last_name").
@@ -28,18 +29,20 @@ func (r *Repository) Create(ctx context.Context, in domain.UserCreateIn) error {
 
 	query, args, err := builder.ToSql()
 	if err != nil {
-		return fmt.Errorf("failed to build query: %w", err)
+		return fmt.Errorf("build %q query: %w", op, err)
 	}
 
+	query = fmt.Sprintf("-- %s\n%s", op, query)
 	_, err = r.getter.DefaultTrOrDB(ctx, r.db).ExecContext(ctx, query, args...)
 	if err != nil {
-		return fmt.Errorf("failed to exec query: %w", err)
+		return fmt.Errorf("exec %q query: %w", op, err)
 	}
 
 	return nil
 }
 
 func (r *Repository) ExistsByEmail(ctx context.Context, email string) (bool, error) {
+	op := "exists by email"
 	builder := sq.StatementBuilder.PlaceholderFormat(sq.Dollar).
 		Select("id").
 		From("_user").
@@ -47,12 +50,13 @@ func (r *Repository) ExistsByEmail(ctx context.Context, email string) (bool, err
 
 	query, args, err := builder.ToSql()
 	if err != nil {
-		return false, fmt.Errorf("failed to build query: %w", err)
+		return false, fmt.Errorf("build %q query: %w", op, err)
 	}
 
+	query = fmt.Sprintf("-- %s\n%s", op, query)
 	rows, err := r.getter.DefaultTrOrDB(ctx, r.db).QueryContext(ctx, query, args...)
 	if err != nil {
-		return false, fmt.Errorf("failed to exec query: %w", err)
+		return false, fmt.Errorf("exec %q query: %w", op, err)
 	}
 
 	if rows.Next() {
@@ -61,7 +65,7 @@ func (r *Repository) ExistsByEmail(ctx context.Context, email string) (bool, err
 	}
 
 	if err := rows.Err(); err != nil {
-		return false, fmt.Errorf("failed to iterate over rows: %w", err)
+		return false, fmt.Errorf("iterate over rows: %w", err)
 	}
 
 	return false, nil

@@ -1,27 +1,27 @@
-package user_list_handler
+package user_list
 
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/samber/lo"
 
 	"github.com/PrikolTech/alpha/backend/core/internal/generated/api"
 	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_list/domain"
-	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
 )
 
 type Handler struct {
-	userUsecase userUsecase
+	usecase usecase
 }
 
-func New(userUsecase userUsecase) *Handler {
-	return &Handler{userUsecase: userUsecase}
+func New(usecase usecase) *Handler {
+	return &Handler{usecase: usecase}
 }
 
 func (h *Handler) Handle(ctx context.Context, params api.UserListParams) (api.UserListRes, error) {
-	out, err := h.userUsecase.Handle(ctx, h.convertParamsToDomain(params))
+	out, err := h.usecase.Handle(ctx, h.convertParamsToDomain(params))
 	if err != nil {
 		var validationErr *domain.ValidationError
 		if errors.As(err, &validationErr) {
@@ -31,7 +31,7 @@ func (h *Handler) Handle(ctx context.Context, params api.UserListParams) (api.Us
 			}
 			return res, nil
 		}
-		return nil, err
+		return nil, fmt.Errorf("user list: %w", err)
 	}
 
 	return h.convertDomainToDto(out), nil
@@ -50,19 +50,19 @@ func (h *Handler) convertParamsToDomain(params api.UserListParams) domain.UserLi
 	}
 
 	if params.Email.IsSet() {
-		in.Filters.Email = ptr.To(params.Email.Value)
+		in.Filters.Email = lo.ToPtr(params.Email.Value)
 	}
 
 	if params.FirstName.IsSet() {
-		in.Filters.FirstName = ptr.To(params.FirstName.Value)
+		in.Filters.FirstName = lo.ToPtr(params.FirstName.Value)
 	}
 
 	if params.MiddleName.IsSet() {
-		in.Filters.MiddleName = ptr.To(params.MiddleName.Value)
+		in.Filters.MiddleName = lo.ToPtr(params.MiddleName.Value)
 	}
 
 	if params.LastName.IsSet() {
-		in.Filters.LastName = ptr.To(params.LastName.Value)
+		in.Filters.LastName = lo.ToPtr(params.LastName.Value)
 	}
 
 	return in
@@ -87,10 +87,10 @@ func (h *Handler) convertDtoToDateTimeFilter(dto api.OptDateTimeFilter) *domain.
 	}
 	var out domain.DateTimeFilter
 	if start, found := in.Start.Get(); found {
-		out.Start = ptr.To(start)
+		out.Start = lo.ToPtr(start)
 	}
 	if end, found := in.End.Get(); found {
-		out.End = ptr.To(end)
+		out.End = lo.ToPtr(end)
 	}
 	return &out
 }

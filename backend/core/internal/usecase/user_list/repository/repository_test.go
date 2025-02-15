@@ -14,7 +14,6 @@ import (
 
 	test_db "github.com/PrikolTech/alpha/backend/core/internal/pkg/test/db"
 	"github.com/PrikolTech/alpha/backend/core/internal/usecase/user_list/domain"
-	"github.com/PrikolTech/alpha/backend/core/pkg/ptr"
 )
 
 func TestRepository_Get_Filters(t *testing.T) {
@@ -37,7 +36,7 @@ func TestRepository_Get_Filters(t *testing.T) {
 				Page:    1,
 				PerPage: 5,
 				Filters: domain.UserListFilters{
-					Email: ptr.To("Test"),
+					Email: lo.ToPtr("Test"),
 				},
 			},
 			setup: func() ([]test_db.User, error) {
@@ -52,7 +51,7 @@ func TestRepository_Get_Filters(t *testing.T) {
 				Page:    1,
 				PerPage: 5,
 				Filters: domain.UserListFilters{
-					FirstName: ptr.To("Test"),
+					FirstName: lo.ToPtr("Test"),
 				},
 			},
 			setup: func() ([]test_db.User, error) {
@@ -67,12 +66,12 @@ func TestRepository_Get_Filters(t *testing.T) {
 				Page:    1,
 				PerPage: 5,
 				Filters: domain.UserListFilters{
-					MiddleName: ptr.To("Test"),
+					MiddleName: lo.ToPtr("Test"),
 				},
 			},
 			setup: func() ([]test_db.User, error) {
 				return test_db.GenerateEntities[test_db.User](2, func(entity *test_db.User) {
-					entity.MiddleName = ptr.To("_test_" + gofakeit.MiddleName())
+					entity.MiddleName = lo.ToPtr("_test_" + gofakeit.MiddleName())
 				})
 			},
 		},
@@ -82,7 +81,7 @@ func TestRepository_Get_Filters(t *testing.T) {
 				Page:    1,
 				PerPage: 5,
 				Filters: domain.UserListFilters{
-					LastName: ptr.To("Test"),
+					LastName: lo.ToPtr("Test"),
 				},
 			},
 			setup: func() ([]test_db.User, error) {
@@ -98,8 +97,8 @@ func TestRepository_Get_Filters(t *testing.T) {
 				PerPage: 6,
 				Filters: domain.UserListFilters{
 					CreatedAt: &domain.DateTimeFilter{
-						Start: ptr.To(lo.Must1(time.Parse(time.DateOnly, "2001-02-03"))),
-						End:   ptr.To(lo.Must1(time.Parse(time.DateOnly, "2001-02-05"))),
+						Start: lo.ToPtr(lo.Must1(time.Parse(time.DateOnly, "2001-02-03"))),
+						End:   lo.ToPtr(lo.Must1(time.Parse(time.DateOnly, "2001-02-05"))),
 					},
 				},
 			},
@@ -132,8 +131,8 @@ func TestRepository_Get_Filters(t *testing.T) {
 				PerPage: 6,
 				Filters: domain.UserListFilters{
 					UpdatedAt: &domain.DateTimeFilter{
-						Start: ptr.To(lo.Must1(time.Parse(time.DateOnly, "2001-02-03"))),
-						End:   ptr.To(lo.Must1(time.Parse(time.DateOnly, "2001-02-05"))),
+						Start: lo.ToPtr(lo.Must1(time.Parse(time.DateOnly, "2001-02-03"))),
+						End:   lo.ToPtr(lo.Must1(time.Parse(time.DateOnly, "2001-02-05"))),
 					},
 				},
 			},
@@ -184,6 +183,10 @@ func TestRepository_Get_Filters(t *testing.T) {
 			ids := lo.Map(users, func(item domain.User, _ int) uuid.UUID { return item.ID })
 
 			require.Equal(t, expectedIDs, ids)
+
+			totalCount, err := repo.GetTotalCount(ctx, test.in.Filters)
+			require.NoError(t, err)
+			require.Equal(t, len(expectedIDs), totalCount)
 		})
 	}
 }
@@ -322,24 +325,4 @@ func TestRepository_Get_Pagination(t *testing.T) {
 			require.Len(t, users, test.expectedLen)
 		})
 	}
-}
-
-func TestRepository_GetTotalCount(t *testing.T) {
-	ctx := context.Background()
-
-	c, err := test_db.NewPsql()
-	require.NoError(t, err)
-	defer func() { require.NoError(t, c.Close()) }()
-
-	users, err := test_db.GenerateEntities[test_db.User](5)
-	require.NoError(t, err)
-
-	ids, err := test_db.InsertEntitiesById[test_db.User, uuid.UUID](c, test_db.TableUser, users)
-	require.NoError(t, err)
-	defer func() { require.NoError(t, test_db.DeleteEntitiesById(c, test_db.TableUser, ids)) }()
-
-	repo := New(c.DB())
-	totalCount, err := repo.GetTotalCount(ctx)
-	require.NoError(t, err)
-	require.Equal(t, len(users), totalCount)
 }

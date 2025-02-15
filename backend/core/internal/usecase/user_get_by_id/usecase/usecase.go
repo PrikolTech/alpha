@@ -21,7 +21,7 @@ func New(userRepo userRepo) *Usecase {
 func (u *Usecase) Handle(ctx context.Context, id uuid.UUID) (*domain.User, error) {
 	user, err := u.userRepo.GetByID(ctx, id)
 	if err != nil {
-		return nil, fmt.Errorf("user get by id: %w", err)
+		return nil, fmt.Errorf("user repo get by id: %w", err)
 	}
 
 	if user == nil {
