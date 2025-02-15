@@ -18,8 +18,8 @@ var _ Handler = UnimplementedHandler{}
 // Создать новый проект.
 //
 // POST /v1/projects
-func (UnimplementedHandler) ProjectCreate(ctx context.Context, req *ProjectCreateRequest) error {
-	return ht.ErrNotImplemented
+func (UnimplementedHandler) ProjectCreate(ctx context.Context, req *ProjectCreateRequest) (r ProjectCreateRes, _ error) {
+	return r, ht.ErrNotImplemented
 }
 
 // ProjectDeleteById implements projectDeleteById operation.
@@ -33,10 +33,10 @@ func (UnimplementedHandler) ProjectDeleteById(ctx context.Context, params Projec
 
 // ProjectGetAll implements projectGetAll operation.
 //
-// Получить все проекты с пагинацией.
+// Получить список проектов.
 //
 // GET /v1/projects
-func (UnimplementedHandler) ProjectGetAll(ctx context.Context, params ProjectGetAllParams) (r *ProjectGetAllResponse, _ error) {
+func (UnimplementedHandler) ProjectGetAll(ctx context.Context, params ProjectGetAllParams) (r ProjectGetAllRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 

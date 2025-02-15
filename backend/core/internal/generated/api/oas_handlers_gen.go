@@ -58,7 +58,7 @@ func (s *Server) handleProjectCreateRequest(args [0]string, argsEscaped bool, w 
 		}
 	}()
 
-	var response *ProjectCreateCreated
+	var response ProjectCreateRes
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -73,7 +73,7 @@ func (s *Server) handleProjectCreateRequest(args [0]string, argsEscaped bool, w 
 		type (
 			Request  = *ProjectCreateRequest
 			Params   = struct{}
-			Response = *ProjectCreateCreated
+			Response = ProjectCreateRes
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -84,12 +84,12 @@ func (s *Server) handleProjectCreateRequest(args [0]string, argsEscaped bool, w 
 			mreq,
 			nil,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				err = s.h.ProjectCreate(ctx, request)
+				response, err = s.h.ProjectCreate(ctx, request)
 				return response, err
 			},
 		)
 	} else {
-		err = s.h.ProjectCreate(ctx, request)
+		response, err = s.h.ProjectCreate(ctx, request)
 	}
 	if err != nil {
 		defer recordError("Internal", err)
@@ -189,7 +189,7 @@ func (s *Server) handleProjectDeleteByIdRequest(args [1]string, argsEscaped bool
 
 // handleProjectGetAllRequest handles projectGetAll operation.
 //
-// Получить все проекты с пагинацией.
+// Получить список проектов.
 //
 // GET /v1/projects
 func (s *Server) handleProjectGetAllRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
@@ -215,12 +215,12 @@ func (s *Server) handleProjectGetAllRequest(args [0]string, argsEscaped bool, w 
 		return
 	}
 
-	var response *ProjectGetAllResponse
+	var response ProjectGetAllRes
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
 			OperationName:    ProjectGetAllOperation,
-			OperationSummary: "Получить все проекты с пагинацией",
+			OperationSummary: "Получить список проектов",
 			OperationID:      "projectGetAll",
 			Body:             nil,
 			Params: middleware.Parameters{
@@ -232,6 +232,14 @@ func (s *Server) handleProjectGetAllRequest(args [0]string, argsEscaped bool, w 
 					Name: "perPage",
 					In:   "query",
 				}: params.PerPage,
+				{
+					Name: "query",
+					In:   "query",
+				}: params.Query,
+				{
+					Name: "sorting",
+					In:   "query",
+				}: params.Sorting,
 			},
 			Raw: r,
 		}
@@ -239,7 +247,7 @@ func (s *Server) handleProjectGetAllRequest(args [0]string, argsEscaped bool, w 
 		type (
 			Request  = struct{}
 			Params   = ProjectGetAllParams
-			Response = *ProjectGetAllResponse
+			Response = ProjectGetAllRes
 		)
 		response, err = middleware.HookMiddleware[
 			Request,

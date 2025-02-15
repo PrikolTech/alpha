@@ -88,6 +88,10 @@ type ProjectGetAllParams struct {
 	Page OptInt
 	// Количество записей на странице.
 	PerPage OptInt
+	// Строка поиска по полям Название и Код проекта.
+	Query OptString
+	// Сортировка списка.
+	Sorting OptSorting
 }
 
 func unpackProjectGetAllParams(packed middleware.Parameters) (params ProjectGetAllParams) {
@@ -107,6 +111,24 @@ func unpackProjectGetAllParams(packed middleware.Parameters) (params ProjectGetA
 		}
 		if v, ok := packed[key]; ok {
 			params.PerPage = v.(OptInt)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "query",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Query = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "sorting",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Sorting = v.(OptSorting)
 		}
 	}
 	return params
@@ -202,6 +224,93 @@ func decodeProjectGetAllParams(args [0]string, argsEscaped bool, r *http.Request
 	}(); err != nil {
 		return params, &ogenerrors.DecodeParamError{
 			Name: "perPage",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: query.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "query",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotQueryVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotQueryVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Query.SetTo(paramsDotQueryVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "query",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: sorting.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "sorting",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+			Fields:  []uri.QueryParameterObjectField{{Name: "field", Required: true}, {Name: "direction", Required: true}},
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotSortingVal Sorting
+				if err := func() error {
+					return paramsDotSortingVal.DecodeURI(d)
+				}(); err != nil {
+					return err
+				}
+				params.Sorting.SetTo(paramsDotSortingVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+			if err := func() error {
+				if value, ok := params.Sorting.Get(); ok {
+					if err := func() error {
+						if err := value.Validate(); err != nil {
+							return err
+						}
+						return nil
+					}(); err != nil {
+						return err
+					}
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "sorting",
 			In:   "query",
 			Err:  err,
 		}
