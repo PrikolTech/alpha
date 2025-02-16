@@ -21,6 +21,7 @@ import (
 type Mockusecase struct {
 	ctrl     *gomock.Controller
 	recorder *MockusecaseMockRecorder
+	isgomock struct{}
 }
 
 // MockusecaseMockRecorder is the mock recorder for Mockusecase.
