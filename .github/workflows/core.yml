@@ -7,7 +7,7 @@ defaults:
 on:
   push:
     branches: ["*"]
-    paths: ["backend/core/**"]
+    paths: ["backend/core/**", ".github/workflows/core.yml"]
 
 jobs:
   build:
