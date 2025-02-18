@@ -1,4 +1,4 @@
-//go:generate ogen --config ../../../.ogen.yml --target ../../generated/api  --package api --clean ../../../../../docs/api/openapi.yml
+//go:generate go tool ogen --config ../../../.ogen.yml --target ../../generated/api  --package api --clean ../../../../../docs/api/openapi.yml
 
 package http
 
